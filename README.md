@@ -2,7 +2,7 @@
 App &amp; backend for a system to compare grocery store prices.
 
 # build &amp; run
-Install `python 3`, `android studio`
+Install `python 3`, `sqlite3`, `android-studio`
 
 Compile app located in `app` in android studio
 

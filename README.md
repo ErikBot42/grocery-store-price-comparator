@@ -1,12 +1,24 @@
 # grocery-store-price-comparator
-App &amp; backend for a system to compare grocery store prices.
+App and backend for a system to compare grocery store prices.
 
-# build &amp; run
+## Get source
+Install `git` and clone this repo
+
+```
+git clone git@github.com:ErikBot42/grocery-store-price-comparator.git
+```
+or
+```
+git clone https://github.com/ErikBot42/grocery-store-price-comparator.git
+```
+## Build and run
 Install `python 3`, `sqlite3`, `android-studio`
 
-Compile app located in `app` in android studio
+Compile app located in `app/` in android studio
 
 Run server
-`python3 server/server.py`
+```
+python3 server/server.py
+```
 
 

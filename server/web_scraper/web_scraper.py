@@ -3,20 +3,26 @@ import re
 import product
 from bs4 import BeautifulSoup
 
-def filter_price_string(price_string):
+def filter_price_string(price_string: str) -> str:
     return re.sub(r'[^\d.,]*', '', price_string.strip())
 
-try:
-    r = requests.get('https://www.lidl.se/veckans-erbjudanden')
-except requests.exceptions.ConnectionError:
-    print("invalid request, exiting...");
-    exit()
-print("request ok");
-soup = BeautifulSoup(r.content, 'html.parser')
+def try_request(http_str: str) -> bytes | None:
+    try:
+        r = requests.get(http_str)
+        return r.content
+    except requests.exceptions.ConnectionError:
+        return None
+
+
+content = try_request('https://www.lidl.se/veckans-erbjudanden')
+if content == None:
+    exit(1)
+soup = BeautifulSoup(content, 'html.parser')
 
 #<div class="nuc-a-flex-item nuc-a-flex-item--width-6 nuc-a-flex-item--width-4@sm"
 
 s = soup.find_all('div', class_ = "nuc-a-flex-item nuc-a-flex-item--width-6 nuc-a-flex-item--width-4@sm")
+print(len(s))
 for el in s:
     #print(el.find('article'))
     product_price_el = el.find('span', class_ = "lidl-m-pricebox__price");

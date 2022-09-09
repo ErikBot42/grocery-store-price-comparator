@@ -40,8 +40,9 @@ def lidl_parse(soup: BeautifulSoup) -> list[product.Product]:
         product_name_el = el.find('h3', class_ = "ret-o-card__headline");
         price_str = filter_price_string(product_price_el.string)
         name_str = product_name_el.string.strip();
-        print("\"","name:", name_str,"\"")
-        print("\"","price:",price_str,"\"")
+        print("name:", name_str)
+        print("price:", price_str)
+        print()
         product_list.append(product.Product(name_str, float(price_str), product.Store.LIDL))
     return product_list
 
@@ -59,7 +60,7 @@ def coop_parse(soup: BeautifulSoup) -> list[product.Product]:
         #['3 för', '79:-']
         #['50%', 'rabatt']
         #['49', '90', '/st']
-        print("messed up price:", price_raw)
+        print("price (sometimes):", price_raw)
         print("heading:", el.find('h3', class_ = "ItemTeaser-heading").string)
         #print("brand:", el.find('span', class_ = "ItemTeaser-brand").string)
         description_list = list(el.find('p', class_ = "ItemTeaser-description").strings);
@@ -87,7 +88,9 @@ def coop_parse(soup: BeautifulSoup) -> list[product.Product]:
 
 #
 soup = address_to_soup('https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/')
-print(coop_parse(soup))
-#soup = address_to_soup('https://www.lidl.se/veckans-erbjudanden')
+coop_parse(soup)
+#print(coop_parse(soup))
+soup = address_to_soup('https://www.lidl.se/veckans-erbjudanden')
+lidl_parse(soup)
 #print(lidl_parse(soup))
 

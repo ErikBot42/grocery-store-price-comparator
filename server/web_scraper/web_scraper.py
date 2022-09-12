@@ -1,8 +1,20 @@
+import product
+
 import requests
 import re
-import product
+
 from bs4 import BeautifulSoup
 import bs4
+
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+#from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+
+import time
 
 #does this string contain amount, eg "Ca 200g", or not, eg "Klass 1"
 def is_amount(amount_str: str) -> bool:
@@ -120,8 +132,72 @@ def ica_parse(soup: BeautifulSoup) -> list[product.Product]:
 
     return product_list
 
-soup = address_to_soup('https://www.ica.se/butiker/maxi/orebro/maxi-ica-stormarknad-universitetet-orebro-15088/erbjudanden/')
-print(ica_parse(soup))
+def willys_parse(soup: BeautifulSoup) -> list[product.Product]:
+    import json
+    #<script crossorigin="anonymous" id="__NEXT_DATA__" type="application/json">
+    json_str = soup_safe_str(soup.find('script', id="__NEXT_DATA__"))
+    #print(json_str)
+
+    js = json.loads(json_str)
+    offers = js["props"]["customProps"]["homePageData"]["contentSlots"]["contentSlot"]
+
+    for offer in offers:
+        components = offer["value"]["components"]["component"]
+        for component in components:
+            print(component)
+            print()
+        print()
+        print()
+        print()
+
+    assert False
+
+
+def get_willys_html(url: str) -> str:
+    driver=webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    wait = WebDriverWait(driver, 10)
+    driver.get(url)
+    get_url = driver.current_url
+    wait.until(EC.url_to_be(url))
+
+    # Decline cookies
+    time.sleep(3) # a bit of a hack
+    cookie_buttons = driver.find_elements(By.XPATH, "//body/div/div/div/div/div/div/div/button")
+    decline_cookies_button = next((x for x in cookie_buttons if x.text == "Avvisa alla"),None)
+    webdriver.ActionChains(driver).click(decline_cookies_button).perform()
+
+    # repeatedly scroll down, click "view more" and wait
+    for _ in range(100):
+        webdriver.ActionChains(driver).scroll_by_amount(0, 100000).perform()
+        time.sleep(2) # a bit of a hack
+        view_more_button_candidates = driver.find_elements(By.XPATH, "//main//section//button")
+        view_more_button = next((x for x in view_more_button_candidates if x.text == "Visa alla"),None)
+        if view_more_button == None:
+            break # no more view more => done
+        webdriver.ActionChains(driver).click(view_more_button).perform()
+        time.sleep(3) # a bit of a hack
+
+    page_source: str = driver.page_source
+    print(BeautifulSoup(page_source, 'html.parser').prettify())
+    driver.quit()
+    if get_url == url:
+        return page_source
+    else:
+        return ""
+
+get_willys_html("https://www.willys.se/erbjudanden/butik?StoreID=2117")
+
+
+#print(BeautifulSoup(page_source, 'html.parser').prettify())
+
+#<button data-testid="load-more-btn" class="Buttonstyles__StyledButton-sc-1g4oxwr-0 dLUxJp LoadMore__LoadMoreBtn-sc-16fjaj7-3 bnbvpm" type="button">Visa alla</button>
+
+
+#soup = address_to_soup("https://www.willys.se/erbjudanden/butik?StoreID=2117")
+#willys_parse(soup)
+
+#soup = address_to_soup('https://www.ica.se/butiker/maxi/orebro/maxi-ica-stormarknad-universitetet-orebro-15088/erbjudanden/')
+#print(ica_parse(soup))
 #soup = address_to_soup('https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/')
 #print(coop_parse(soup))
 #soup = address_to_soup('https://www.lidl.se/veckans-erbjudanden')

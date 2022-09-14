@@ -8,3 +8,17 @@ res = cur.execute("SELECT * FROM Register")
 print(res.fetchall())
 con.commit()
 con.close()
+
+#TODO Add product, Add user, add store, Loggin
+
+def AddProductToDatabase():
+    print("TODO")
+
+def AddUserToDatabase():
+    print("TODO")
+
+def AddStoreToDatabase():
+    print("TODO")
+
+def Loggin():
+    print("TODO")

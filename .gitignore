@@ -1,3 +1,5 @@
+*.db
+
 # Built application files
 *.apk
 *.aar

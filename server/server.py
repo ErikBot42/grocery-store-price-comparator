@@ -3,7 +3,7 @@ from pickle import NONE
 import sqlite3
 
 #Databasen "Grocery_Store_Database.db" måste ligga i samma map för att kunna köra koden(Ligger på Discord)
-#TODO Add product, add store, Loggin
+#TODO Add product, add store
 
 def AddProductToDatabase():
     print("TODO: AddProductToDatabase")
@@ -20,8 +20,15 @@ def AddUserToDatabase(ID: int,email: str, mobile_nr: int, name: str = "TestName"
 def AddStoreToDatabase():
     print("TODO: AddStoreToDatabase")
 
-def Loggin() -> bool:
+#Returns true if password matches password from database
+def Loggin(email: str, password: str) -> bool:
     print("TODO: Loggin")
+    res = cur.execute("SELECT Password FROM Register WHERE email = '"+ email +"'")
+    temp = res.fetchone()[0]
+    if (temp == password): 
+        return True 
+    else:
+        return False
 
 #Save all new changes to the database. 
 def CommitToDatabase():
@@ -30,9 +37,6 @@ def CommitToDatabase():
 
 con = sqlite3.connect("Grocery_Store_Database.db")  #Conection to database
 cur = con.cursor()                                  #cursor executes sql comands
-AddUserToDatabase(ID = 7, email = "test7@email.com", mobile_nr = 1415917)   #Testar att lägga till en användare i databasen
-res = cur.execute("SELECT * FROM Register")         
-print("Users:")   
-for result in res:  print(result)
+AddUserToDatabase(ID = 7, email = "test7@email.com", mobile_nr = 1415917)   #Testar att lägga till en användare i databasen        
 CommitToDatabase()          
 con.close()

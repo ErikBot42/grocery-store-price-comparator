@@ -2,9 +2,9 @@ from pickle import NONE
 import sqlite3
 print("This machine can run sqlite3")
 
-con = sqlite3.connect("Test2.db")
+con = sqlite3.connect("Grocery_Store_Database.db")
 cur = con.cursor()
-res = cur.execute("SELECT * FROM REGISTER")
-print("Print 1")
+res = cur.execute("SELECT * FROM Register")
 print(res.fetchall())
-print("Print 2")
+con.commit()
+con.close()

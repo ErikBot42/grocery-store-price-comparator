@@ -20,10 +20,8 @@ class Database:
     def AddProductToDatabase(self, name: str, store: str, price: str, category: int) -> bool:
         res = self.cur.execute("SELECT MAX(Product_ID) FROM Product")
         ID = res.fetchone()[0]
-        print(ID)
         if (ID is None): ID = 0
         else: ID += 1
-        print(ID)
         query = "INSERT INTO Product (Category_ID, Product_ID, Product_Name, Store_ID, Price) VALUES ('"+str(category)+"', '"+str(ID)+"', '"+name+"', '"+str(store)+"', '"+price+"')"
         try: 
             self.cur.execute(query)
@@ -34,9 +32,10 @@ class Database:
             return False
     
     #Adds a user to the database. Default values are only ment for testing
-    def AddUserToDatabase(self, ID: int,email: str, mobile_nr: int, name: str = "TestName", password: str = "Password", date_of_birth: int = 19900101, city: str = "Karlstad", country: str = "Sweden", status: int = 0) -> bool:
+    def AddUserToDatabase(self, email: str, mobile_nr: int, name: str = "TestName", password: str = "Password", date_of_birth: int = 19900101, city: str = "Karlstad", country: str = "Sweden", status: int = 0) -> bool:
+        print("INSERT INTO Register (Name, Email, Password, Mobile_Number,  Date_of_Birth, City, Country, Logged_in_Status) VALUES ('"+name+"', '"+email+"', '"+password+"', '"+str(mobile_nr)+"', '"+str(date_of_birth)+"', '"+city+"', '"+country+"', '"+str(status)+"')")
         try:
-            self.cur.execute("INSERT INTO Register (User_ID, Name, Email, Password, Mobile_Number,  Date_of_Birth, City, Country, Logged_in_Status) VALUES ('"+str(ID)+"', '"+name+"', '"+email+"', '"+password+"', '"+str(mobile_nr)+"', '"+str(date_of_birth)+"', '"+city+"', '"+country+"', '"+str(status)+"')")
+            self.cur.execute("INSERT INTO Register (Name, Email, Password, Mobile_Number,  Date_of_Birth, City, Country, Logged_in_Status) VALUES ('"+name+"', '"+email+"', '"+password+"', '"+str(mobile_nr)+"', '"+str(date_of_birth)+"', '"+city+"', '"+country+"', '"+str(status)+"')")
             return True
         except:
             print("Unable to add user")
@@ -82,7 +81,7 @@ class Database:
     ##################################################################
     
     def FillDatabase(self,input_nr: int = 5):
-       for i in range(input_nr): self.AddUserToDatabase(ID = i, email = "test"+str(i)+"@email.com", mobile_nr = i+1, name = "User"+str(i))
+       for i in range(input_nr): self.AddUserToDatabase(email = "test"+str(i)+"@email.com", mobile_nr = i+1, name = "User"+str(i))
        for i in range(input_nr): self.AddStoreToDatabase(ID = i, name = "Store"+str(i))
        for i in range(input_nr): self.AddCategoryToDatabase(ID = i, name = "Category"+str(i))
        for i in range(input_nr): self.AddProductToDatabase(name = "Product"+str(i), store=i, price="10"+str(i), category=0)

@@ -8,6 +8,7 @@ class Store(Enum):
     LIDL = 1
     COOP = 2
     ICA = 3
+    WILLYS = 4
     def __str__(self):
         match self:
             case self.LIDL:
@@ -16,6 +17,8 @@ class Store(Enum):
                 return "Coop"
             case self.ICA:
                 return "Ica"
+            case self.WILLYS:
+                return "Willys"
 
 class Product:
     #TODO: filter valid products

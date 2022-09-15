@@ -1,3 +1,4 @@
+import colorama
 import product
 
 import requests
@@ -13,6 +14,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+from typing import AnyStr, Iterable
+import typing
 
 import time
 
@@ -22,7 +25,7 @@ def is_amount(amount_str: str) -> bool:
     return True
 
 #remove surrounding whitespace and empty elements
-def remove_whitespace_elements(original: list[str]) -> list[str]:
+def remove_whitespace_elements(original: Iterable[str]) -> list[str]:
     return [el.strip() for el in original if len(el.strip()) != 0]
 
 def filter_price_string(price_string: str) -> str:
@@ -52,9 +55,23 @@ def soup_safe_str(maybe_soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | No
         return safe_none_str(maybe_soup)
     return safe_none_str(maybe_soup.string)
 
-def soup_find(soup: BeautifulSoup, kind: str, class_tag: str) -> bs4.Tag | bs4.NavigableString | None:
-    return soup.find(kind, class_=class_tag)
+def soup_find_all(soup: BeautifulSoup, kind: str, class_tag: str) -> list[bs4.Tag | bs4.NavigableString]:
+    return soup.find_all(kind, class_=class_tag)
 
+def soup_find(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString, kind: str, class_tag: str) -> bs4.Tag | bs4.NavigableString | None:
+    match soup:
+        case BeautifulSoup() | bs4.Tag():
+            return soup.find(kind, class_=class_tag)
+        case _:
+            return None
+
+# will return empty tag instead of none
+def soup_find_ignore_none(soup: BeautifulSoup | bs4.Tag, kind: str, class_tag: str) -> bs4.Tag | bs4.NavigableString:
+    result: bs4.Tag | bs4.NavigableString | None = soup_find(soup, kind, class_tag)
+    if result == None:
+        exit(1) #TODO
+    else:
+        return result
 # make request from http address and return soup object
 def address_to_soup(address: str) -> BeautifulSoup:
     content: bytes = safe_request(address)
@@ -133,24 +150,45 @@ def ica_parse(soup: BeautifulSoup) -> list[product.Product]:
     return product_list
 
 def willys_parse(soup: BeautifulSoup) -> list[product.Product]:
-    import json
-    #<script crossorigin="anonymous" id="__NEXT_DATA__" type="application/json">
-    json_str = soup_safe_str(soup.find('script', id="__NEXT_DATA__"))
-    #print(json_str)
+    #print(soup.prettify())
+    #<div class="Productstyles__StyledProduct-sc-16nua0l-0 aRuiG" itemscope="" itemtype="https://schema.org/Product">
+    elements = soup_find_all(soup, "div", "Productstyles__StyledProduct-sc-16nua0l-0 aRuiG")
+    #print(elements)
+    product_list: list[product.Product] = []
+    for el in elements:
+        price_el = soup_find(el, "div", "PriceLabelstyles__StyledProductPrice-sc-koui33-0 dCxjnV") # "yellow" price
+        if price_el == None: # "red" price
+            price_el = soup_find(el, "div", "PriceLabelstyles__StyledProductPriceTextWrapper-sc-koui33-1 fHVyJs")
+        if price_el == None:
+            assert False
+        price: str = " ".join(remove_whitespace_elements(price_el.strings))
+        price_modifier_el = soup_find(el, "div", "Productstyles__StyledProductSavePrice-sc-16nua0l-13 iyjqpG")
+        price_modifier: str = ""
+        if price_modifier_el!=None:
+            price_modifier = " ".join(remove_whitespace_elements(price_modifier_el.strings))
 
-    js = json.loads(json_str)
-    offers = js["props"]["customProps"]["homePageData"]["contentSlots"]["contentSlot"]
+        final_price_str = price_modifier + " " + price
+        print("price:", final_price_str)
 
-    for offer in offers:
-        components = offer["value"]["components"]["component"]
-        for component in components:
-            print(component)
-            print()
-        print()
-        print()
+        name_el = soup_find(el, "div", "Productstyles__StyledProductName-sc-16nua0l-5 dqhhbm")
+        if name_el == None:
+            assert False
+        name = " ".join(remove_whitespace_elements(name_el.strings))
+        print("name:", name)
+
+        description_el = soup_find(el, "div", "Productstyles__StyledProductManufacturer-sc-16nua0l-6 ksPmCk")
+        if description_el == None:
+            assert False
+        description = " ".join(remove_whitespace_elements(description_el.strings))
+        print("description:", description)
+        product_list.append(product.Product(
+            name=name, 
+            price=price, 
+            store=product.Store.WILLYS,
+            description=description))
         print()
 
-    assert False
+    return product_list
 
 
 def get_willys_html(url: str) -> str:
@@ -159,6 +197,7 @@ def get_willys_html(url: str) -> str:
     driver.get(url)
     get_url = driver.current_url
     wait.until(EC.url_to_be(url))
+    fac = 0.5
 
     # Decline cookies
     time.sleep(3) # a bit of a hack
@@ -167,25 +206,31 @@ def get_willys_html(url: str) -> str:
     webdriver.ActionChains(driver).click(decline_cookies_button).perform()
 
     # repeatedly scroll down, click "view more" and wait
-    for _ in range(100):
+    for _ in range(100): #TODO: 100
         webdriver.ActionChains(driver).scroll_by_amount(0, 100000).perform()
-        time.sleep(2) # a bit of a hack
+        time.sleep(2*fac) # a bit of a hack
         view_more_button_candidates = driver.find_elements(By.XPATH, "//main//section//button")
         view_more_button = next((x for x in view_more_button_candidates if x.text == "Visa alla"),None)
         if view_more_button == None:
             break # no more view more => done
         webdriver.ActionChains(driver).click(view_more_button).perform()
-        time.sleep(3) # a bit of a hack
+        time.sleep(3*fac) # a bit of a hack
 
     page_source: str = driver.page_source
     print(BeautifulSoup(page_source, 'html.parser').prettify())
-    driver.quit()
+    #driver.quit()
     if get_url == url:
         return page_source
     else:
         return ""
 
-get_willys_html("https://www.willys.se/erbjudanden/butik?StoreID=2117")
+#willys_html: str = get_willys_html("https://www.willys.se/erbjudanden/butik?StoreID=2117")
+cached_willys_html = open("willys.html", "r") 
+#print(willys_html)
+#exit(0)
+willys_html: str = cached_willys_html.read()
+soup: BeautifulSoup = BeautifulSoup(willys_html, 'html.parser')
+print(willys_parse(soup))
 
 
 #print(BeautifulSoup(page_source, 'html.parser').prettify())

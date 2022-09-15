@@ -1,6 +1,7 @@
 from itertools import count
 from pickle import NONE
 import sqlite3
+from weakref import ref
 
 #Databasen "Grocery_Store_Database.db" måste ligga i samma map för att kunna köra koden(Ligger på Discord)
 #TODO 
@@ -13,14 +14,20 @@ class Database:
     
     def __init__(self):
         self.con = sqlite3.connect("Grocery_Store_Database.db")  #Conection to database
-        self.cur = self.con.cursor()                                  #cursor executes sql comands
+        self.cur = self.con.cursor()                             #cursor executes sql comands
 
     #Adds a product to the database
-    def AddProductToDatabase(self, ID: int, name: str, store: str, price: str, category: int) -> bool:
+    def AddProductToDatabase(self, name: str, store: str, price: str, category: int) -> bool:
+        res = self.cur.execute("SELECT MAX(Product_ID) FROM Product")
+        ID = res.fetchone()[0]
+        print(ID)
+        if (ID is None): ID = 0
+        else: ID += 1
+        print(ID)
         query = "INSERT INTO Product (Category_ID, Product_ID, Product_Name, Store_ID, Price) VALUES ('"+str(category)+"', '"+str(ID)+"', '"+name+"', '"+str(store)+"', '"+price+"')"
-        print(query)
         try: 
             self.cur.execute(query)
+            self.CommitToDatabase()
             return True
         except:
             print("Unable to add product")
@@ -78,7 +85,7 @@ class Database:
        for i in range(input_nr): self.AddUserToDatabase(ID = i, email = "test"+str(i)+"@email.com", mobile_nr = i+1, name = "User"+str(i))
        for i in range(input_nr): self.AddStoreToDatabase(ID = i, name = "Store"+str(i))
        for i in range(input_nr): self.AddCategoryToDatabase(ID = i, name = "Category"+str(i))
-       for i in range(input_nr): self.AddProductToDatabase(ID = i, name = "Product"+str(i), store=i, price="10"+str(i), category=0)
+       for i in range(input_nr): self.AddProductToDatabase(name = "Product"+str(i), store=i, price="10"+str(i), category=0)
         
     def Close(self):
         self.con.close()

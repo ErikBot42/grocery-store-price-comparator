@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>My test page</title>
+        <!-- CSS only -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    </head>
+    <body >
+        <div class="container">
+            <div id="currListings">
+                <h2 class="text-primary d-flex justify-content-center">Current Listings</h2>
+                <table class="table  table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Store</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mjölk</td>
+                            <td>22.99</td>
+                            <td>Ica</td>
+                            <td>
+                                <!-- Call to action buttons -->
+                                <ul class="">
+                                    <li class="list-inline-item">
+                                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i>Edit</button>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
+                                    </li>
+                                </ul>
+                            </td>
+                            
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Smör</td>
+                            <td>30.99</td>
+                            <td>Coop</td>
+                            <td>
+                                <!-- Call to action buttons -->
+                                <!--Code taken from https://bootstrapious.com/p/bootstrap-add-edit-and-delete-buttons-->
+                                <ul class="">
+                                    <li class="list-inline-item">
+                                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i>Edit</button>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" id="newProduct" class="btn btn-primary">New Product</button>
+        </div>
+        <script src="adminview.js"></script>
+    </body>
+</html>

@@ -1,4 +1,5 @@
 *.db
+*.sqbpro
 
 # Built application files
 *.apk

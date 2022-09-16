@@ -28,8 +28,11 @@ def is_amount(amount_str: str) -> bool:
 def remove_whitespace_elements(original: Iterable[str]) -> list[str]:
     return [el.strip() for el in original if len(el.strip()) != 0]
 
+def clean_join(separator: str, strings: Iterable[str]) -> str:
+    return separator.join(remove_whitespace_elements(strings))
+
 def filter_price_string(price_string: str) -> str:
-    return re.sub(r'[^\d.,]*', '', price_string.strip())
+    return re.sub(r"[^\d.,]*", "", price_string.strip())
 
 # wrapper around http request to prevent errors
 def safe_request(http_str: str) -> bytes:
@@ -39,39 +42,43 @@ def safe_request(http_str: str) -> bytes:
     except requests.exceptions.ConnectionError:
         return bytes()
 
-# None -> "", other -> other.strip()
 def safe_none_str(maybe_string: None | str) -> str:
     if maybe_string == None:
         return ""
     else:
         return maybe_string.strip()
 
-# get string safetly
-def soup_safe_str(maybe_soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None) -> str:
-    if maybe_soup == None:
-        #assert False
-        return ""
-    elif isinstance(maybe_soup, bs4.NavigableString):
-        return safe_none_str(maybe_soup)
-    return safe_none_str(maybe_soup.string)
+def soup_get_str(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None) -> str:
+    match soup:
+        case BeautifulSoup() | bs4.Tag():
+            return safe_none_str(soup.string)
+        case _:
+            return ""
 
-def soup_find_all(soup: BeautifulSoup, kind: str, class_tag: str) -> list[bs4.Tag | bs4.NavigableString]:
-    return soup.find_all(kind, class_=class_tag)
+def soup_safe_strs(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None) -> Iterable[str]:
+    match soup:
+        case BeautifulSoup() | bs4.Tag():
+            return soup.strings
+        case _:
+            return []
 
-def soup_find(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString, kind: str, class_tag: str) -> bs4.Tag | bs4.NavigableString | None:
+def soup_find(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None, kind: str, class_tag: str) -> bs4.Tag | bs4.NavigableString | None:
     match soup:
         case BeautifulSoup() | bs4.Tag():
             return soup.find(kind, class_=class_tag)
         case _:
             return None
 
-# return "" on fail
-def soup_get_safe(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None, attribute: str) -> str:
+def soup_find_all(soup: BeautifulSoup | bs4.Tag, kind: str, class_tag: str) -> list[bs4.Tag | bs4.NavigableString]:
+    return soup.find_all(kind, class_=class_tag)
+
+# get arbitrary attribute safetly
+def soup_get_attr(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None, attribute: str) -> str:
     match soup:
         case None:
             return ""
         case bs4.NavigableString():
-            return ""
+            return soup
         case _:
             res: str | list[str] = soup[attribute]
             match res:
@@ -83,81 +90,69 @@ def soup_get_safe(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None, at
                     else:
                         return ""
 
-# will return empty tag instead of none
-def soup_find_ignore_none(soup: BeautifulSoup | bs4.Tag, kind: str, class_tag: str) -> bs4.Tag | bs4.NavigableString:
-    result: bs4.Tag | bs4.NavigableString | None = soup_find(soup, kind, class_tag)
-    if result == None:
-        exit(1) #TODO
-    else:
-        return result
+def soup_find_str(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None, kind: str, class_tag: str) -> str:
+    el: BeautifulSoup | bs4.Tag | bs4.NavigableString | None = soup_find(soup, kind, class_tag)
+    return soup_get_str(el)
+
+def soup_find_attr(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None, attribute: str, kind: str, class_tag: str) -> str:
+    el: BeautifulSoup | bs4.Tag | bs4.NavigableString | None = soup_find(soup, kind, class_tag)
+    return soup_get_attr(el, attribute)
+
+def soup_find_strs_joined(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None, separator: str, kind: str, class_tag: str) -> str:
+    el: BeautifulSoup | bs4.Tag | bs4.NavigableString | None = soup_find(soup, kind, class_tag)
+    return clean_join(separator, soup_safe_strs(el))
+
 # make request from http address and return soup object
 def address_to_soup(address: str) -> BeautifulSoup:
     content: bytes = safe_request(address)
-    return BeautifulSoup(content, 'html.parser')
+    return BeautifulSoup(content, "html.parser")
 
-# Parse lidl offers from html
+# Parse Lidl offers from html
 def lidl_parse(soup: BeautifulSoup) -> list[product.Product]:
-    offers: list[bs4.Tag | bs4.NavigableString] = soup_find_all(soup, 'div',  "nuc-a-flex-item nuc-a-flex-item--width-6 nuc-a-flex-item--width-4@sm")
+    offers: list[bs4.Tag | bs4.NavigableString] = soup_find_all(soup, "div",  "nuc-a-flex-item nuc-a-flex-item--width-6 nuc-a-flex-item--width-4@sm")
     product_list: list[product.Product] = []
     for offer_el in offers:
-        product_price_el = soup_find(offer_el, 'span', "lidl-m-pricebox__price")
-        product_name_el = soup_find(offer_el, 'h3', "ret-o-card__headline")
-        product_image_el = soup_find(offer_el, "img", "nuc-m-picture__image nuc-a-image")
-        product_modifier_el = soup_find(offer_el, "div", "lidl-m-pricebox__highlight")
-        product_amount_el = soup_find(offer_el, "div", "lidl-m-pricebox__basic-quantity")
-
-        price_str: str = soup_safe_str(product_price_el)
-        name_str: str = soup_safe_str(product_name_el)
-        image_url: str = soup_get_safe(product_image_el,"src")
-        modifier_str: str = soup_safe_str(product_modifier_el)
-        amount_str: str = soup_safe_str(product_amount_el)
-        
         product_list.append(product.Product(
-            name=name_str, 
-            price=price_str, 
-            image_url=image_url,
-            store=product.Store.LIDL,
-            modifier=modifier_str,
-            amount=amount_str,))
+            name        = soup_find_str( offer_el,        "h3",   "ret-o-card__headline"), 
+            price       = soup_find_str( offer_el,        "span", "lidl-m-pricebox__price"), 
+            image_url   = soup_find_attr(offer_el, "src", "img",  "nuc-m-picture__image nuc-a-image"),
+            modifier    = soup_find_str( offer_el,        "div",  "lidl-m-pricebox__highlight"),
+            amount      = soup_find_str( offer_el,        "div",  "lidl-m-pricebox__basic-quantity"),
+            description = soup_find_str( offer_el,        "span", "lidl-m-pricebox__discount-prefix"),
+            store       = product.Store.LIDL,
+            ))
     return product_list
 
-#<div class="ItemTeaser-content">
-#<div class="Grid-cell u-size1of2 u-xsm-size1of2 u-md-size1of4 u-lg-size1of6 js-drOffer js-offerItem" data-eag-id="12960" data-store-id="165420">
-#<article class="ItemTeaser" itemscope="" itemtype="http://schema.org/Product">
+# Parse Coop offers from html
 def coop_parse(soup: BeautifulSoup) -> list[product.Product]:
-    s = soup.find_all('article', class_ = "ItemTeaser")
+    offers: list[bs4.Tag | bs4.NavigableString] = soup.find_all("article", class_ = "ItemTeaser")
     product_list: list[product.Product] = []
-    for el in s:
-        price_raw: str = " ".join(remove_whitespace_elements(list(el.find('span', class_ = "Splash-content").strings)))
-        heading: str = el.find('h3', class_ = "ItemTeaser-heading").string
-        description: str = " ".join(remove_whitespace_elements(list(el.find('p', class_ = "ItemTeaser-description").strings)));
-        #print("image link:", el.find('img', class_ = "u-posAbsoluteCenter").get('src'))
-        #print("price:", price_raw)
-        #print("heading:", heading)
-        #print("description:", description)
-        #print()
+    for offer_el in offers:
+        price = clean_join(" ", soup_safe_strs(soup_find(offer_el, "span", "Splash-content")))
+        price_el: str = " ".join(remove_whitespace_elements(list(offer_el.find("span", class_ = "Splash-content").strings)))
+        description: str = " ".join(remove_whitespace_elements(list(offer_el.find("p", class_ = "ItemTeaser-description").strings)));
         product_list.append(product.Product(
-            name=heading, 
-            price=price_raw, 
-            store=product.Store.COOP,
-            description=description))
+            name        = soup_find_str(offer_el, "h3", "ItemTeaser-heading"), 
+            price       = price_el, 
+            store       = product.Store.COOP,
+            description = description))
     return product_list
 
 def ica_parse(soup: BeautifulSoup) -> list[product.Product]:
     #<section class="offer-category details open">
-    offer_groups: list[BeautifulSoup] = soup.find_all('section', class_ = "offer-category details open")
+    offer_groups: list[BeautifulSoup] = soup.find_all("section", class_ = "offer-category details open")
     product_list: list[product.Product] = []
     for offer_group in offer_groups:
-        header_soup = offer_group.find('header', class_ = "offer-category__header summary active")
-        category: str = soup_safe_str(header_soup)
-        offers = offer_group.find_all('div', class_="offer-category__item")
+        header_soup = offer_group.find("header", class_ = "offer-category__header summary active")
+        category: str = soup_get_str(header_soup)
+        offers = offer_group.find_all("div", class_="offer-category__item")
         print("category:", category, "offers:", len(offers))
-        for offer in offers:
-            title: str = soup_safe_str(offer.find('h2', class_="offer-type__product-name splash-bg icon-store-pseudo"))
-            description: str = soup_safe_str(offer.find('p', class_="offer-type__product-info"))
-            price: str = soup_safe_str(offer.find('div', class_="product-price__price-value"))\
-            + " " +      soup_safe_str(offer.find('div', class_="product-price__decimal"))\
-            + " " +      soup_safe_str(offer.find('div', class_="product-price__unit-item benefit-more-info"))
+        for offer_el in offers:
+            title: str = soup_get_str(offer_el.find("h2", class_="offer-type__product-name splash-bg icon-store-pseudo"))
+            description: str = soup_get_str(offer_el.find("p", class_="offer-type__product-info"))
+            price: str = soup_get_str(offer_el.find("div", class_="product-price__price-value"))\
+            + " " +      soup_get_str(offer_el.find("div", class_="product-price__decimal"))\
+            + " " +      soup_get_str(offer_el.find("div", class_="product-price__unit-item benefit-more-info"))
             price = price.strip()
             #print(offer.prettify())
             #exit()
@@ -177,17 +172,17 @@ def ica_parse(soup: BeautifulSoup) -> list[product.Product]:
 def willys_parse(soup: BeautifulSoup) -> list[product.Product]:
     #print(soup.prettify())
     #<div class="Productstyles__StyledProduct-sc-16nua0l-0 aRuiG" itemscope="" itemtype="https://schema.org/Product">
-    elements = soup_find_all(soup, "div", "Productstyles__StyledProduct-sc-16nua0l-0 aRuiG")
+    offers = soup_find_all(soup, "div", "Productstyles__StyledProduct-sc-16nua0l-0 aRuiG")
     #print(elements)
     product_list: list[product.Product] = []
-    for el in elements:
-        price_el = soup_find(el, "div", "PriceLabelstyles__StyledProductPrice-sc-koui33-0 dCxjnV") # "yellow" price
+    for offer_el in offers:
+        price_el = soup_find(offer_el, "div", "PriceLabelstyles__StyledProductPrice-sc-koui33-0 dCxjnV") # "yellow" price
         if price_el == None: # "red" price
-            price_el = soup_find(el, "div", "PriceLabelstyles__StyledProductPriceTextWrapper-sc-koui33-1 fHVyJs")
+            price_el = soup_find(offer_el, "div", "PriceLabelstyles__StyledProductPriceTextWrapper-sc-koui33-1 fHVyJs")
         if price_el == None:
             assert False
         price: str = " ".join(remove_whitespace_elements(price_el.strings))
-        price_modifier_el = soup_find(el, "div", "Productstyles__StyledProductSavePrice-sc-16nua0l-13 iyjqpG")
+        price_modifier_el = soup_find(offer_el, "div", "Productstyles__StyledProductSavePrice-sc-16nua0l-13 iyjqpG")
         price_modifier: str = ""
         if price_modifier_el!=None:
             price_modifier = " ".join(remove_whitespace_elements(price_modifier_el.strings))
@@ -195,13 +190,13 @@ def willys_parse(soup: BeautifulSoup) -> list[product.Product]:
         final_price_str = price_modifier + " " + price
         print("price:", final_price_str)
 
-        name_el = soup_find(el, "div", "Productstyles__StyledProductName-sc-16nua0l-5 dqhhbm")
+        name_el = soup_find(offer_el, "div", "Productstyles__StyledProductName-sc-16nua0l-5 dqhhbm")
         if name_el == None:
             assert False
         name = " ".join(remove_whitespace_elements(name_el.strings))
         print("name:", name)
 
-        description_el = soup_find(el, "div", "Productstyles__StyledProductManufacturer-sc-16nua0l-6 ksPmCk")
+        description_el = soup_find(offer_el, "div", "Productstyles__StyledProductManufacturer-sc-16nua0l-6 ksPmCk")
         if description_el == None:
             assert False
         description = " ".join(remove_whitespace_elements(description_el.strings))
@@ -242,7 +237,7 @@ def get_willys_html(url: str) -> str:
         time.sleep(3*fac) # a bit of a hack
 
     page_source: str = driver.page_source
-    print(BeautifulSoup(page_source, 'html.parser').prettify())
+    print(BeautifulSoup(page_source, "html.parser").prettify())
     #driver.quit()
     if get_url == url:
         return page_source
@@ -254,11 +249,11 @@ def get_willys_html(url: str) -> str:
 #print(willys_html)
 #exit(0)
 #willys_html: str = cached_willys_html.read()
-#soup: BeautifulSoup = BeautifulSoup(willys_html, 'html.parser')
+#soup: BeautifulSoup = BeautifulSoup(willys_html, "html.parser")
 #print(willys_parse(soup))
 
 
-#print(BeautifulSoup(page_source, 'html.parser').prettify())
+#print(BeautifulSoup(page_source, "html.parser").prettify())
 
 #<button data-testid="load-more-btn" class="Buttonstyles__StyledButton-sc-1g4oxwr-0 dLUxJp LoadMore__LoadMoreBtn-sc-16fjaj7-3 bnbvpm" type="button">Visa alla</button>
 
@@ -266,10 +261,14 @@ def get_willys_html(url: str) -> str:
 #soup = address_to_soup("https://www.willys.se/erbjudanden/butik?StoreID=2117")
 #willys_parse(soup)
 
-#soup = address_to_soup('https://www.ica.se/butiker/maxi/orebro/maxi-ica-stormarknad-universitetet-orebro-15088/erbjudanden/')
+#soup = address_to_soup("https://www.ica.se/butiker/maxi/orebro/maxi-ica-stormarknad-universitetet-orebro-15088/erbjudanden/")
 #print(ica_parse(soup))
-#soup = address_to_soup('https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/')
-#print(coop_parse(soup))
-soup = address_to_soup('https://www.lidl.se/veckans-erbjudanden')
-print(lidl_parse(soup))
+soup = address_to_soup("https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/")
+output = (coop_parse(soup))
+#soup = address_to_soup("https://www.lidl.se/veckans-erbjudanden")
+#output = (lidl_parse(soup))
+
+for el in output:
+    el.print()
+    print()
 

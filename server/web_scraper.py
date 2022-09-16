@@ -65,6 +65,24 @@ def soup_find(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString, kind: str, cl
         case _:
             return None
 
+# return "" on fail
+def soup_get_safe(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None, attribute: str) -> str:
+    match soup:
+        case None:
+            return ""
+        case bs4.NavigableString():
+            return ""
+        case _:
+            res: str | list[str] = soup[attribute]
+            match res:
+                case str():
+                    return res
+                case list():
+                    if len(res) > 0:
+                        return res[0]
+                    else:
+                        return ""
+
 # will return empty tag instead of none
 def soup_find_ignore_none(soup: BeautifulSoup | bs4.Tag, kind: str, class_tag: str) -> bs4.Tag | bs4.NavigableString:
     result: bs4.Tag | bs4.NavigableString | None = soup_find(soup, kind, class_tag)
@@ -79,18 +97,28 @@ def address_to_soup(address: str) -> BeautifulSoup:
 
 # Parse lidl offers from html
 def lidl_parse(soup: BeautifulSoup) -> list[product.Product]:
-    s: list[BeautifulSoup] = soup.find_all('div', class_ = "nuc-a-flex-item nuc-a-flex-item--width-6 nuc-a-flex-item--width-4@sm")
+    offers: list[bs4.Tag | bs4.NavigableString] = soup_find_all(soup, 'div',  "nuc-a-flex-item nuc-a-flex-item--width-6 nuc-a-flex-item--width-4@sm")
     product_list: list[product.Product] = []
-    for el in s:
-        #TODO: Image link
-        product_price_el = el.find('span', class_ = "lidl-m-pricebox__price")
-        product_name_el = el.find('h3', class_ = "ret-o-card__headline")
-        price_str: str = filter_price_string(soup_safe_str(product_price_el))
+    for offer_el in offers:
+        product_price_el = soup_find(offer_el, 'span', "lidl-m-pricebox__price")
+        product_name_el = soup_find(offer_el, 'h3', "ret-o-card__headline")
+        product_image_el = soup_find(offer_el, "img", "nuc-m-picture__image nuc-a-image")
+        product_modifier_el = soup_find(offer_el, "div", "lidl-m-pricebox__highlight")
+        product_amount_el = soup_find(offer_el, "div", "lidl-m-pricebox__basic-quantity")
+
+        price_str: str = soup_safe_str(product_price_el)
         name_str: str = soup_safe_str(product_name_el)
+        image_url: str = soup_get_safe(product_image_el,"src")
+        modifier_str: str = soup_safe_str(product_modifier_el)
+        amount_str: str = soup_safe_str(product_amount_el)
+        
         product_list.append(product.Product(
             name=name_str, 
             price=price_str, 
-            store=product.Store.LIDL))
+            image_url=image_url,
+            store=product.Store.LIDL,
+            modifier=modifier_str,
+            amount=amount_str,))
     return product_list
 
 #<div class="ItemTeaser-content">
@@ -100,9 +128,6 @@ def coop_parse(soup: BeautifulSoup) -> list[product.Product]:
     s = soup.find_all('article', class_ = "ItemTeaser")
     product_list: list[product.Product] = []
     for el in s:
-        #['3 för', '79:-']
-        #['50%', 'rabatt']
-        #['49', '90', '/st']
         price_raw: str = " ".join(remove_whitespace_elements(list(el.find('span', class_ = "Splash-content").strings)))
         heading: str = el.find('h3', class_ = "ItemTeaser-heading").string
         description: str = " ".join(remove_whitespace_elements(list(el.find('p', class_ = "ItemTeaser-description").strings)));
@@ -225,12 +250,12 @@ def get_willys_html(url: str) -> str:
         return ""
 
 #willys_html: str = get_willys_html("https://www.willys.se/erbjudanden/butik?StoreID=2117")
-cached_willys_html = open("willys.html", "r") 
+#cached_willys_html = open("willys.html", "r") 
 #print(willys_html)
 #exit(0)
-willys_html: str = cached_willys_html.read()
-soup: BeautifulSoup = BeautifulSoup(willys_html, 'html.parser')
-print(willys_parse(soup))
+#willys_html: str = cached_willys_html.read()
+#soup: BeautifulSoup = BeautifulSoup(willys_html, 'html.parser')
+#print(willys_parse(soup))
 
 
 #print(BeautifulSoup(page_source, 'html.parser').prettify())
@@ -245,6 +270,6 @@ print(willys_parse(soup))
 #print(ica_parse(soup))
 #soup = address_to_soup('https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/')
 #print(coop_parse(soup))
-#soup = address_to_soup('https://www.lidl.se/veckans-erbjudanden')
-#print(lidl_parse(soup))
+soup = address_to_soup('https://www.lidl.se/veckans-erbjudanden')
+print(lidl_parse(soup))
 

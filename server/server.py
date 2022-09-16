@@ -1,9 +1,6 @@
 #Databasen "Grocery_Store_Database.db" måste ligga i samma map för att kunna köra koden(Ligger på Discord)
 
-from itertools import count
-from pickle import NONE
 import sqlite3
-from weakref import ref
 
 #TODO
 # change input variables for refering keys to names from IDs,
@@ -13,7 +10,7 @@ class Database:
     
     def __init__(self):
         self.connection = sqlite3.connect("Grocery_Store_Database.db")  #Conection to database
-        self.cursor = self.connection.cursor()                             #cursor executes sql comands
+        self.cursor = self.connection.cursor()                          #cursor executes sql comands
 
     def _createInsertSQLQuery(self, table: str, categories: str, values: list[str]) -> str:
         query = "INSERT INTO "+table+" ("+categories+") VALUES ("

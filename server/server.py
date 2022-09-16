@@ -13,18 +13,18 @@ from weakref import ref
 class Database:
     
     def __init__(self):
-        self.con = sqlite3.connect("Grocery_Store_Database.db")  #Conection to database
-        self.cur = self.con.cursor()                             #cursor executes sql comands
+        self.connection = sqlite3.connect("Grocery_Store_Database.db")  #Conection to database
+        self.cursor = self.connection.cursor()                             #cursor executes sql comands
 
     #Adds a product to the database
     def AddProductToDatabase(self, name: str, store: str, price: str, category: int) -> bool:
-        res = self.cur.execute("SELECT MAX(Product_ID) FROM Product")
-        ID = res.fetchone()[0]
+        result = self.cursor.execute("SELECT MAX(Product_ID) FROM Product")
+        ID = result.fetchone()[0]
         if (ID is None): ID = 0
         else: ID += 1
         query = "INSERT INTO Product (Category_ID, Product_ID, Product_Name, Store_ID, Price) VALUES ('"+str(category)+"', '"+str(ID)+"', '"+name+"', '"+str(store)+"', '"+price+"')"
         try: 
-            self.cur.execute(query)
+            self.cursor.execute(query)
             self.CommitToDatabase()
             return True
         except:
@@ -35,7 +35,7 @@ class Database:
     def AddUserToDatabase(self, email: str, mobile_nr: int, name: str = "TestName", password: str = "Password", date_of_birth: int = 19900101, city: str = "Karlstad", country: str = "Sweden", status: int = 0) -> bool:
         print("INSERT INTO Register (Name, Email, Password, Mobile_Number,  Date_of_Birth, City, Country, Logged_in_Status) VALUES ('"+name+"', '"+email+"', '"+password+"', '"+str(mobile_nr)+"', '"+str(date_of_birth)+"', '"+city+"', '"+country+"', '"+str(status)+"')")
         try:
-            self.cur.execute("INSERT INTO Register (Name, Email, Password, Mobile_Number,  Date_of_Birth, City, Country, Logged_in_Status) VALUES ('"+name+"', '"+email+"', '"+password+"', '"+str(mobile_nr)+"', '"+str(date_of_birth)+"', '"+city+"', '"+country+"', '"+str(status)+"')")
+            self.cursor.execute("INSERT INTO Register (Name, Email, Password, Mobile_Number,  Date_of_Birth, City, Country, Logged_in_Status) VALUES ('"+name+"', '"+email+"', '"+password+"', '"+str(mobile_nr)+"', '"+str(date_of_birth)+"', '"+city+"', '"+country+"', '"+str(status)+"')")
             return True
         except:
             print("Unable to add user")
@@ -43,7 +43,7 @@ class Database:
     
     def AddStoreToDatabase(self, ID: int, name: str) -> bool:
         try: 
-            self.cur.execute("INSERT INTO Store VALUES ('"+str(ID)+"', '"+name+"')")
+            self.cursor.execute("INSERT INTO Store VALUES ('"+str(ID)+"', '"+name+"')")
             return True
         except:
             print("Unable to add store")
@@ -51,7 +51,7 @@ class Database:
     
     def AddCategoryToDatabase(self, ID: int, name: str) -> bool:
         try: 
-            self.cur.execute("INSERT INTO Category VALUES ('"+str(ID)+"', '"+name+"')")
+            self.cursor.execute("INSERT INTO Category VALUES ('"+str(ID)+"', '"+name+"')")
             return True
         except:
             print("Unable to add category")
@@ -61,10 +61,11 @@ class Database:
     def Loggin(self, email: str, password: str) -> bool:
         print("TODO: Loggin")
         try:
-            self.res = self.cur.execute("SELECT Password FROM Register WHERE email = '"+ email +"'")
+            res = self.cursor.execute("SELECT Password FROM Register WHERE email = '"+ email +"'")
+            temp = res.fetchone()[0]
         except:
             print("Unable to run query")
-        temp = self.res.fetchone()[0]
+            return False
         if (temp == password): 
             return True 
         else:
@@ -72,7 +73,7 @@ class Database:
     
     #Save all new changes to the database. 
     def CommitToDatabase(self):
-        self.con.commit()
+        self.connection.commit()
     
     
     
@@ -87,7 +88,7 @@ class Database:
        for i in range(input_nr): self.AddProductToDatabase(name = "Product"+str(i), store=i, price="10"+str(i), category=0)
         
     def Close(self):
-        self.con.close()
+        self.connection.close()
 
 database = Database()
 database.FillDatabase()

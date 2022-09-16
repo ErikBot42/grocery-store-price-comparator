@@ -46,23 +46,32 @@ class Database:
         ) 
         try:
             self.cursor.execute(query)
-            #self.cursor.execute("INSERT INTO Register (Name, Email, Password, Mobile_Number,  Date_of_Birth, City, Country, Logged_in_Status) VALUES ('"+name+"', '"+email+"', '"+password+"', '"+str(mobile_nr)+"', '"+str(date_of_birth)+"', '"+city+"', '"+country+"', '"+str(status)+"')")
             return True
         except:
             print("Unable to add user")
             return False
     
     def addStoreToDatabase(self, ID: int, name: str) -> bool:
+        query = self._createInsertSQLQuery(
+            "Store",
+            ("Store_ID, Store_Name"),
+            [str(ID), name]
+        )
         try: 
-            self.cursor.execute("INSERT INTO Store VALUES ('"+str(ID)+"', '"+name+"')")
+            self.cursor.execute(query)
             return True
         except:
             print("Unable to add store")
             return False
     
     def addCategoryToDatabase(self, ID: int, name: str) -> bool:
+        query = self._createInsertSQLQuery(
+            "Category",
+            "Category_ID, Category_Name",
+            [str(ID), name]
+        )
         try: 
-            self.cursor.execute("INSERT INTO Category VALUES ('"+str(ID)+"', '"+name+"')")
+            self.cursor.execute(query)
             return True
         except:
             print("Unable to add category")
@@ -104,7 +113,7 @@ class Database:
         self.connection.close()
 
 database = Database()
-database.fillDatabase(1)
+database.fillDatabase(2)
 database._createInsertSQLQuery("TableName", "Item1, item2, item3", ["value1", "value2", "value3"])
 database.commitToDatabase()
 database.Close()

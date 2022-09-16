@@ -18,11 +18,11 @@ class Database:
 
     #Adds a product to the database
     def AddProductToDatabase(self, name: str, store: str, price: str, category: int) -> bool:
-        res = self.cur.execute("SELECT MAX(Product_ID) FROM Product")
-        ID = res.fetchone()[0]
-        if (ID is None): ID = 0
-        else: ID += 1
-        query = "INSERT INTO Product (Category_ID, Product_ID, Product_Name, Store_ID, Price) VALUES ('"+str(category)+"', '"+str(ID)+"', '"+name+"', '"+str(store)+"', '"+price+"')"
+        #res = self.cur.execute("SELECT MAX(Product_ID) FROM Product")
+        #ID = res.fetchone()[0]
+        #if (ID is None): ID = 0
+        #else: ID += 1
+        query = "INSERT INTO Product (Category_ID, Product_Name, Store_ID, Price) VALUES ('"+str(category)+"', '"+name+"', '"+str(store)+"', '"+price+"')"
         try: 
             self.cur.execute(query)
             self.CommitToDatabase()
@@ -82,7 +82,11 @@ class Database:
     
     def FillDatabase(self,input_nr: int = 5):
        for i in range(input_nr): self.AddUserToDatabase(email = "test"+str(i)+"@email.com", mobile_nr = i+1, name = "User"+str(i))
-       for i in range(input_nr): self.AddStoreToDatabase(ID = i, name = "Store"+str(i))
+       #for i in range(input_nr): self.AddStoreToDatabase(ID = i, name = "Store"+str(i))
+       self.AddStoreToDatabase(ID = i, name = "LIDL")
+       self.AddStoreToDatabase(ID = i, name = "COOP")
+       self.AddStoreToDatabase(ID = i, name = "ICA")
+       self.AddStoreToDatabase(ID = i, name = "WILLYS")
        for i in range(input_nr): self.AddCategoryToDatabase(ID = i, name = "Category"+str(i))
        for i in range(input_nr): self.AddProductToDatabase(name = "Product"+str(i), store=i, price="10"+str(i), category=0)
         

@@ -149,21 +149,19 @@ def ica_parse(soup: BeautifulSoup) -> list[product.Product]:
         offers = soup_find_all(offer_group, "div", "offer-category__item")
         for offer_el in offers:
             product_list.append(product.Product(
-                category=category,
-                description=soup_find_str(offer_el, "p", "offer-type__product-info"),
-                name=soup_find_str(offer_el, "h2", "offer-type__product-name splash-bg icon-store-pseudo"), 
-                price=(soup_find_str(offer_el, "div", "product-price__price-value")\
-               + " " + soup_find_str(offer_el, "div", "product-price__decimal")\
-               + " " + soup_find_str(offer_el, "div", "product-price__unit-item benefit-more-info")).strip(),
-                store=product.Store.ICA,
+                category     =  category,
+                description  =  soup_find_str(offer_el,                  "p",    "offer-type__product-info"),
+                image_url    = soup_find_attr(offer_el, "data-original", "img",  "lazy"),
+                name         =  soup_find_str(offer_el,                  "h2",   "offer-type__product-name splash-bg icon-store-pseudo"), 
+                price        = (soup_find_str(offer_el,                  "div",  "product-price__price-value")\
+                        + " " + soup_find_str(offer_el,                  "div",  "product-price__decimal")\
+                        + " " + soup_find_str(offer_el,                  "div",  "product-price__unit-item benefit-more-info")).strip(),
+                store        =  product.Store.ICA,
                 ))
     return product_list
 
 def willys_parse(soup: BeautifulSoup) -> list[product.Product]:
-    #print(soup.prettify())
-    #<div class="Productstyles__StyledProduct-sc-16nua0l-0 aRuiG" itemscope="" itemtype="https://schema.org/Product">
     offers = soup_find_all(soup, "div", "Productstyles__StyledProduct-sc-16nua0l-0 aRuiG")
-    #print(elements)
     product_list: list[product.Product] = []
     for offer_el in offers:
         price_el = soup_find(offer_el, "div", "PriceLabelstyles__StyledProductPrice-sc-koui33-0 dCxjnV") # "yellow" price

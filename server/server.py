@@ -103,6 +103,14 @@ class Database:
             return True 
         else:
             return False
+
+    def addFavoriteStore(self, user_ID: int, store_ID: int) -> bool:
+        query = self._createInsertSQLQuery(
+        "Favourite_Store",
+        "User_ID, Store_ID",
+        [str(user_ID), str(store_ID)]
+        ) 
+        return self._runInsertSQLQuerry(query)
     
     #Save all new changes to the database. 
     def commitToDatabase(self):
@@ -128,6 +136,7 @@ class Database:
         for i in range(input_nr): self.addShopingList(list_name="List" + str(i))
         for i in range(input_nr): self.addShopingListOwner(user_ID=i,list_ID=i)
         for i in range(input_nr): self.addShopingListItem(list_ID=i, product_ID=i, amount=i)
+        for i in range(input_nr): self.addFavoriteStore(user_ID=i, store_ID=min(i+1, 4))
 
 
     def droppAllData(self): #Använd endast för att rensa databasen vid testning
@@ -149,7 +158,7 @@ class Database:
 
 database = Database()
 database.fillDatabase()
-database.droppAllData()
+#database.droppAllData()
 database.commitToDatabase()
 database.Close()
 

@@ -34,15 +34,15 @@ class Product:
             amount: str = "",
             modifier: str = "",
             ):
+        self.amount = amount
+        self.category = category
+        self.description = description
+        self.image_url = image_url
+        self.modifier = modifier
         self.name = name
         self.price = price
-        self.description = description
-        self.category = category
-        self.image_url = image_url
         #self.product_url = product_url
         self.store = store
-        self.amount = amount
-        self.modifier = modifier
 
     def __str__(self):
         return self.name + ": (" + self.price + ") at " + str(self.store) + " " + self.description

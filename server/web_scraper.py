@@ -69,8 +69,12 @@ def soup_find(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None, kind: 
         case _:
             return None
 
-def soup_find_all(soup: BeautifulSoup | bs4.Tag, kind: str, class_tag: str) -> list[bs4.Tag | bs4.NavigableString]:
-    return soup.find_all(kind, class_=class_tag)
+def soup_find_all(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString, kind: str, class_tag: str) -> list[bs4.Tag | bs4.NavigableString]:
+    match soup:
+        case bs4.NavigableString():
+            return []
+        case _:
+            return soup.find_all(kind, class_=class_tag)
 
 # get arbitrary attribute safetly
 def soup_get_attr(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None, attribute: str) -> str:
@@ -113,60 +117,46 @@ def lidl_parse(soup: BeautifulSoup) -> list[product.Product]:
     product_list: list[product.Product] = []
     for offer_el in offers:
         product_list.append(product.Product(
-            name        = soup_find_str( offer_el,        "h3",   "ret-o-card__headline"), 
-            price       = soup_find_str( offer_el,        "span", "lidl-m-pricebox__price"), 
-            image_url   = soup_find_attr(offer_el, "src", "img",  "nuc-m-picture__image nuc-a-image"),
-            modifier    = soup_find_str( offer_el,        "div",  "lidl-m-pricebox__highlight"),
             amount      = soup_find_str( offer_el,        "div",  "lidl-m-pricebox__basic-quantity"),
             description = soup_find_str( offer_el,        "span", "lidl-m-pricebox__discount-prefix"),
+            image_url   = soup_find_attr(offer_el, "src", "img",  "nuc-m-picture__image nuc-a-image"),
+            modifier    = soup_find_str( offer_el,        "div",  "lidl-m-pricebox__highlight"),
+            name        = soup_find_str( offer_el,        "h3",   "ret-o-card__headline"), 
+            price       = soup_find_str( offer_el,        "span", "lidl-m-pricebox__price"), 
             store       = product.Store.LIDL,
             ))
     return product_list
 
 # Parse Coop offers from html
+# TODO: test & improve
 def coop_parse(soup: BeautifulSoup) -> list[product.Product]:
     offers: list[bs4.Tag | bs4.NavigableString] = soup.find_all("article", class_ = "ItemTeaser")
     product_list: list[product.Product] = []
     for offer_el in offers:
-        price = clean_join(" ", soup_safe_strs(soup_find(offer_el, "span", "Splash-content")))
-        price_el: str = " ".join(remove_whitespace_elements(list(offer_el.find("span", class_ = "Splash-content").strings)))
-        description: str = " ".join(remove_whitespace_elements(list(offer_el.find("p", class_ = "ItemTeaser-description").strings)));
         product_list.append(product.Product(
-            name        = soup_find_str(offer_el, "h3", "ItemTeaser-heading"), 
-            price       = price_el, 
+            description = soup_find_strs_joined(offer_el, " ", "p",    "ItemTeaser-description"),
+            name        = soup_find_str(offer_el,              "h3",   "ItemTeaser-heading"), 
+            price       = soup_find_strs_joined(offer_el, " ", "span", "Splash-content"),
             store       = product.Store.COOP,
-            description = description))
+            ))
     return product_list
 
 def ica_parse(soup: BeautifulSoup) -> list[product.Product]:
-    #<section class="offer-category details open">
-    offer_groups: list[BeautifulSoup] = soup.find_all("section", class_ = "offer-category details open")
+    offer_groups: list[bs4.Tag | bs4.NavigableString] = soup_find_all(soup, "section", "offer-category details open")
     product_list: list[product.Product] = []
     for offer_group in offer_groups:
-        header_soup = offer_group.find("header", class_ = "offer-category__header summary active")
-        category: str = soup_get_str(header_soup)
-        offers = offer_group.find_all("div", class_="offer-category__item")
-        print("category:", category, "offers:", len(offers))
+        category: str = soup_find_str(offer_group, "header", "offer-category__header summary active")
+        offers = soup_find_all(offer_group, "div", "offer-category__item")
         for offer_el in offers:
-            title: str = soup_get_str(offer_el.find("h2", class_="offer-type__product-name splash-bg icon-store-pseudo"))
-            description: str = soup_get_str(offer_el.find("p", class_="offer-type__product-info"))
-            price: str = soup_get_str(offer_el.find("div", class_="product-price__price-value"))\
-            + " " +      soup_get_str(offer_el.find("div", class_="product-price__decimal"))\
-            + " " +      soup_get_str(offer_el.find("div", class_="product-price__unit-item benefit-more-info"))
-            price = price.strip()
-            #print(offer.prettify())
-            #exit()
-
-            print("    title:", title)
-            print("    description:", description)
-            print("    price:", price)
             product_list.append(product.Product(
-                name=title, 
-                price=price, 
+                category=category,
+                description=soup_find_str(offer_el, "p", "offer-type__product-info"),
+                name=soup_find_str(offer_el, "h2", "offer-type__product-name splash-bg icon-store-pseudo"), 
+                price=(soup_find_str(offer_el, "div", "product-price__price-value")\
+               + " " + soup_find_str(offer_el, "div", "product-price__decimal")\
+               + " " + soup_find_str(offer_el, "div", "product-price__unit-item benefit-more-info")).strip(),
                 store=product.Store.ICA,
-                description=description,
-                category=category))
-
+                ))
     return product_list
 
 def willys_parse(soup: BeautifulSoup) -> list[product.Product]:
@@ -262,9 +252,10 @@ def get_willys_html(url: str) -> str:
 #willys_parse(soup)
 
 #soup = address_to_soup("https://www.ica.se/butiker/maxi/orebro/maxi-ica-stormarknad-universitetet-orebro-15088/erbjudanden/")
-#print(ica_parse(soup))
-soup = address_to_soup("https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/")
-output = (coop_parse(soup))
+soup = address_to_soup("https://www.ica.se/butiker/maxi/karlstad/maxi-ica-stormarknad-karlstad-11010/erbjudanden/")
+output = (ica_parse(soup))
+#soup = address_to_soup("https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/")
+#output = (coop_parse(soup))
 #soup = address_to_soup("https://www.lidl.se/veckans-erbjudanden")
 #output = (lidl_parse(soup))
 

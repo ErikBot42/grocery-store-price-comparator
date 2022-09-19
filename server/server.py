@@ -156,9 +156,4 @@ class Database:
             print("Avbryter")
 
 
-database = Database()
-database.fillDatabase()
-#database.droppAllData()
-database.commitToDatabase()
-database.Close()
 

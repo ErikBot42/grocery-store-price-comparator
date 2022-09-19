@@ -1,8 +1,7 @@
-import colorama
-import product
+import time
+#import typing
 
 import requests
-import re
 
 from bs4 import BeautifulSoup
 import bs4
@@ -15,9 +14,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from typing import AnyStr, Iterable
-import typing
+#import colorama
 
-import time
+from server import Database
+import product
+import re
 
 #does this string contain amount, eg "Ca 200g", or not, eg "Klass 1"
 def isAmount(amount_str: str) -> bool:
@@ -132,7 +133,6 @@ def lidl_parse(soup: BeautifulSoup) -> list[product.Product]:
     return product_list
 
 # Parse Coop offers from html
-# TODO: test & improve
 def coop_parse(soup: BeautifulSoup) -> list[product.Product]:
     offers: list[bs4.Tag | bs4.NavigableString] = soup.find_all("article", class_ = "ItemTeaser")
     product_list: list[product.Product] = []
@@ -146,6 +146,7 @@ def coop_parse(soup: BeautifulSoup) -> list[product.Product]:
             ))
     return product_list
 
+# Parse Ica offers from html
 def ica_parse(soup: BeautifulSoup) -> list[product.Product]:
     offer_groups: list[bs4.Tag | bs4.NavigableString] = soup_find_all(soup, "section", "offer-category details open")
     product_list: list[product.Product] = []
@@ -165,6 +166,7 @@ def ica_parse(soup: BeautifulSoup) -> list[product.Product]:
                 ))
     return product_list
 
+# Parse Willys offers from html
 def willys_parse(soup: BeautifulSoup) -> list[product.Product]:
     offers = soup_find_all(soup, "div", "Productstyles__StyledProduct-sc-16nua0l-0 aRuiG")
     product_list: list[product.Product] = []
@@ -217,32 +219,28 @@ def get_willys_html(url: str) -> str:
     else:
         return ""
 
-#willys_html: str = get_willys_html("https://www.willys.se/erbjudanden/butik?StoreID=2117")
-#cached_willys_html = open("willys.html", "r") 
-#print(willys_html)
-#exit(0)
-#willys_html: str = cached_willys_html.read()
-#soup: BeautifulSoup = BeautifulSoup(willys_html, "html.parser")
-#output = (willys_parse(soup))
+def request_all() -> list[product.Product]:
+    product_list: list[product.Product] = []
+    willys_html: str = get_willys_html("https://www.willys.se/erbjudanden/butik?StoreID=2117")
+    soup: BeautifulSoup = html_to_soup(willys_html)
+    product_list += willys_parse(soup)
+    soup = address_to_soup("https://www.ica.se/butiker/maxi/karlstad/maxi-ica-stormarknad-karlstad-11010/erbjudanden/")
+    product_list += ica_parse(soup)
+    soup = address_to_soup("https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/")
+    product_list += coop_parse(soup)
+    soup = address_to_soup("https://www.lidl.se/veckans-erbjudanden")
+    product_list += lidl_parse(soup)
+    return product_list
 
+def add_all_to_database(data: Database):
+    product_list = request_all()
+    
+    for product in product_list:
+        product.print()
+        data.addProductToDatabase(
+                name=product.name, 
+                store=str(product.store), 
+                price=product.price, 
+                category=-1)
 
-#print(BeautifulSoup(page_source, "html.parser").prettify())
-
-#<button data-testid="load-more-btn" class="Buttonstyles__StyledButton-sc-1g4oxwr-0 dLUxJp LoadMore__LoadMoreBtn-sc-16fjaj7-3 bnbvpm" type="button">Visa alla</button>
-
-
-#soup = address_to_soup("https://www.willys.se/erbjudanden/butik?StoreID=2117")
-#output = willys_parse(soup)
-
-#soup = address_to_soup("https://www.ica.se/butiker/maxi/orebro/maxi-ica-stormarknad-universitetet-orebro-15088/erbjudanden/")
-#soup = address_to_soup("https://www.ica.se/butiker/maxi/karlstad/maxi-ica-stormarknad-karlstad-11010/erbjudanden/")
-#output = (ica_parse(soup))
-soup = address_to_soup("https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/")
-output = (coop_parse(soup))
-#soup = address_to_soup("https://www.lidl.se/veckans-erbjudanden")
-#output = (lidl_parse(soup))
-
-for el in output:
-    el.print()
-    print()
 

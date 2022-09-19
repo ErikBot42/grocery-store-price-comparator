@@ -20,7 +20,7 @@ import typing
 import time
 
 #does this string contain amount, eg "Ca 200g", or not, eg "Klass 1"
-def is_amount(amount_str: str) -> bool:
+def isAmount(amount_str: str) -> bool:
     #TODO: implement
     return True
 
@@ -29,7 +29,7 @@ def remove_whitespace_elements(original: Iterable[str]) -> list[str]:
     return [el.strip() for el in original if len(el.strip()) != 0]
 
 def clean_join(separator: str, strings: Iterable[str]) -> str:
-    return separator.join(remove_whitespace_elements(strings))
+    return (separator.join(remove_whitespace_elements(strings))).strip()
 
 def filter_price_string(price_string: str) -> str:
     return re.sub(r"[^\d.,]*", "", price_string.strip())
@@ -106,10 +106,14 @@ def soup_find_strs_joined(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | 
     el: BeautifulSoup | bs4.Tag | bs4.NavigableString | None = soup_find(soup, kind, class_tag)
     return clean_join(separator, soup_safe_strs(el))
 
+def html_to_soup(content: str | bytes) -> BeautifulSoup:
+    return BeautifulSoup(content, "html.parser")
+
 # make request from http address and return soup object
 def address_to_soup(address: str) -> BeautifulSoup:
     content: bytes = safe_request(address)
-    return BeautifulSoup(content, "html.parser")
+    return html_to_soup(content)
+
 
 # Parse Lidl offers from html
 def lidl_parse(soup: BeautifulSoup) -> list[product.Product]:
@@ -134,9 +138,10 @@ def coop_parse(soup: BeautifulSoup) -> list[product.Product]:
     product_list: list[product.Product] = []
     for offer_el in offers:
         product_list.append(product.Product(
-            description = soup_find_strs_joined(offer_el, " ", "p",    "ItemTeaser-description"),
-            name        = soup_find_str(offer_el,              "h3",   "ItemTeaser-heading"), 
-            price       = soup_find_strs_joined(offer_el, " ", "span", "Splash-content"),
+            description = soup_find_strs_joined(offer_el,  " ",  "p",    "ItemTeaser-description"),
+            image_url   = soup_find_attr(offer_el,        "src", "img",  "u-posAbsoluteCenter"),
+            name        = soup_find_str(offer_el,                "h3",   "ItemTeaser-heading"), 
+            price       = soup_find_strs_joined(offer_el,   " ", "span", "Splash-content"),
             store       = product.Store.COOP,
             ))
     return product_list
@@ -150,12 +155,12 @@ def ica_parse(soup: BeautifulSoup) -> list[product.Product]:
         for offer_el in offers:
             product_list.append(product.Product(
                 category     =  category,
-                description  =  soup_find_str(offer_el,                  "p",    "offer-type__product-info"),
-                image_url    = soup_find_attr(offer_el, "data-original", "img",  "lazy"),
-                name         =  soup_find_str(offer_el,                  "h2",   "offer-type__product-name splash-bg icon-store-pseudo"), 
-                price        = (soup_find_str(offer_el,                  "div",  "product-price__price-value")\
-                        + " " + soup_find_str(offer_el,                  "div",  "product-price__decimal")\
-                        + " " + soup_find_str(offer_el,                  "div",  "product-price__unit-item benefit-more-info")).strip(),
+                description  =  soup_find_str(offer_el,                  "p",   "offer-type__product-info"),
+                image_url    = soup_find_attr(offer_el, "data-original", "img", "lazy"),
+                name         =  soup_find_str(offer_el,                  "h2",  "offer-type__product-name splash-bg icon-store-pseudo"), 
+                price        = (soup_find_str(offer_el,                  "div", "product-price__price-value")\
+                        + " " + soup_find_str(offer_el,                  "div", "product-price__decimal")\
+                        + " " + soup_find_str(offer_el,                  "div", "product-price__unit-item benefit-more-info")).strip(),
                 store        =  product.Store.ICA,
                 ))
     return product_list
@@ -164,38 +169,18 @@ def willys_parse(soup: BeautifulSoup) -> list[product.Product]:
     offers = soup_find_all(soup, "div", "Productstyles__StyledProduct-sc-16nua0l-0 aRuiG")
     product_list: list[product.Product] = []
     for offer_el in offers:
-        price_el = soup_find(offer_el, "div", "PriceLabelstyles__StyledProductPrice-sc-koui33-0 dCxjnV") # "yellow" price
-        if price_el == None: # "red" price
-            price_el = soup_find(offer_el, "div", "PriceLabelstyles__StyledProductPriceTextWrapper-sc-koui33-1 fHVyJs")
-        if price_el == None:
+        price: str = soup_find_strs_joined(offer_el, " ", "div", "PriceLabelstyles__StyledProductPrice-sc-koui33-0 dCxjnV") # "yellow" price
+        if price == "": # "red" price
+            price = soup_find_strs_joined(offer_el, " ", "div", "PriceLabelstyles__StyledProductPriceTextWrapper-sc-koui33-1 fHVyJs")
+        if price == "":
             assert False
-        price: str = " ".join(remove_whitespace_elements(price_el.strings))
-        price_modifier_el = soup_find(offer_el, "div", "Productstyles__StyledProductSavePrice-sc-16nua0l-13 iyjqpG")
-        price_modifier: str = ""
-        if price_modifier_el!=None:
-            price_modifier = " ".join(remove_whitespace_elements(price_modifier_el.strings))
-
-        final_price_str = price_modifier + " " + price
-        print("price:", final_price_str)
-
-        name_el = soup_find(offer_el, "div", "Productstyles__StyledProductName-sc-16nua0l-5 dqhhbm")
-        if name_el == None:
-            assert False
-        name = " ".join(remove_whitespace_elements(name_el.strings))
-        print("name:", name)
-
-        description_el = soup_find(offer_el, "div", "Productstyles__StyledProductManufacturer-sc-16nua0l-6 ksPmCk")
-        if description_el == None:
-            assert False
-        description = " ".join(remove_whitespace_elements(description_el.strings))
-        print("description:", description)
         product_list.append(product.Product(
-            name=name, 
-            price=price, 
-            store=product.Store.WILLYS,
-            description=description))
-        print()
-
+            description = soup_find_strs_joined(offer_el, " ", "div", "Productstyles__StyledProductManufacturer-sc-16nua0l-6 ksPmCk"),
+            modifier    = soup_find_strs_joined(offer_el, " ", "div", "Productstyles__StyledProductSavePrice-sc-16nua0l-13 iyjqpG"),
+            name        = soup_find_strs_joined(offer_el, " ", "div", "Productstyles__StyledProductName-sc-16nua0l-5 dqhhbm"), 
+            price       = price, 
+            store       = product.Store.WILLYS,
+            ))
     return product_list
 
 
@@ -238,7 +223,7 @@ def get_willys_html(url: str) -> str:
 #exit(0)
 #willys_html: str = cached_willys_html.read()
 #soup: BeautifulSoup = BeautifulSoup(willys_html, "html.parser")
-#print(willys_parse(soup))
+#output = (willys_parse(soup))
 
 
 #print(BeautifulSoup(page_source, "html.parser").prettify())
@@ -247,13 +232,13 @@ def get_willys_html(url: str) -> str:
 
 
 #soup = address_to_soup("https://www.willys.se/erbjudanden/butik?StoreID=2117")
-#willys_parse(soup)
+#output = willys_parse(soup)
 
 #soup = address_to_soup("https://www.ica.se/butiker/maxi/orebro/maxi-ica-stormarknad-universitetet-orebro-15088/erbjudanden/")
-soup = address_to_soup("https://www.ica.se/butiker/maxi/karlstad/maxi-ica-stormarknad-karlstad-11010/erbjudanden/")
-output = (ica_parse(soup))
-#soup = address_to_soup("https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/")
-#output = (coop_parse(soup))
+#soup = address_to_soup("https://www.ica.se/butiker/maxi/karlstad/maxi-ica-stormarknad-karlstad-11010/erbjudanden/")
+#output = (ica_parse(soup))
+soup = address_to_soup("https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/")
+output = (coop_parse(soup))
 #soup = address_to_soup("https://www.lidl.se/veckans-erbjudanden")
 #output = (lidl_parse(soup))
 

@@ -13,6 +13,9 @@ serverPort = 8080
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
         assert self.command == "GET"
+        attrs = vars(self)
+        for item in attrs.items():
+            print("%s: %s" % item)
 
         self.send_response(200)
         self.send_header("Content-type", "text/html")
@@ -36,6 +39,12 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_header("Location", "/adminview.html")
         self.end_headers()
 
+        #print all request data
+        attrs = vars(self)
+        
+        for item in attrs.items():
+            print("%s: %s\n\n" % item)
+        attrs.items()
 
         form = cgi.FieldStorage(
             fp=self.rfile,

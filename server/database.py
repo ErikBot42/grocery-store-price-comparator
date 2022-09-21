@@ -202,18 +202,87 @@ class Database:
 
     def uppdateDatabase(self):
         self.droppAllData(run = True)
+        self.cursor.execute("DROP TABLE Category")
+        self.cursor.execute("DROP TABLE Favourite_Products")
+        self.cursor.execute("DROP TABLE List")
+        self.cursor.execute("DROP TABLE List_Items")
+        self.cursor.execute("DROP TABLE List_owner")
+        self.cursor.execute("DROP TABLE Login")
         self.cursor.execute("DROP TABLE Product")
+        self.cursor.execute("DROP TABLE Register")
+        self.cursor.execute("DROP TABLE Store")
+
+
+        self.cursor.execute("""CREATE TABLE "Favourite_Products" (
+                "User_ID"	INTEGER,
+                "Product_ID"	INTEGER,
+                FOREIGN KEY("Product_ID") REFERENCES "Product"("Product_ID"),
+                FOREIGN KEY("User_ID") REFERENCES "Register"("User_ID"),
+                PRIMARY KEY("User_ID","Product_ID")
+            )
+        """)
+        self.cursor.execute("""CREATE TABLE "List" (
+                "List_name"	INTEGER NOT NULL,
+                "List_ID"	INTEGER NOT NULL,
+                PRIMARY KEY("List_ID")
+            )
+        """)
+        self.cursor.execute("""CREATE TABLE "List_Items" (
+                "LIst_ID"	INTEGER NOT NULL,
+                "Product_ID"	INTEGER NOT NULL,
+                "Amount"	INTEGER NOT NULL,
+                PRIMARY KEY("LIst_ID","Product_ID")
+            )
+        """)
+        self.cursor.execute("""CREATE TABLE "List_owner" (
+                "User_ID"	INTEGER NOT NULL,
+                "List_ID"	INTEGER NOT NULL,
+                PRIMARY KEY("User_ID","List_ID"),
+                FOREIGN KEY("List_ID") REFERENCES "List"("List_ID")
+            )
+        """)
+        self.cursor.execute("""CREATE TABLE "Login" (
+                "Day"	INTEGER,
+                "Time"	INTEGER,
+                "User_ID"	INTEGER,
+                PRIMARY KEY("User_ID"),
+                FOREIGN KEY("User_ID") REFERENCES "Register"("User_ID")
+            )
+        """)
         self.cursor.execute("""CREATE TABLE "Product" (
             "Category_ID"	INTEGER,
             "Product_ID"	INTEGER,
-            "Product_Name"	TEXT,
-            "Store_ID"	INTEGER,
-            "Price"	TEXT,
-            "URL"	TEXT,
+@ -211,7 +257,32 @@ class Database:
             PRIMARY KEY("Product_ID"),
             FOREIGN KEY("Store_ID") REFERENCES "Store"("Store_ID"),
             FOREIGN KEY("Category_ID") REFERENCES "Category"("Category_ID")
-        )""")
+                       )
+        """)
+        self.cursor.execute("""CREATE TABLE "Category" (
+            "Category_ID"	INTEGER,
+            "Category_Name"	INTEGER NOT NULL UNIQUE,
+            PRIMARY KEY("Category_ID")
+            )""")
+        self.cursor.execute("""CREATE TABLE "Register" (
+                "User_ID"	INTEGER,
+                "Email"	TEXT NOT NULL UNIQUE,
+                "Password"	TEXT NOT NULL,
+                "Mobile_Number"	INTEGER UNIQUE,
+                "Date_of_Birth"	INTEGER,
+                "City"	TEXT,
+                "Country"	TEXT,
+                "Logged_in_Status"	INTEGER,
+                "Name"	TEXT,
+                PRIMARY KEY("User_ID")
+            )
+        """)
+        self.cursor.execute("""CREATE TABLE "Store" (
+                "Store_ID"	INTEGER,
+                "Store_Name"	TEXT,
+                PRIMARY KEY("Store_ID")
+            )
+        """)
+        self.Close()
 
 
 

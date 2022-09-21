@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Grocery store price comparator"
+rootProject.name = "GroceryStoreOffers"
 include ':app'

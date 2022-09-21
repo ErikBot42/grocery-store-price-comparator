@@ -16,7 +16,7 @@ from selenium.webdriver.common.by import By
 from typing import AnyStr, Iterable
 #import colorama
 
-from server import Database
+from database import Database
 import product
 import re
 
@@ -192,28 +192,40 @@ def get_willys_html(url: str) -> str:
     driver.get(url)
     get_url = driver.current_url
     wait.until(EC.url_to_be(url))
-    fac = 0.5
+    webdriver.ActionChains(driver).scroll_by_amount(0, 100000).perform()
 
-    # Decline cookies
-    time.sleep(3) # a bit of a hack
-    cookie_buttons = driver.find_elements(By.XPATH, "//body/div/div/div/div/div/div/div/button")
-    decline_cookies_button = next((x for x in cookie_buttons if x.text == "Avvisa alla"),None)
-    webdriver.ActionChains(driver).click(decline_cookies_button).perform()
+    time.sleep(1) # wait for site to start loading
 
-    # repeatedly scroll down, click "view more" and wait
-    for _ in range(100): #TODO: 100
-        webdriver.ActionChains(driver).scroll_by_amount(0, 100000).perform()
-        time.sleep(2*fac) # a bit of a hack
+    # repeatedly scroll down, click "view more"/"decline cookies"
+    max_wait = 3
+    current_wait = 0
+    iteration_time = 1
+    click_pointer_move_duration_ms: int = 0
+    while True:
+        action_driver = webdriver.ActionChains(driver, click_pointer_move_duration_ms)
+        cookie_buttons = driver.find_elements(By.XPATH, "//body/div/div/div/div/div/div/div/button")
+        decline_cookies_button = next((x for x in cookie_buttons if x.text == "Avvisa alla"),None)
+        if decline_cookies_button != None:
+            print("decline cookies")
+            action_driver.click(decline_cookies_button).perform()
         view_more_button_candidates = driver.find_elements(By.XPATH, "//main//section//button")
         view_more_button = next((x for x in view_more_button_candidates if x.text == "Visa alla"),None)
-        if view_more_button == None:
-            break # no more view more => done
-        webdriver.ActionChains(driver).click(view_more_button).perform()
-        time.sleep(3*fac) # a bit of a hack
-
+        if view_more_button != None:
+            print("view more")
+            action_driver.click(view_more_button).perform()
+        if decline_cookies_button == None and view_more_button == None:
+            current_wait += iteration_time
+        else:
+            current_wait = 0
+        if current_wait>=max_wait:
+            break
+        print("scrolling")
+        webdriver.ActionChains(driver).scroll_by_amount(0, 1000).perform()
+        #time.sleep(iteration_time) # a bit of a hack
+        print("current wait:", current_wait)
     page_source: str = driver.page_source
-    print(BeautifulSoup(page_source, "html.parser").prettify())
-    #driver.quit()
+    #print(BeautifulSoup(page_source, "html.parser").prettify())
+    driver.quit()
     if get_url == url:
         return page_source
     else:
@@ -221,20 +233,29 @@ def get_willys_html(url: str) -> str:
 
 def request_all() -> list[product.Product]:
     product_list: list[product.Product] = []
+    print("get willys html")
     willys_html: str = get_willys_html("https://www.willys.se/erbjudanden/butik?StoreID=2117")
+    print("parse willys html")
     soup: BeautifulSoup = html_to_soup(willys_html)
     product_list += willys_parse(soup)
+    print("get ica html")
     soup = address_to_soup("https://www.ica.se/butiker/maxi/karlstad/maxi-ica-stormarknad-karlstad-11010/erbjudanden/")
+    print("parse ica html")
     product_list += ica_parse(soup)
+    print("get coop html")
     soup = address_to_soup("https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/")
+    print("parse coop html")
     product_list += coop_parse(soup)
+    print("get lidl html")
     soup = address_to_soup("https://www.lidl.se/veckans-erbjudanden")
+    print("parse lidl html")
     product_list += lidl_parse(soup)
     return product_list
 
 def add_all_to_database(data: Database):
     product_list = request_all()
     
+    print("add products to database")
     for product in product_list:
         product.print()
         data.addProductToDatabase(

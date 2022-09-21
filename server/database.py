@@ -125,7 +125,7 @@ class Database:
         return self._runInsertSQLQuerry(query)
 
     def getProductDataForAdmin(self):
-        query = "SELECT Product_Name, Price, Store_Name FROM Product JOIN Store USING (Store_ID)"
+        query = "SELECT Product_Name, Price, Store_Name, Store_ID FROM Product JOIN Store USING (Store_ID)"
         result = self._runSQLQueryWhitResults(query)
         return result
     
@@ -260,23 +260,9 @@ class Database:
                 FOREIGN KEY("Store_ID") REFERENCES "Store"("Store_ID")
             )
         """)
+        
         self.cursor.execute("""CREATE TABLE "Category" (
             "Category_ID"	INTEGER,
-<<<<<<< Updated upstream
-=======
-            "Product_ID"	INTEGER,
-            "Product_Name"	TEXT,
-            "Store_ID"	INTEGER,
-            "Price"	TEXT,
-            "URL"	TEXT,
-            PRIMARY KEY("Product_ID"),
-            FOREIGN KEY("Store_ID") REFERENCES "Store"("Store_ID"),
-            FOREIGN KEY("Category_ID") REFERENCES "Category"("Category_ID")
-            )
-        """)
-        self.cursor.execute("""CREATE TABLE "Category" (
-            "Category_ID"	INTEGER,
->>>>>>> Stashed changes
             "Category_Name"	INTEGER NOT NULL UNIQUE,
             PRIMARY KEY("Category_ID")
             )""")
@@ -299,11 +285,6 @@ class Database:
                 PRIMARY KEY("Store_ID")
             )
         """)
-<<<<<<< Updated upstream
-        self.close()
-
-=======
-        self.Close()
->>>>>>> Stashed changes
+        self.commitToDatabase()
 
 

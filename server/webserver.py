@@ -58,7 +58,7 @@ class MyServer(BaseHTTPRequestHandler):
         print(f"Name is {form['name'].value}")
         print(f"Name is {form['price'].value}")
         print(f"Name is {form['store'].value}\n\n")
-        database.addProductToDatabase(name = form['name'].value, price=form['price'].value, store=form['price'].value, category=0, url="")
+        database.addProductToDatabase(name = form['name'].value, price=form['price'].value, store=form['store'].value, category=0, url="")
         database.commitToDatabase()
         #print form.getvalue("foo")
         #print form.getvalue("bin")

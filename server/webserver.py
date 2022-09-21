@@ -2,6 +2,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from database import Database
 #import time
+import cgi
 
 database = Database()
 hostName = "localhost"
@@ -32,7 +33,27 @@ class MyServer(BaseHTTPRequestHandler):
     #TODO
     def do_POST(self):
         assert self.command == "POST"
-        pass
+        self.send_response(200) 
+        self.send_header("Location", "/adminview.html")
+        self.end_headers()
+
+        #print all request data
+        attrs = vars(self)
+        for item in attrs.items():
+            print("%s: %s" % item)
+
+        form = cgi.FieldStorage(
+            fp=self.rfile,
+            headers=self.headers,
+            environ={'REQUEST_METHOD': 'POST'}
+        )
+        print("--------FORM----------")
+        attrs = vars(form)
+        for item in attrs.items():
+            print("%s: %s" % item)
+        #print form.getvalue("foo")
+        #print form.getvalue("bin")
+        #self.wfile.write("<html><body><h1>POST Request Received!</h1></body></html>")
 
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), MyServer)

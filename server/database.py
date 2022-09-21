@@ -1,5 +1,6 @@
 #Databasen "Grocery_Store_Database.db" måste ligga i samma map för att kunna köra koden(Ligger på Discord)
 
+from pickle import NONE
 import sqlite3
 
 class Database:
@@ -9,7 +10,7 @@ class Database:
         self.cursor = self.connection.cursor()                          #cursor executes sql comands
 
     def _createInsertSQLQuery(self, table: str, categories: str, values: list[str]) -> str:
-        query = "INSERT INTO "+table+" ("+categories+") VALUES ("
+        query = f"INSERT INTO {table} ({categories}) VALUES ("
         query = query + "'" + values.pop(0) + "'"
         for value in values:
             value = value.replace("'", "")
@@ -26,11 +27,20 @@ class Database:
             print('\tSQLite error: %s' % (' '.join(er.args)))
             return False
 
+    def _runSQLQueryWhitResults(self, query: str) -> list:
+        try:
+            result = self.cursor.execute(query)
+            return result.fetchall()
+        except sqlite3.Error as er:
+            print("\nCould not run querry: " + query)
+            print('\tSQLite error: %s' % (' '.join(er.args)))
+            return NONE
+
     def addProductToDatabase(self, name: str, store: str, price: str, category: int) -> bool:
         query = self._createInsertSQLQuery(
             "Product", 
             "Category_ID, Product_Name, Store_ID, Price", 
-            [str(category), name, str(store), price]
+            [str(category), name, str(self.getStoreID(store)), price]
             )
         return self._runInsertSQLQuerry(query)
     
@@ -111,6 +121,16 @@ class Database:
         [str(user_ID), str(store_ID)]
         ) 
         return self._runInsertSQLQuerry(query)
+
+    def getProductDataForAdmin(self):
+        query = "SELECT Product_Name, Price, Store_Name FROM Product JOIN Store USING (Store_ID)"
+        result = self._runSQLQueryWhitResults(query)
+        return result
+    
+    def getStoreID(self, store_name: str) -> int:
+        result = self.cursor.execute(f"SELECT Store_ID FROM Store WHERE Store_Name == '{store_name}'").fetchone()
+        if result is None: return -1
+        else: return result[0]
     
     #Save all new changes to the database. 
     def commitToDatabase(self):

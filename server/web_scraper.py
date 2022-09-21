@@ -194,7 +194,7 @@ def get_willys_html(url: str) -> str:
     wait.until(EC.url_to_be(url))
     webdriver.ActionChains(driver).scroll_by_amount(0, 100000).perform()
 
-    time.sleep(1) # wait for site to start loading
+    time.sleep(4) # wait for site to start loading
 
     # repeatedly scroll down, click "view more"/"decline cookies"
     max_wait = 3

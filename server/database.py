@@ -36,11 +36,11 @@ class Database:
             print('\tSQLite error: %s' % (' '.join(er.args)))
             return NONE
 
-    def addProductToDatabase(self, name: str, store: str, price: str, category: int) -> bool:
+    def addProductToDatabase(self, name: str, store: str, price: str, category: int, url: str = "") -> bool:
         query = self._createInsertSQLQuery(
             "Product", 
-            "Category_ID, Product_Name, Store_ID, Price", 
-            [str(category), name, str(self.getStoreID(store)), price]
+            "Category_ID, Product_Name, Store_ID, Price, URL", 
+            [str(category), name, str(self.getStoreID(store)), price, url]
             )
         return self._runInsertSQLQuerry(query)
     
@@ -150,6 +150,7 @@ class Database:
                             
                         </tr>"""
         return temp
+
     
     #Save all new changes to the database. 
     def commitToDatabase(self):

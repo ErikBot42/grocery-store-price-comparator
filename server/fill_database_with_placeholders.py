@@ -6,4 +6,4 @@ database.fillDatabase()
 #database.droppAllData()
 
 database.commitToDatabase()
-database.Close()
+database.close()

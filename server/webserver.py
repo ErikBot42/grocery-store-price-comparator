@@ -23,7 +23,7 @@ class MyServer(BaseHTTPRequestHandler):
             file_content = file_content.replace("ADD_THINGS_HERE", 
             " ".join([database.getProductString(l) for l in database.getProductDataForAdmin()]))
             print(database.getProductDataForAdmin())
-            exit(0)
+            #exit(0)
         print(file_content)
         self.wfile.write(bytes(file_content,'utf-8'))
         #self.wfile.write(bytes("<html><head><title>https://pythonbasics.org</title></head>", "utf-8"))

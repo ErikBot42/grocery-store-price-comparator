@@ -3,16 +3,16 @@
 
 import sys
 
-
-if len(sys.argv) == 1:
-    print(
-"""
+usage: str = """
 Avaliable args (can be combined):
 --scrape: scrapes to database
 --clear-database: remove everything from database
 --add-placeholder: add placeholders to database
+--webserver: start the webserver
 """
-            )
+
+if len(sys.argv) == 1:
+    print(usage)
 
 from database import Database
 for command in sys.argv[1:]:
@@ -36,6 +36,12 @@ for command in sys.argv[1:]:
             database.fillDatabase()
             database.commitToDatabase()
             database.close()
+        case "--webserver":
+            import webserver
+            webserver.startWebServer()
+        case _:
+            print(usage)
+            
 
 
 

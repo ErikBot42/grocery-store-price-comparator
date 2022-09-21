@@ -2,8 +2,7 @@ from database import Database
 
 
 database = Database()
+database.recreateDatabase()
 database.fillDatabase()
-#database.droppAllData()
-
 database.commitToDatabase()
 database.close()

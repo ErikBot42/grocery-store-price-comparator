@@ -262,6 +262,21 @@ class Database:
         """)
         self.cursor.execute("""CREATE TABLE "Category" (
             "Category_ID"	INTEGER,
+<<<<<<< Updated upstream
+=======
+            "Product_ID"	INTEGER,
+            "Product_Name"	TEXT,
+            "Store_ID"	INTEGER,
+            "Price"	TEXT,
+            "URL"	TEXT,
+            PRIMARY KEY("Product_ID"),
+            FOREIGN KEY("Store_ID") REFERENCES "Store"("Store_ID"),
+            FOREIGN KEY("Category_ID") REFERENCES "Category"("Category_ID")
+            )
+        """)
+        self.cursor.execute("""CREATE TABLE "Category" (
+            "Category_ID"	INTEGER,
+>>>>>>> Stashed changes
             "Category_Name"	INTEGER NOT NULL UNIQUE,
             PRIMARY KEY("Category_ID")
             )""")
@@ -284,7 +299,11 @@ class Database:
                 PRIMARY KEY("Store_ID")
             )
         """)
+<<<<<<< Updated upstream
         self.close()
 
+=======
+        self.Close()
+>>>>>>> Stashed changes
 
 

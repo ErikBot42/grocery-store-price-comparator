@@ -159,7 +159,6 @@ class Database:
         self.connection.commit()
      
     def close(self):
-        self.commitToDatabase()
         self.connection.close()
     
     

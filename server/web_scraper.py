@@ -261,7 +261,8 @@ def add_all_to_database(data: Database):
         data.addProductToDatabase(
                 name=product.name, 
                 store=str(product.store), 
-                price=product.price, 
-                category=-1)
+                price=product.modifier + " " + product.price, 
+                category=-1,
+                url=product.image_url)
 
 

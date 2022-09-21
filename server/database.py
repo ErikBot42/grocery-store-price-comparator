@@ -5,6 +5,8 @@ import sqlite3
 
 class Database:
     
+    def __del__(self):
+        self.close()
     def __init__(self):
         self.connection = sqlite3.connect("Grocery_Store_Database.db")  #Conection to database
         self.cursor = self.connection.cursor()                          #cursor executes sql comands
@@ -34,7 +36,7 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run querry: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
-            return NONE
+            return []
 
     def addProductToDatabase(self, name: str, store: str, price: str, category: int, url: str = "") -> bool:
         query = self._createInsertSQLQuery(
@@ -156,7 +158,7 @@ class Database:
     def commitToDatabase(self):
         self.connection.commit()
      
-    def Close(self):
+    def close(self):
         self.connection.close()
     
     
@@ -171,7 +173,7 @@ class Database:
         self.addStoreToDatabase(ID = 3, name = "ICA")
         self.addStoreToDatabase(ID = 4, name = "WILLYS")
         for i in range(input_nr): self.addCategoryToDatabase(ID = i, name = "Category"+str(i))
-        for i in range(input_nr): self.addProductToDatabase(name = "Product"+str(i), store=i, price="10"+str(i), category=0)
+        for i in range(input_nr): self.addProductToDatabase(name = "Product"+str(i), store=str(i), price="10"+str(i), category=0)
         for i in range(input_nr): self.addFavoriteProduct(user_ID=i, product_ID=i)
         for i in range(input_nr): self.addShopingList(list_name="List" + str(i))
         for i in range(input_nr): self.addShopingListOwner(user_ID=i,list_ID=i)

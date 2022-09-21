@@ -131,6 +131,25 @@ class Database:
         result = self.cursor.execute(f"SELECT Store_ID FROM Store WHERE Store_Name == '{store_name}'").fetchone()
         if result is None: return -1
         else: return result[0]
+
+    def getProductString(self, values: list):
+        temp = f"""<tr>
+                            <td>{values[0]}</td>
+                            <td>{values[1]}</td>
+                            <td>{values[2]}</td>
+                            <td>
+                                <ul class="">
+                                    <li class="list-inline-item">
+                                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i>Edit</button>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
+                                    </li>
+                                </ul>
+                            </td>
+                            
+                        </tr>"""
+        return temp
     
     #Save all new changes to the database. 
     def commitToDatabase(self):

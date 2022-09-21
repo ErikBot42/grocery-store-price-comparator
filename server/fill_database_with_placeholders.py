@@ -2,8 +2,8 @@ from database import Database
 
 
 database = Database()
+#database.recreateDatabase()
+database.droppAllData()
 database.fillDatabase()
-#database.droppAllData()
-
 database.commitToDatabase()
-database.Close()
+database.close()

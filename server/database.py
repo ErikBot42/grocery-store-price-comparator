@@ -173,7 +173,7 @@ class Database:
         self.addStoreToDatabase(ID = 3, name = "ICA")
         self.addStoreToDatabase(ID = 4, name = "WILLYS")
         for i in range(input_nr): self.addCategoryToDatabase(ID = i, name = "Category"+str(i))
-        for i in range(input_nr): self.addProductToDatabase(name = "Product"+str(i), store=str(i), price="10"+str(i), category=0, url = "")
+        for i in range(input_nr): self.addProductToDatabase(name = "Product"+str(i), store="ICA", price="10"+str(i), category=0, url = "")
         for i in range(input_nr): self.addFavoriteProduct(user_ID=i, product_ID=i)
         for i in range(input_nr): self.addShopingList(list_name="List" + str(i))
         for i in range(input_nr): self.addShopingListOwner(user_ID=i,list_ID=i)
@@ -199,7 +199,7 @@ class Database:
             print("Avbryter")
 
 
-    def uppdateDatabase(self):
+    def recreateDatabase(self):
         self.droppAllData(run = True)
         self.cursor.execute("DROP TABLE Category")
         self.cursor.execute("DROP TABLE Favourite_Products")
@@ -249,13 +249,16 @@ class Database:
             )
         """)
         self.cursor.execute("""CREATE TABLE "Product" (
-            "Category_ID"	INTEGER,
-            "Product_ID"	INTEGER,
-@ -211,7 +257,32 @@ class Database:
-            PRIMARY KEY("Product_ID"),
-            FOREIGN KEY("Store_ID") REFERENCES "Store"("Store_ID"),
-            FOREIGN KEY("Category_ID") REFERENCES "Category"("Category_ID")
-                       )
+                "Category_ID"	INTEGER,
+                "Product_ID"	INTEGER,
+                "Product_Name"	TEXT,
+                "Store_ID"	INTEGER,
+                "Price"	TEXT,
+                "URL"	TEXT,
+                PRIMARY KEY("Product_ID"),
+                FOREIGN KEY("Category_ID") REFERENCES "Category"("Category_ID"),
+                FOREIGN KEY("Store_ID") REFERENCES "Store"("Store_ID")
+            )
         """)
         self.cursor.execute("""CREATE TABLE "Category" (
             "Category_ID"	INTEGER,
@@ -281,7 +284,7 @@ class Database:
                 PRIMARY KEY("Store_ID")
             )
         """)
-        self.Close()
+        self.close()
 
 
 

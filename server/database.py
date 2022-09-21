@@ -157,6 +157,7 @@ class Database:
         self.connection.commit()
      
     def Close(self):
+        self.commitToDatabase()
         self.connection.close()
     
     
@@ -179,8 +180,9 @@ class Database:
         for i in range(input_nr): self.addFavoriteStore(user_ID=i, store_ID=min(i+1, 4))
 
 
-    def droppAllData(self): #Använd endast för att rensa databasen vid testning
-        result = input("\n\nVARNING!\nÄr du säker på att du tömma databasen? y/n\n")
+    def droppAllData(self, run: bool = False): #Använd endast för att rensa databasen vid testning
+        if (not run): result = input("\n\nVARNING!\nÄr du säker på att du tömma databasen? y/n\n")
+        else: result = 'y'
         if (result == 'y'):
             print("Raderar all data...")
             self.cursor.execute("DELETE FROM List_Items WHERE '1' == '1'")
@@ -194,6 +196,22 @@ class Database:
             self.cursor.execute("DELETE FROM List_Items WHERE '1' == '1'")
         else:
             print("Avbryter")
+
+
+    def uppdateDatabase(self):
+        self.droppAllData(run = True)
+        self.cursor.execute("DROP TABLE Product")
+        self.cursor.execute("""CREATE TABLE "Product" (
+            "Category_ID"	INTEGER,
+            "Product_ID"	INTEGER,
+            "Product_Name"	TEXT,
+            "Store_ID"	INTEGER,
+            "Price"	TEXT,
+            "URL"	TEXT,
+            PRIMARY KEY("Product_ID"),
+            FOREIGN KEY("Store_ID") REFERENCES "Store"("Store_ID"),
+            FOREIGN KEY("Category_ID") REFERENCES "Category"("Category_ID")
+        )""")
 
 
 

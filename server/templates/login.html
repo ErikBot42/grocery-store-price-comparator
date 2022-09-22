@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="sv">
+    <head>
+        <meta charset="utf-8">
+        <title>Admin</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body class="container ">
+        <main class="jumbotron text-center mb-5 pb-4">
+            <h1 class="display-3">Admin Login</h1>
+            <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded">                          
+                <div class="form-group">
+                    <label for="nickname">Username:</label>
+                    <input type="text" class="form-control" id="Username" name="Username" required placeholder="Username">
+                    <label for="nickname">Password:</label>
+                    <input type="password" class="form-control" id="Password" name="Password" required>
+                </div>
+                <div class="text-right">                 
+                    <button type="submit" class="btn btn-primary mr-0">Login</button>                  
+                </div>
+            </form>
+        </main>
+        <script src="login.js"></script>
+    </body>
+</html>

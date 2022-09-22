@@ -105,13 +105,22 @@ class Database:
 
 
     def logginValidation(self, email: str, password: str) -> bool:
+        query = f"SELECT Password FROM Register WHERE email == '{email}'"
+        print(f"query is: {query}")
         try:
-            res = self.cursor.execute("SELECT Password FROM Register WHERE email = '"+ email +"'")
-            temp = res.fetchone()[0]
-        except:
-            print("Unable to run query")
+            res = self.cursor.execute(query)
+            res = res.fetchone()
+            print(f"Result from query: {res}")
+            if (res is not None):
+                res = res[0]
+            else: 
+                res = ""
+        except sqlite3.Error as er:
+            print("\nCould not run querry: " + query)
+            print('\tSQLite error: %s' % (' '.join(er.args)))
             return False
-        if (temp == password): 
+        print(f"Password from database is {res}, input is {password}")
+        if (res == password): 
             return True 
         else:
             return False

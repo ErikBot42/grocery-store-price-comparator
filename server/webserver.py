@@ -6,7 +6,6 @@ from database import Database
 import cgi
 import requests
 
-database = Database()
 hostName = "localhost"
 serverPort = 8080
 
@@ -23,6 +22,7 @@ class MyServer(BaseHTTPRequestHandler):
         file = open("website/"+self.path)
         file_content = file.read()
         if self.path == "/adminview.html":
+            database = Database()
             file_content = file_content.replace("ADD_THINGS_HERE", 
             " ".join([database.getProductString(l) for l in database.getProductDataForAdmin()]))
             #print(database.getProductDataForAdmin())

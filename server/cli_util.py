@@ -12,11 +12,12 @@ Avaliable args (can be combined):
 --recreate: regenerate (empty) database
 --flask-server: run flask server
 """
-
+from threading import Thread
 if len(sys.argv) == 1:
     print(usage)
 
 from database import Database
+threads: list[Thread] = []
 for command in sys.argv[1:]:
     match command:
         case "--scrape":
@@ -44,14 +45,19 @@ for command in sys.argv[1:]:
             database.close()
         case "--webserver":
             import webserver
-            webserver.startWebServer()
+            threads.append(Thread(target=webserver.startWebServer, args=()))
         case "--flask-server":
             import flask_server
-            flask_server.runServer()
+            threads.append(Thread(target=flask_server.runServer, args=()))
         case _:
             print(usage)
             exit(0)
-            
+
+for thread in threads:
+    thread.start()
+
+for thread in threads:
+    thread.join()
 
 
 

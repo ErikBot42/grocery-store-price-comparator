@@ -14,5 +14,8 @@ def debug():
     print(text)
     return "received" 
    
+def runServer():
+    app.run(host="0.0.0.0")
 if __name__ == "__main__":
-  app.run(host="0.0.0.0")
+    runServer()
+

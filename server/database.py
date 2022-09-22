@@ -125,7 +125,7 @@ class Database:
         return self._runInsertSQLQuerry(query)
 
     def getProductDataForAdmin(self):
-        query = "SELECT Product_Name, Price, Store_Name FROM Product JOIN Store USING (Store_ID)"
+        query = "SELECT Product_Name, Price, Store_Name, Store_ID FROM Product JOIN Store USING (Store_ID)"
         result = self._runSQLQueryWhitResults(query)
         return result
     
@@ -284,6 +284,6 @@ class Database:
                 PRIMARY KEY("Store_ID")
             )
         """)
-
+        self.commitToDatabase()
 
 

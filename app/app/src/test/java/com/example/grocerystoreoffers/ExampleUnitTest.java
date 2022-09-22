@@ -1,4 +1,4 @@
-package com.example.grocerystorepricecomparator;
+package com.example.grocerystoreoffers;
 
 import org.junit.Test;
 

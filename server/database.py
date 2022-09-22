@@ -204,6 +204,10 @@ class Database:
             self.cursor.execute("DELETE FROM Store WHERE '1' == '1'")
             self.cursor.execute("DELETE FROM Category WHERE '1' == '1'")
             self.cursor.execute("DELETE FROM List_Items WHERE '1' == '1'")
+            self.addStoreToDatabase(ID = 1, name = "LIDL")
+            self.addStoreToDatabase(ID = 2, name = "COOP")
+            self.addStoreToDatabase(ID = 3, name = "ICA")
+            self.addStoreToDatabase(ID = 4, name = "WILLYS")
         else:
             print("Avbryter")
 
@@ -293,6 +297,10 @@ class Database:
                 PRIMARY KEY("Store_ID")
             )
         """)
+        self.addStoreToDatabase(ID = 1, name = "LIDL")
+        self.addStoreToDatabase(ID = 2, name = "COOP")
+        self.addStoreToDatabase(ID = 3, name = "ICA")
+        self.addStoreToDatabase(ID = 4, name = "WILLYS")
         self.commitToDatabase()
 
 

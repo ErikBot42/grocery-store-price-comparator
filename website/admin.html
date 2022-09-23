@@ -12,6 +12,7 @@
             <h1 class="display-3">Admin Login</h1>
             <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded">                          
                 <div class="form-group">
+                    <h1 id="wrongLogin"></h1>
                     <label for="nickname">Username:</label>
                     <input type="text" class="form-control" id="Username" name="Username" required placeholder="Username">
                     <label for="nickname">Password:</label>
@@ -22,6 +23,26 @@
                 </div>
             </form>
         </main>
-        <script src="login.js"></script>
+        <script >window.addEventListener('load', ()=>{
+            console.log('Page Loaded');
+            let button = document.querySelector("button");
+            let wrongLog = document.querySelector('#wrongLogin')
+            button.addEventListener('click',()=>{
+                console.log("Button Clicked");
+                let Username = document.querySelector('#Username');
+                let Password = document.querySelector('#Password');
+                console.log(Username.value + " " + Password.value)
+                event.preventDefault()
+                if(Username.value === 'admin' && Password.value === 'password'){
+                    console.log('Correct login')
+                    window.location.assign("adminview.html");
+                    wrongLog.textContent = ''
+                }else{
+                    
+                    wrongLog.textContent = 'Wrong Login'
+                }
+            })
+            
+        })</script>
     </body>
 </html>

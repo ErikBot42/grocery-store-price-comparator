@@ -43,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.settings:
                     replaceFragment(new SettingsFragment());
                     break;
+                case R.id.map:
+                    Intent intent = new Intent(this, MapsActivityRaw.class);
+                    startActivity(intent);
+                    break;
             }
 
             return true;

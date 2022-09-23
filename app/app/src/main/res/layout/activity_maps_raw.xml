@@ -22,4 +22,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MapsActivityRaw"
-    map:cameraZoom="10" />
+    map:cameraZoom="10" >
+
+    <Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="left|top"
+    android:text="@string/back_to_home"
+    android:padding="10dp"
+    android:layout_marginTop="20dp"
+    android:paddingLeft="10dp"/>
+
+</fragment>

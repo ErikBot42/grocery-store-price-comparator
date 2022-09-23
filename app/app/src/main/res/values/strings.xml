@@ -15,6 +15,6 @@
     <string name="your_name">Full Name</string>
     <string name="new_user">New user?</string>
     <string name="login_back">Back to login</string>
-    />
+    <string name="back_to_home">Back to home</string>
     <string name="remember">Remember me</string>
 </resources>

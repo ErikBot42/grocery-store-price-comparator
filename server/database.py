@@ -105,13 +105,22 @@ class Database:
 
 
     def logginValidation(self, email: str, password: str) -> bool:
+        query = f"SELECT Password FROM Register WHERE email == '{email}'"
+        print(f"query is: {query}")
         try:
-            res = self.cursor.execute("SELECT Password FROM Register WHERE email = '"+ email +"'")
-            temp = res.fetchone()[0]
-        except:
-            print("Unable to run query")
+            res = self.cursor.execute(query)
+            res = res.fetchone()
+            print(f"Result from query: {res}")
+            if (res is not None):
+                res = res[0]
+            else: 
+                res = ""
+        except sqlite3.Error as er:
+            print("\nCould not run querry: " + query)
+            print('\tSQLite error: %s' % (' '.join(er.args)))
             return False
-        if (temp == password): 
+        print(f"Password from database is {res}, input is {password}")
+        if (res == password): 
             return True 
         else:
             return False
@@ -195,6 +204,10 @@ class Database:
             self.cursor.execute("DELETE FROM Store WHERE '1' == '1'")
             self.cursor.execute("DELETE FROM Category WHERE '1' == '1'")
             self.cursor.execute("DELETE FROM List_Items WHERE '1' == '1'")
+            self.addStoreToDatabase(ID = 1, name = "LIDL")
+            self.addStoreToDatabase(ID = 2, name = "COOP")
+            self.addStoreToDatabase(ID = 3, name = "ICA")
+            self.addStoreToDatabase(ID = 4, name = "WILLYS")
         else:
             print("Avbryter")
 
@@ -260,7 +273,6 @@ class Database:
                 FOREIGN KEY("Store_ID") REFERENCES "Store"("Store_ID")
             )
         """)
-        
         self.cursor.execute("""CREATE TABLE "Category" (
             "Category_ID"	INTEGER,
             "Category_Name"	INTEGER NOT NULL UNIQUE,
@@ -285,6 +297,10 @@ class Database:
                 PRIMARY KEY("Store_ID")
             )
         """)
+        self.addStoreToDatabase(ID = 1, name = "LIDL")
+        self.addStoreToDatabase(ID = 2, name = "COOP")
+        self.addStoreToDatabase(ID = 3, name = "ICA")
+        self.addStoreToDatabase(ID = 4, name = "WILLYS")
         self.commitToDatabase()
 
 

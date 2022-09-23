@@ -6,7 +6,6 @@ from database import Database
 import cgi
 import requests
 
-database = Database()
 hostName = "localhost"
 serverPort = 8080
 
@@ -23,10 +22,12 @@ class MyServer(BaseHTTPRequestHandler):
         file = open("website/"+self.path)
         file_content = file.read()
         if self.path == "/adminview.html":
+            database = Database()
             file_content = file_content.replace("ADD_THINGS_HERE", 
             " ".join([database.getProductString(l) for l in database.getProductDataForAdmin()]))
-            print(database.getProductDataForAdmin())
-        print(file_content)
+            #print(database.getProductDataForAdmin())
+            #exit(0)
+        #print(file_content)
         self.wfile.write(bytes(file_content,'utf-8'))
         #self.wfile.write(bytes("<html><head><title>https://pythonbasics.org</title></head>", "utf-8"))
         #self.wfile.write(bytes("<p>Request: %s</p>" % self.path, "utf-8"))
@@ -34,10 +35,9 @@ class MyServer(BaseHTTPRequestHandler):
         #self.wfile.write(bytes("<p>This is an example web server.</p>", "utf-8"))
         #self.wfile.write(bytes("</body></html>", "utf-8"))
         
-    #TODO
     def do_POST(self):
         assert self.command == "POST"
-        self.send_response(200) 
+        self.send_response(301) 
         self.send_header("Location", "/adminview.html")
         self.end_headers()
 
@@ -45,7 +45,7 @@ class MyServer(BaseHTTPRequestHandler):
         attrs = vars(self)
         
         for item in attrs.items():
-            print("%s: %s\n\n" % item)
+            print("%s: %s" % item)
         attrs.items()
 
         form = cgi.FieldStorage(
@@ -60,11 +60,8 @@ class MyServer(BaseHTTPRequestHandler):
         print(f"Name is {form['store'].value}\n\n")
         database.addProductToDatabase(name = form['name'].value, price=form['price'].value, store=form['store'].value, category=0, url="")
         database.commitToDatabase()
-        #print form.getvalue("foo")
-        #print form.getvalue("bin")
-        #self.wfile.write("<html><body><h1>POST Request Received!</h1></body></html>")
 
-if __name__ == "__main__":        
+def startWebServer():
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
 
@@ -75,3 +72,6 @@ if __name__ == "__main__":
 
     webServer.server_close()
     print("Server stopped.")
+
+if __name__ == "__main__":        
+    startWebServer()

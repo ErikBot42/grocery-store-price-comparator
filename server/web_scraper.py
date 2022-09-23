@@ -1,7 +1,8 @@
 import time
 #import typing
-
 import requests
+import concurrent.futures
+
 
 from bs4 import BeautifulSoup
 import bs4
@@ -21,9 +22,9 @@ import product
 import re
 
 #does this string contain amount, eg "Ca 200g", or not, eg "Klass 1"
-def isAmount(amount_str: str) -> bool:
-    #TODO: implement
-    return True
+#def isAmount(amount_str: str) -> bool:
+#    #TODO: implement
+#    return True
 
 #remove surrounding whitespace and empty elements
 def remove_whitespace_elements(original: Iterable[str]) -> list[str]:
@@ -111,8 +112,9 @@ def html_to_soup(content: str | bytes) -> BeautifulSoup:
     return BeautifulSoup(content, "html.parser")
 
 # make request from http address and return soup object
-def address_to_soup(address: str) -> BeautifulSoup:
-    content: bytes = safe_request(address)
+def address_to_soup(url: str) -> BeautifulSoup:
+    print("get:", url)
+    content: bytes = safe_request(url)
     return html_to_soup(content)
 
 
@@ -233,23 +235,19 @@ def get_willys_html(url: str) -> str:
 
 def request_all() -> list[product.Product]:
     product_list: list[product.Product] = []
-    print("get willys html")
-    willys_html: str = get_willys_html("https://www.willys.se/erbjudanden/butik?StoreID=2117")
-    print("parse willys html")
-    soup: BeautifulSoup = html_to_soup(willys_html)
-    product_list += willys_parse(soup)
-    print("get ica html")
-    soup = address_to_soup("https://www.ica.se/butiker/maxi/karlstad/maxi-ica-stormarknad-karlstad-11010/erbjudanden/")
-    print("parse ica html")
-    product_list += ica_parse(soup)
-    print("get coop html")
-    soup = address_to_soup("https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/")
-    print("parse coop html")
-    product_list += coop_parse(soup)
-    print("get lidl html")
-    soup = address_to_soup("https://www.lidl.se/veckans-erbjudanden")
-    print("parse lidl html")
-    product_list += lidl_parse(soup)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        ica_future = executor.submit(address_to_soup, "https://www.ica.se/butiker/maxi/karlstad/maxi-ica-stormarknad-karlstad-11010/erbjudanden/")
+        coop_future = executor.submit(address_to_soup, "https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/")
+        lidl_future = executor.submit(address_to_soup, "https://www.lidl.se/veckans-erbjudanden")
+        willys_future = executor.submit(get_willys_html, "https://www.willys.se/erbjudanden/butik?StoreID=2117")
+        print("parse coop html")
+        product_list += coop_parse(coop_future.result())
+        print("parse ica html")
+        product_list += ica_parse(ica_future.result())
+        print("parse lidl html")
+        product_list += lidl_parse(lidl_future.result())
+        print("parse willys html")
+        product_list += willys_parse(html_to_soup(willys_future.result()))
     return product_list
 
 def add_all_to_database(data: Database):
@@ -257,12 +255,15 @@ def add_all_to_database(data: Database):
     
     print("add products to database")
     for product in product_list:
-        product.print()
-        data.addProductToDatabase(
-                name=product.name, 
-                store=str(product.store), 
-                price=product.modifier + " " + product.price, 
-                category=-1,
-                url=product.image_url)
+        if not data.addProductToDatabase(\
+                name=product.name,\
+                store=str(product.store),\
+                price=product.modifier + " " + product.price,\
+                category=-1,\
+                url=product.image_url):
+            print("Could not add product:")
+            product.print()
+    print("scraper done.")
+
 
 

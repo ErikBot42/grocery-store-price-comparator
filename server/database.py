@@ -1,6 +1,5 @@
 #Databasen "Grocery_Store_Database.db" måste ligga i samma map för att kunna köra koden(Ligger på Discord)
 
-from pickle import NONE
 import sqlite3
 
 class Database:
@@ -134,7 +133,7 @@ class Database:
         return self._runInsertSQLQuerry(query)
 
     def getProductDataForAdmin(self):
-        query = "SELECT Product_Name, Price, Store_Name, Store_ID FROM Product JOIN Store USING (Store_ID)"
+        query = "SELECT Product_Name, Price, Store_Name, Product_ID FROM Product JOIN Store USING (Store_ID)"
         result = self._runSQLQueryWhitResults(query)
         return result
 
@@ -147,6 +146,13 @@ class Database:
         result = self.cursor.execute(f"SELECT Store_ID FROM Store WHERE Store_Name == '{store_name}'").fetchone()
         if result is None: return -1
         else: return result[0]
+
+    def removeProduct(self, id):
+        query = f"DELETE FROM Product WHERE Product_ID == '?'"
+        data = [str(id)]
+        print(f"TODO: Handle exeptions in removeProduct")
+        self.cursor.execute(query, data)
+
 
     def getProductString(self, values: list):
         print("(***WARNING***)Function is no longer supported")

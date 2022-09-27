@@ -55,6 +55,14 @@ def logout():
         flash("You have been loged out", "info")
     return redirect(url_for("showHomePage"))
 
+@app.route("/remove/product/<id>", methods=["Post"])
+def removeProduct(id):
+    db = Database()
+    db.removeProduct(id)
+    db.commitToDatabase()
+    db.close()
+    return redirect(url_for("admin_products.html"))
+
 @app.route("/login/app", methods=["POST"])
 def appLogin():
     database = Database()

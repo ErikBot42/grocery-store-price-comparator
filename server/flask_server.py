@@ -1,28 +1,74 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, session, redirect, request, flash, jsonify
 from database import Database
+from datetime import timedelta
  
 # import request
 from flask import request
 app = Flask(__name__)
+app.secret_key = b".U,e-Xr))$I,/bK"
+app.permanent_session_lifetime = timedelta(days=1)
  
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def showHomePage():
-    return render_template("login.html")
- 
-@app.route("/debug", methods=["POST"])
-def debug():
-    text = request.form["sample"]
-    print(text)
-    return "received" 
-
-@app.route("/login/<name>/<password>")
-def addProduct(name, password):
-    database = Database()
-    print(f"INPUT: ({name}, {password})")
-    if (database.logginValidation(email = name, password = password) == True):
-        return f"Correct login"
+    if "user" in session:
+        return redirect(url_for("products"))
+    elif request.method == "POST":
+        db = Database()
+        flash(f"Logged in as: {request.form['Username']}", "info")
+        if db.logginValidation(email=request.form["Username"], password=request.form['Password']):
+            session["user"] = request.form["Username"]
+            session.permanent = True
+            db.close()
+            return redirect(url_for("products"))
+        else:
+            db.close()
+            return render_template("login.html")
     else: 
-        return f"Bad login({name}, {password})"
+        return render_template("login.html")
+ 
+@app.route("/admin/")
+@app.route("/products/")
+def products():
+    if "user" in session:
+        db = Database()
+        prod = db.getProductDataForAdmin()
+        db.close()
+        return render_template("admin_products.html", products=prod)
+    else:
+        return redirect(url_for("showHomePage"))
+
+
+@app.route("/users/")
+def users():
+    if "user" in session:
+        db = Database()
+        usr = db.getUserDataForAdmin()
+        db.close()
+        return render_template("admin_users.html", users=usr)
+    else:
+        return redirect(url_for("showHomePage"))
+
+@app.route("/logout/")
+def logout():
+    if "user" in session:
+        session.pop("user", None)
+        flash("You have been loged out", "info")
+    return redirect(url_for("showHomePage"))
+
+@app.route("/login/app", methods=["POST"])
+def appLogin():
+    database = Database()
+    data = request.json
+    print(f"INPUT: ({data['Username']}, {data['Password']})")
+    if (database.logginValidation(email = data['Username'], password = data['Password']) == True):
+        result = {'login': 'True'}
+    else:
+        result = {'login': 'False'}
+    return jsonify(result)
+
+@app.route("/debug/")
+def debug():
+    return render_template("debug.html")
    
 def runServer():
     app.run(host="0.0.0.0", debug=True)

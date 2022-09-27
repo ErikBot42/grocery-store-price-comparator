@@ -1,0 +1,26 @@
+{% extends 'admin_base.html' %}
+
+{% block title%}
+    DEBUG
+{% endblock %}
+
+{% block content%}
+    <h1>This is the debuging page</h1>
+    <script>
+        $.ajax({
+        type: "POST",
+        url: "http://127.0.0.1:5000/debug/",
+        data: JSON.stringify({ "userName": 'test0@email.com', "password" : 'Password' }),
+        contentType: "application/json",
+        success: function (result) {
+            document.write(result);
+        },
+        error: function (result, status) {
+            document.write(result);
+        }
+
+        });
+
+        xhr.send(data);
+    </script>
+{% endblock %}

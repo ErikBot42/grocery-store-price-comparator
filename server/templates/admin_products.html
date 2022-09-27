@@ -1,0 +1,149 @@
+{% extends 'admin_base.html'%}
+<!-- Definerar vilken fil vvi ärver från -->
+
+<!-- blocket titel sätter sidans titel i headern-->
+{% block title %}
+    Products
+{% endblock %}
+
+<!-- blocket content fyller ut sidans body -->
+{% block content %}
+<div class="container">
+    <div id="currListings">
+        <h2 class="text-primary d-flex justify-content-center">Current Listings</h2>
+        <table class="table  table-dark table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Store</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Lopar igenom alla produkter och lägger till en rad för varje -->
+                {% for item in products %}
+                    <tr>
+                        <td>{{item[0]}}</td>
+                        <td>{{item[1]}}</td>
+                        <td>{{item[2]}}</td>
+                        <td>
+                            <ul class="">
+                                <li class="list-inline-item">
+                                    <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i>Edit</button>
+                                </li>
+                                <li class="list-inline-item">
+                                    <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">New Product</button>
+    <div class="container mt-5">
+        <div class="modal" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">New Product</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="mb-3">
+                        
+                            <label class="form-label required" >Name</label>
+                            <input type="text" class="form-control" id="name">
+                        
+                            <label class="form-label required" >Price</label>
+                            <input type="text" class="form-control" id="price">
+                        
+                            <label class="form-label required" >Store</label>
+                            <input type="text" class="form-control mb-5" id="store" >
+                            <button type="submit" class="btn btn-primary" id="createButton" data-bs-toggle="modal" data-bs-target="#myModal">Create</button>
+                            <button type="reset" class="btn btn-dark" value="Reset">Reset</button>
+                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
+<script >window.addEventListener('load', ()=>{
+    console.log('Page Loaded')
+    let Table = document.querySelector('table')
+    let allDeleteButtons = document.querySelectorAll('.btn-danger')
+    let createButton = document.querySelector('#createButton')
+    let name = document.querySelector('#name')
+    let price = document.querySelector('#price')
+    let store = document.querySelector('#store')
+    for (let index = 0; index < allDeleteButtons.length; index++) {
+        allDeleteButtons[index].addEventListener('click', (e)=>{
+            console.log('Delete product')
+            allDeleteButtons[index].closest('tr').remove()
+        })
+        
+    }
+    createButton.addEventListener('click', ()=>{
+
+        console.log('Creating new Product')
+        event.preventDefault()
+        console.log('Name ' + name.value + ' Price ' + price.value + ' Store' + store.value)
+        createNewRow(name.value,price.value,store.value)
+        name.value = ''
+        price.value = ''
+        store.value = ''
+        
+    })
+
+    function createNewRow(name, price, store){
+        var row = Table.insertRow()
+        var cell = row.insertCell()
+        cell.innerHTML = name
+        var cell = row.insertCell()
+        cell.innerHTML = price
+        var cell = row.insertCell()
+        cell.innerHTML = store
+        var cell = row.insertCell()
+
+        const newUl = document.createElement('ul')
+        newUl.setAttribute('class', '')
+        cell.appendChild(newUl)
+
+        const newEditLi = document.createElement('li')
+        newUl.appendChild(newEditLi)
+        newEditLi.setAttribute('class', 'list-inline-item')
+        const newEditButton = document.createElement('button')
+        newEditLi.appendChild(newEditButton)
+        newEditButton.setAttribute('class', 'btn btn-success btn-sm rounded-0')
+        newEditButton.setAttribute('type', 'button')
+        newEditButton.setAttribute('data-toggle','tooltip')
+        newEditButton.setAttribute('data-placement', 'top')
+        newEditButton.setAttribute('title', 'edit')
+        newEditButton.textContent = 'Edit'
+
+        const newDeleteLi = document.createElement('li')
+        newUl.appendChild(newDeleteLi);
+        newDeleteLi.setAttribute('class', 'list-inline-item')
+        const newDeleteButton = document.createElement('button')
+        newDeleteLi.appendChild(newDeleteButton)
+        newDeleteButton.setAttribute('class', 'btn btn-danger btn-sm rounded-0')
+        newDeleteButton.setAttribute('type', 'button')
+        newDeleteButton.setAttribute('data-toggle','tooltip')
+        newDeleteButton.setAttribute('data-placement', 'top')
+        newDeleteButton.setAttribute('title', 'edit')
+        newDeleteButton.textContent = 'Delete'
+        newDeleteButton.addEventListener('click',()=>{
+        newDeleteButton.closest('tr').remove()
+        })
+    }
+})</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+
+{% endblock %}

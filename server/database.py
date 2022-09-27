@@ -137,6 +137,11 @@ class Database:
         query = "SELECT Product_Name, Price, Store_Name, Store_ID FROM Product JOIN Store USING (Store_ID)"
         result = self._runSQLQueryWhitResults(query)
         return result
+
+    def getUserDataForAdmin(self):
+        query = "SELECT User_id, Email, Password, Mobile_Number, Date_of_Birth, City, Name FROM Register"
+        result = self._runSQLQueryWhitResults(query)
+        return result
     
     def getStoreID(self, store_name: str) -> int:
         result = self.cursor.execute(f"SELECT Store_ID FROM Store WHERE Store_Name == '{store_name}'").fetchone()
@@ -144,6 +149,7 @@ class Database:
         else: return result[0]
 
     def getProductString(self, values: list):
+        print("(***WARNING***)Function is no longer supported")
         temp = f"""<tr>
                             <td>{values[0]}</td>
                             <td>{values[1]}</td>

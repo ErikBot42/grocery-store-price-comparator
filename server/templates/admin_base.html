@@ -36,23 +36,28 @@
                         </li>
                     {% endif %}
                 </ul>
-                <form method="POST" class="form-inline my-2 my-lg-0" action="/users/">
-                    <input class="form-control mr-sm-2" type="search" name="userSearch" id="userSearch" placeholder="User" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search User</button>
-                </form>
-                <form method="POST" class="form-inline my-2 my-lg-0" action="/products/">
-                    <input class="form-control mr-sm-2" type="search" name="productSearch" id="productSearch" placeholder="Product" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search Product</button>
-                </form>
+                {% if 'user' in session %}
+                    <form method="POST" class="form-inline my-2 my-lg-0" action="/users/">
+                        <input class="form-control mr-sm-2" type="search" name="userSearch" id="userSearch" placeholder="User" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search User</button>
+                    </form>
+                    <form method="POST" class="form-inline my-2 my-lg-0" action="/products/">
+                        <input class="form-control mr-sm-2" type="search" name="productSearch" id="productSearch" placeholder="Product" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search Product</button>
+                    </form>
+                {% endif %}
             </div>
         </nav>
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                {% for msg in messages %}
-                  <p>{{msg}}</p>
+                <ul class=flashes>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
                 {% endfor %}
+                </ul>
             {% endif %}
         {% endwith %}
+        
         {% block content%}
         {% endblock %}
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

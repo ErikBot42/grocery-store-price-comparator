@@ -188,11 +188,17 @@ class Database:
         """
         res = self.cursor.execute(query)
         return res.fetchall()
+
+    def getProductCategory(self, category_term: str):
+        query = """
+        
+        """
         
 
     def getProductString(self, values: list):
         print("(***WARNING***)Function is no longer supported")
-        temp = f"""<tr>
+        temp = f"""<h1>This method is no longer suposed to be used!</h1>
+                    <tr>
                             <td>{values[0]}</td>
                             <td>{values[1]}</td>
                             <td>{values[2]}</td>
@@ -209,7 +215,7 @@ class Database:
                             
                         </tr>"""
         return temp
-
+    
     
     #Save all new changes to the database. 
     def commitToDatabase(self):

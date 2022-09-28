@@ -27,22 +27,28 @@ def showHomePage():
         return render_template("login.html")
  
 @app.route("/admin/")
-@app.route("/products/")
+@app.route("/products/", methods=["GET", "POST"])
 def products():
     if "user" in session:
         db = Database()
-        prod = db.getProductDataForAdmin()
-        db.close()
+        if request.method == "POST":
+            prod = db.searchProduct(request.form["productSearch"])
+        else:
+            prod = db.getProductDataForAdmin()
+            db.close()
         return render_template("admin_products.html", products=prod)
     else:
         return redirect(url_for("showHomePage"))
 
 
-@app.route("/users/")
+@app.route("/users/", methods=["GET", "POST"])
 def users():
     if "user" in session:
         db = Database()
-        usr = db.getUserDataForAdmin()
+        if request.method == "POST":
+            usr = db.searchUser(request.form["userSearch"])
+        else:
+            usr = db.getUserDataForAdmin()
         db.close()
         return render_template("admin_users.html", users=usr)
     else:

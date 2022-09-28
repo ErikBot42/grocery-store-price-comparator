@@ -165,6 +165,30 @@ class Database:
         except sqlite3.Error:
             print("Error in removing product: TODO: HAndle error in removeProduct")
 
+    def searchProduct(self, search_term: str):
+        query = f"""SELECT Product_Name, Price, Store_Name, Product_ID 
+            FROM Product JOIN Store USING (Store_ID)
+            WHERE Product_Name LIKE '%{search_term}%' 
+            OR Price LIKE '%{search_term}%' 
+            OR Store_Name LIKE '%{search_term}%' 
+        """
+        res = self.cursor.execute(query)
+        return res.fetchall()
+
+    def searchUser(self, search_term: str):
+        query = f"""SELECT User_id, Email, Password, Mobile_Number, Date_of_Birth, City, Name 
+            FROM Register
+            WHERE User_id LIKE '%{search_term}%' 
+            OR Email LIKE '%{search_term}%' 
+            OR Password LIKE '%{search_term}%' 
+            OR Mobile_Number LIKE '%{search_term}%' 
+            OR Date_of_Birth LIKE '%{search_term}%' 
+            OR City LIKE '%{search_term}%' 
+            OR Name LIKE '%{search_term}%' 
+        """
+        res = self.cursor.execute(query)
+        return res.fetchall()
+        
 
     def getProductString(self, values: list):
         print("(***WARNING***)Function is no longer supported")
@@ -335,12 +359,3 @@ class Database:
         self.addStoreToDatabase(ID = 3, name = "ICA")
         self.addStoreToDatabase(ID = 4, name = "WILLYS")
         self.commitToDatabase()
-
-
-db = Database()
-db.recreateDatabase()
-db.fillDatabase()
-db.commitToDatabase()
-db.close()
-
-

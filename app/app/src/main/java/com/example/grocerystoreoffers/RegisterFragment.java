@@ -103,17 +103,19 @@ public class RegisterFragment extends Fragment {
 
         regBtn = view.findViewById(R.id.btn_register);
         Button backToLogin_btn = view.findViewById(R.id.btn_login);
-
         fullName = view.findViewById(R.id.et_name);
         password = view.findViewById(R.id.et_password);
         //TODO: Check if email is taken
         email = view.findViewById(R.id.et_email);
         rePassword = view.findViewById(R.id.et_repassword);
+        loadingProgress = view.findViewById(R.id.regProgressBar);
+
+        loadingProgress.setVisibility(View.INVISIBLE);
 
         regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                loadingProgress.setVisibility(View.VISIBLE);
                 //regBtn.setVisibility(View.INVISIBLE);
                 final String email1 = email.getText().toString();
                 final String password1 = password.getText().toString();
@@ -138,24 +140,6 @@ public class RegisterFragment extends Fragment {
                 }
             }
         });
-
-        /*
-        register_btn.setOnClickListener(view1 -> {
-            if(!validateEmail(email.getText().toString())){
-                printToast("Invalid email");
-            }else {
-                System.out.println("Email: " + email.getText().toString() + "\n");
-            }
-            System.out.println("Full Name: " + fullName.getText().toString() + "\n");
-            if(passwordSameCheck(password.getText().toString(),rePassword.getText().toString())) {
-                System.out.println("Password: " + password.getText().toString() + "\n");
-                System.out.println("RePassword: " + rePassword.getText().toString() + "\n");
-            }else{
-                printToast("Passwords does not match");
-            }
-        });
-
-         */
         // Change to login fragment
         backToLogin_btn.setOnClickListener(view1 -> {
             replaceFragment(new ProfileFragment());
@@ -166,7 +150,7 @@ public class RegisterFragment extends Fragment {
 
     private void CreateUserAccount(String email, String name, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -179,6 +163,7 @@ public class RegisterFragment extends Fragment {
                             user.put("Name", name);
                             user.put("Email", email);
                             user.put("Password", password);
+                            replaceFragment(new ProfileFragment());
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
 
                                 @Override
@@ -225,4 +210,6 @@ public class RegisterFragment extends Fragment {
         fragmentTransaction.replace(R.id.frame_layout,fragment);
         fragmentTransaction.commit();
     }
+
+
 }

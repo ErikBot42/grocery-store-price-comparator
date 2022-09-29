@@ -75,17 +75,6 @@ public class ProfileFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-        /*
-        if (username.getText().toString().equals("admin") && password.getText().toString().equals("admin")) {
-
-            System.out.println("Correct login\n");
-            System.out.println(username);
-            System.out.println(password);
-
-        } else {
-            System.out.println("Wrong input");
-        }
-        */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,15 +108,6 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
-        // Login
-        /*
-        login_btn.setOnClickListener(view1 -> {
-            //TODO: Check whether email is unused, if unused, prompt to register
-            System.out.println("Email: " + username.getText().toString() + "\n");
-            System.out.println("Password: " + password.getText().toString() + "\n");
-        });
-
-         */
 
         register_btn.setOnClickListener(view1 -> {
             System.out.println("Register button clicked from profFrag");
@@ -158,9 +138,9 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
-
                 if (task.isSuccessful()) {
                     printToast("CORRECT LOGIN");
+                    replaceFragment(new HomeFragment());
                     /*
                     loginProgress.setVisibility(View.INVISIBLE);
                     btnLogin.setVisibility(View.VISIBLE);

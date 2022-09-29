@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(new ProfileFragment());
                     break;
                 case R.id.settings:
-                    replaceFragment(new SettingsFragment());
+                    replaceFragment(new NearbyStoresFragment());
+                    //replaceFragment(new SettingsFragment());
                     break;
                 case R.id.map:
                     Intent intent = new Intent(this, MapsActivityRaw.class);

@@ -15,6 +15,7 @@
 package com.example.grocerystoreoffers;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -29,6 +30,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -65,6 +69,7 @@ public class MapsActivityRaw extends AppCompatActivity implements OnMapReadyCall
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_maps_raw);
 
+
         // Get the SupportMapFragment and register for the callback
         // when the map is ready for use.
         SupportMapFragment mapFragment =
@@ -73,6 +78,16 @@ public class MapsActivityRaw extends AppCompatActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
 
 
+
+
+    }
+
+    private void replaceFragment(Fragment fragment){
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout,fragment);
+        fragmentTransaction.commit();
     }
 
     /**
@@ -132,8 +147,5 @@ public class MapsActivityRaw extends AppCompatActivity implements OnMapReadyCall
             Toast.makeText(MapsActivityRaw.this, "Clicked location is " + markerName, Toast.LENGTH_SHORT).show();
             return false;
         });
-
-
     }
-
 }

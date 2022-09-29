@@ -1,10 +1,20 @@
-import email
 from flask import Flask, render_template, url_for, session, redirect, request, flash, jsonify
 from database import Database
 from datetime import timedelta
- 
-# import request
-from flask import request
+
+CATEGORIES = [
+    ["Vegetarian", [".*[vV]egetar.*"]], 
+    ["Vegan", [".*[vV]egan.*"]], 
+    ["Meat", [".*[kK]ött.*", ".*[fF]isk.*", ".*[kK]arré.*", ".*[kK]orv.*", ".*[fF]ilé.*", ".*[kK]yckling.*", ".*[kK]ebab.*", ".*[sS]alami.*"]], 
+    ["Fruit", [".*[fF]rukt.*", ".*[äÄ]pple.*", ".*[pP]äron.*", ".*[bB]anan.*", ".*[dD]ruvor.*", ".*[tT]omat.*", ".*[pP]aprika.*", ".*[sS]alad.*"]], 
+    ["Dairy", [".*[mM]jölk.*"]], 
+    ["Drink", [".*[lL]äsk", ".*[dD]rika.*"]], 
+    ["Sweets", [".*[gG]odis.*"]], 
+    ["Bread", [".*[bB]röd.*"]]
+    ]
+
+
+
 app = Flask(__name__)
 app.secret_key = b".U,e-Xr))$I,/bK"
 app.permanent_session_lifetime = timedelta(days=1)
@@ -83,6 +93,24 @@ def appLogin():
     else:
         result = {'login': 'False'}
     return jsonify(result)
+
+@app.route("/products/category/<category>", methods = ["GET"])
+def productCategory(category: str):
+    if "user" in session:
+        db = Database()
+        for cat in CATEGORIES:
+            if category == cat[0]:
+                print(f"#### Found match!: {category} matches {cat[0]}")
+                prod = db.getProductCategory(cat[1])
+                break
+        else:
+            print(f"#### Not a mach found for: {category}")
+            prod = db.getProductDataForAdmin()
+        db.close()
+        return render_template("admin_products.html", products=prod)
+    else:
+        return redirect(url_for("showHomePage"))
+    
 
 @app.route("/debug/")
 def debug():

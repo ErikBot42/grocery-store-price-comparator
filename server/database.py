@@ -1,6 +1,7 @@
 #Databasen "Grocery_Store_Database.db" måste ligga i samma map för att kunna köra koden(Ligger på Discord)
 
 import sqlite3
+import re
 
 class Database:
     
@@ -9,6 +10,9 @@ class Database:
     def __init__(self):
         self.connection = sqlite3.connect("Grocery_Store_Database.db")  #Conection to database
         self.cursor = self.connection.cursor()                          #cursor executes sql comands
+        self.connection.create_function(
+                           'REGEXP', 2, 
+                           lambda exp, item : re.search(exp, item) != None)
 
     def _createInsertSQLQuery(self, table: str, categories: str, values: list[str]) -> str:
         query = f"INSERT INTO {table} ({categories}) VALUES ("
@@ -189,10 +193,27 @@ class Database:
         res = self.cursor.execute(query)
         return res.fetchall()
 
-    def getProductCategory(self, category_term: str):
-        query = """
+    def getProductCategory(self, category_terms: list[str]):
+        if len(category_terms) is not 0:
+            query = f"""SELECT Product_Name, Price, Store_Name, Product_ID 
+                FROM Product JOIN Store USING (Store_ID)
+                WHERE REGEXP('{category_terms.pop(0)}', Product_Name)
+            """
+            for regex in category_terms:
+                #query = f"{query} or PRoduct_Name LIKE '{regex}'"
+                query = f"{query} or REGEXP('{regex}', Product_Name)"
+            print(f"Query is: {query}")
+            try:
+                return self.cursor.execute(query).fetchall()
+            except sqlite3.Error as er:
+                print("\nCould not run querry: " + query)
+                print('\tSQLite error: %s' % (' '.join(er.args)))
+                return []
+        else:
+            return []   
+
+         
         
-        """
         
 
     def getProductString(self, values: list):

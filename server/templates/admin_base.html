@@ -34,6 +34,21 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/products">Products</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Categories
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item" href="/products/category/Vegetarian">Vegetarian</a>
+                              <a class="dropdown-item" href="/products/category/Vegan">Vegan</a>
+                              <a class="dropdown-item" href="/products/category/Meat">Meat, poultry & fish</a>
+                              <a class="dropdown-item" href="/products/category/Fruit">Fruit & vegetables </a>
+                              <a class="dropdown-item" href="/products/category/Dairy">Dairy, cheese & eggs</a>
+                              <a class="dropdown-item" href="/products/category/Drink">Drink</a>
+                              <a class="dropdown-item" href="/products/category/Sweets">Ice cream, sweets & snacks</a>
+                              <a class="dropdown-item" href="/products/category/Bread">Bread & cookies</a>
+                            </div>
+                          </li>
                     {% endif %}
                 </ul>
                 {% if 'user' in session %}

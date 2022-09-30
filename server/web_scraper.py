@@ -14,7 +14,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-from typing import AnyStr, Iterable
+from typing import Iterable #AnyStr
 #import colorama
 
 from database import Database
@@ -233,28 +233,64 @@ def get_willys_html(url: str) -> str:
     else:
         return ""
 
-def request_all() -> list[product.Product]:
+def request_all(skip_selenium: bool) -> list[product.Product]:
     product_list: list[product.Product] = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
         ica_future = executor.submit(address_to_soup, "https://www.ica.se/butiker/maxi/karlstad/maxi-ica-stormarknad-karlstad-11010/erbjudanden/")
         coop_future = executor.submit(address_to_soup, "https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/")
         lidl_future = executor.submit(address_to_soup, "https://www.lidl.se/veckans-erbjudanden")
-        willys_future = executor.submit(get_willys_html, "https://www.willys.se/erbjudanden/butik?StoreID=2117")
+        
+        if not skip_selenium:
+            willys_future = executor.submit(get_willys_html, "https://www.willys.se/erbjudanden/butik?StoreID=2117")
+            print("parse willys html")
+            product_list += willys_parse(html_to_soup(willys_future.result()))
+        else:
+            print("skipping willys (needs selenium)")
+
         print("parse coop html")
         product_list += coop_parse(coop_future.result())
         print("parse ica html")
         product_list += ica_parse(ica_future.result())
         print("parse lidl html")
         product_list += lidl_parse(lidl_future.result())
-        print("parse willys html")
-        product_list += willys_parse(html_to_soup(willys_future.result()))
     return product_list
 
-def add_all_to_database(data: Database):
-    product_list = request_all()
-    
+def add_all_to_database(data: Database, skip_selenium: bool = False):
+    product_list = request_all(skip_selenium)
+
+    for product in product_list:
+        #print(product.store, product.name,"::", product.price)
+        print(product.description)
+
+        #name may contain amount, but not price
+        #COOP:
+        #Snackpaprika 2-pack
+        #Rosor 9-pack Fairtrade
+        #Vetemjöl 2 kg
+        #Jordnötter
+        #ICA:
+        #Frysta räkor med skal 90/120 (=90 till 120 st)
+        #Godispåse, pingvinstänger 3-pack
+        #Te 100-pack
+        #Öl 3,5%
+        #LIDL:
+        #Toalettpapper, 4 lager
+
+
+
+
+
+    #1/0
+
+
     print("add products to database")
     for product in product_list:
+        if not product.is_valid():
+            print()
+            print("INVALID PRODUCT:")
+            product.print()
+
+
         if not data.addProductToDatabase(\
                 name=product.name,\
                 store=str(product.store),\

@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         button = view.findViewById(R.id.logOutButton);
-
+        button.setText(R.string.log_Btn);
 
         button.setOnClickListener(view1 -> {
             logOut();

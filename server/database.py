@@ -212,7 +212,36 @@ class Database:
         else:
             return []   
 
-         
+    def getAllProductsWhitCategories(self, category_list: list):
+        if len(category_list) is not 0:
+            query = f"""SELECT Product_Name, Price, Store_Name, Product_ID 
+                FROM Product JOIN Store USING (Store_ID) WHERE
+            """
+            for category in category_list:
+                for reg in category[1]:
+                    if query[-1] == ')':
+                        query = f"{query} OR"
+                    query = f"{query} REGEXP('{reg}', Product_Name)"
+            
+            return self.cursor.execute(query).fetchall()
+        else:
+            return []   
+
+    def getProductWhithoutCategory(self, category_list: list):
+        if len(category_list) is not 0:
+            query_category = f"SELECT Product_ID FROM Product JOIN Store USING (Store_ID) WHERE"
+            for category in category_list:
+                for reg in category[1]:
+                    if query_category[-1] == ')':
+                        query_category = f"{query_category} OR"
+                    query_category = f"{query_category} REGEXP('{reg}', Product_Name)"
+        else: 
+            query_category = "SELECT Product_ID FROM Product JOIN Store USING (Store_ID) WHERE Product_Name == ";""
+        query_no_category = f"""SELECT Product_Name, Price, Store_Name, Product_ID 
+            FROM Product JOIN Store USING (Store_ID) WHERE Product_ID NOT IN ({query_category})"""
+        return self.cursor.execute(query_no_category).fetchall()
+       
+       
         
         
 

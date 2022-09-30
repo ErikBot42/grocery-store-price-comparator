@@ -3,15 +3,15 @@ from database import Database
 from datetime import timedelta
 
 CATEGORIES = [
-    ["Vegetarian", [".*[vV]egetar.*"]], 
+    ["Vegetarian", [".*[vV]egetar.*", ".*[oO]stburgare.*", ".*[vV]ego.*"]], 
     ["Vegan", [".*[vV]egan.*"]], 
-    ["Meat", [".*[kK]ött.*", ".*[fF]isk.*", ".*[kK]arré.*", ".*[kK]orv.*", ".*[fF]ilé.*", ".*[kK]yckling.*", ".*[kK]ebab.*", ".*[sS]alami.*", ".*[bB]iff.*", ".*[fF]ärs .*"]], 
-    ["Fruit", [".*[fF]rukt.*", ".*[äÄ]pple.*", ".*[pP]äron.*", ".*[bB]anan.*", ".*[dD]ruvor.*", ".*[tT]omat.*", ".*[pP]aprika.*", ".*[sS]alad.*", ".*[aA]vokado.*", ".*[cC]itro(n|ner).*"]], 
-    ["Dairy", [".*[mM]jölk.*", ".*[sS]mör.*", ".*[äÄ]gg$", ".*[oO]st$", ".*[yY]oghurt.*", ".*[mM]ilk.*", ".*[mM]ozzarella.*"]], 
-    ["Drink", [".*[lL]äsk$", ".*[dD]rika.*"]], 
-    ["Sweets", [".*[gG]odis.*", ".*[gG]lass.*", ".*[cC]hips.*", ".*[oO]stbågar.*", ".*[cC]hoklad.*", ".*[nN]ötter.*"]], 
-    ["Bread", [".*[bB]röd.*", ".*[kK]ak(a|or).*", ".*[cC]ookie.*", ".*[bB]ull(e|ar).*"]]
-    ]
+    ["Meat", [".*[kK]ött.*", ".*[pP]rosciutto.*", ".*[wW]urst.*", ".*[sS]alame .*", ".*[sS]kinka.*", ".*[bB]acon.*", ".*[hH]amburgare.*", ".*[fF]ish.*", ".*[nN]uggets.*", ".*[lL]amm.*", ".*[fF]läsk.*", ".*[sS]tek.*", ".*[rR]ostas.*", ".*[fF]isk.*", ".*[kK]arré.*", ".*[kK]orv.*", ".*[fF]ilé.*", ".*[kK]yckling.*", ".*[kK]ebab.*", ".*[sS]alami.*", ".*[bB]iff.*", ".*[fF]ärs .*"]], 
+    ["Fruit", [".*[pP]otatis.*", ".*[bB]önor.*", ".*[oO]liver.*", ".*[aA]vocado.*", ".*[mM]ango.*", ".*[sS]allad.*", ".*[kK]iwi.*", ".*[pP]umpa.*",".*[fF]rukt.*", ".*[äÄ]pple.*", ".*[pP]äron.*", ".*[bB]anan.*", ".*[dD]ruvor.*", ".*[tT]omat.*", ".*[pP]aprika.*", ".*[sS]alad.*", ".*[aA]vokado.*", ".*[cC]itro(n|nera).*"]], 
+    ["Dairy", [".*[mM]jölk.*", ".*[pP]armigiano.*", ".*[sS]mör.*", ".*[äÄ]gg$", ".*[oO]st$", ".*[yY]oghurt.*", ".*[mM]ilk.*", ".*[mM]ozzarella.*", ".*[bB]rie.*", ".*[gG]revé.*", ".*[cC]reme .*", ".*[kK]varg.*"]], 
+    ["Drink", [".*[lL]äsk$", ".*[jJ]uice.*", ".*.[sS]moothie*", ".*[kK]affe.*", ".*[dD]rika.*", ".*[bB]ords[vV]atten.*", ".*(^| )[öÖ]l($| ).*", ".*.[dD]ryck*"]], 
+    ["Sweets", [".*(^| )[gG]odis.*", ".*[cC]andie.*", ".*[tT]offee.*", ".*[pP]lopp.*", ".*[gG]lass.*", ".*[cC]hips.*", ".*[oO]stbågar.*", ".*[cC]hoklad.*", ".*[nN]ötter.*"]], 
+    ["Bread", [".*[bB]röd.*", ".*[lL]antgoda.*", ".*[bB]agel.*", ".*[kK]ak(a|or).*", ".*[cC]ookie.*", ".*([^t])[bB]ull(e|ar).*", ".*[bB]allerina.*", ".*[sS]ingoalla.*", ".*[tT]årt(a|or).*"]]
+    ]   
 
 
 
@@ -48,7 +48,7 @@ def products():
         if request.method == "POST":
             prod = db.searchProduct(request.form["productSearch"])
         else:
-            prod = db.getProductDataForAdmin()
+            prod = db.getAllProductsWhitCategories(CATEGORIES)
             db.close()
         return render_template("admin_products.html", products=prod)
     else:
@@ -104,8 +104,13 @@ def productCategory(category: str):
                 prod = db.getProductCategory(cat[1])
                 break
         else:
-            print(f"#### Not a mach found for: {category}")
-            prod = db.getProductDataForAdmin()
+            if category == "Misk":
+                prod = db.getProductWhithoutCategory(CATEGORIES)
+            elif category == "All":
+                prod = db.getProductDataForAdmin()
+            else:
+                print(f"#### Not a mach found for: {category}")
+                prod = []
         db.close()
         return render_template("admin_products.html", products=prod)
     else:

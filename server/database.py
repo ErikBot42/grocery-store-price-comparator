@@ -200,9 +200,7 @@ class Database:
                 WHERE REGEXP('{category_terms.pop(0)}', Product_Name)
             """
             for regex in category_terms:
-                #query = f"{query} or PRoduct_Name LIKE '{regex}'"
                 query = f"{query} or REGEXP('{regex}', Product_Name)"
-            print(f"Query is: {query}")
             try:
                 return self.cursor.execute(query).fetchall()
             except sqlite3.Error as er:
@@ -214,7 +212,7 @@ class Database:
 
     def getAllProductsWhitCategories(self, category_list: list):
         if len(category_list) is not 0:
-            query = f"""SELECT Product_Name, Price, Store_Name, Product_ID 
+            query = f"""SELECT Product_Name, Price, Store_Name, Product_ID, Store_Name, URL 
                 FROM Product JOIN Store USING (Store_ID) WHERE
             """
             for category in category_list:
@@ -237,7 +235,7 @@ class Database:
                     query_category = f"{query_category} REGEXP('{reg}', Product_Name)"
         else: 
             query_category = "SELECT Product_ID FROM Product JOIN Store USING (Store_ID) WHERE Product_Name == ";""
-        query_no_category = f"""SELECT Product_Name, Price, Store_Name, Product_ID 
+        query_no_category = f"""SELECT Product_Name, Price, Store_Name, Product_ID, URL 
             FROM Product JOIN Store USING (Store_ID) WHERE Product_ID NOT IN ({query_category})"""
         return self.cursor.execute(query_no_category).fetchall()
        

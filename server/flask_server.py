@@ -83,16 +83,32 @@ def removeProduct(id):
     db.close()
     return redirect(url_for("admin_products.html"))
 
-@app.route("/login/app", methods=["POST"])
+@app.route("/app/loggin/", methods=["POST"])
 def appLogin():
-    database = Database()
+    db = Database()
     data = request.json
     print(f"INPUT: ({data['Username']}, {data['Password']})")
-    if (database.logginValidation(email = data['Username'], password = data['Password']) == True):
+    if (db.logginValidation(email = data['Username'], password = data['Password']) == True):
         result = {'login': 'True'}
     else:
         result = {'login': 'False'}
     return jsonify(result)
+
+@app.route("/app/products/", methods=["POST", "GET"])
+def sendProductsInJson():
+    db = Database()
+    prod = db.getAllProductsWhitCategories(CATEGORIES)
+    data = []
+    for item in prod:
+        temp = {
+            "id":item[3],
+            "name":item[0],
+            "price":item[1],
+            "image":item[4]
+        }
+        data.append(temp)
+    return jsonify(data)
+
 
 @app.route("/products/category/<category>", methods = ["GET"])
 def productCategory(category: str):
@@ -100,7 +116,6 @@ def productCategory(category: str):
         db = Database()
         for cat in CATEGORIES:
             if category == cat[0]:
-                print(f"#### Found match!: {category} matches {cat[0]}")
                 prod = db.getProductCategory(cat[1])
                 break
         else:
@@ -111,7 +126,7 @@ def productCategory(category: str):
             else:
                 print(f"#### Not a mach found for: {category}")
                 prod = []
-        db.close()
+        db.close()  
         return render_template("admin_products.html", products=prod)
     else:
         return redirect(url_for("showHomePage"))

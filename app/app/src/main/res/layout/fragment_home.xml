@@ -15,5 +15,6 @@
         android:layout_marginLeft="150dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="100dp"
-        android:text="Log out" />
+        android:text="Log out"
+        android:label="@string/log_Btn"/>
 </FrameLayout>

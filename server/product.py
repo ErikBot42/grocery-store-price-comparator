@@ -21,53 +21,119 @@ class Store(Enum):
             case self.WILLYS:
                 return "WILLYS"
 
+@unique
+class Units(Enum):
+    KG = 1 #mass
+    L = 2 #volume
+    NUMBER = 3 #number
+    
+
+def price(kr: int, öre: int) -> int:
+    return 100*kr + öre
 
 class ExtractedInfo:
+
     def __init__(self):
         self.price = ""
         pass
     def try_read(self, string: str):
+
+        #price represented as "öre"
+
         import ply.lex as lex
+        import re
 
         # List of token names.   This is always required
         tokens = (
-            #'NUMBER',
-           'PRICE',
-           'PER_KG',
-           #'MINUS',
-           #'TIMES',
-           #'DIVIDE',
-           #'LPAREN',
-           #'RPAREN',
-        )
-        
+                'NUMBER',
+                'PRICE',
+                'PER',
+                'FOR',
+                'UNIT',
+                'PACK',
+                'TO',
+                'ERROR',
+                )
+
         # Regular expression rules for simple tokens
-        t_PRICE = r'(\d+[ .]\d\d)|(\d+:-)'
-        t_PER_KG
-        #t_MINUS   = r'-'
         #t_TIMES   = r'\*'
         #t_DIVIDE  = r'/'
         #t_LPAREN  = r'\('
         #t_RPAREN  = r'\)'
+
+        def to_unit(s: str):
+            match s:
+                case "st"|"ask"|"förp":
+                    return (Units.NUMBER, 1)
+                case "kg":
+                    return (Units.KG, 1)
+                case "g":
+                    return (Units.KG, 1/1000.0)
+                case "l"|"lit":
+                    return (Units.L, 1)
+                case "ml":
+                    return (Units.L, 1/1000.0)
+                case "cl":
+                    return (Units.L, 1/100.0)
+                case _:
+                    print(s)
+                    assert False
         
-        # A regular expression rule with some action code
-        #def t_NUMBER(t):
-        #    r'\d+'
-        #    t.value = int(t.value)
-        #    return t
+        # denotes a range of values
+        def t_TO(t):
+            r'-'
+            return t
+
+        def t_FOR(t):
+            r'för'
+            t.value = ""
+            return t
         
-        # Define a rule so we can track line numbers
-        #def t_newline(t):
-        #    r'\n+'
-        #    t.lexer.lineno += len(t.value)
+        def t_PACK(t):
+            r'(\d+-pack)'
+            #(\d+×) <- "3×212 ml" fails
+            t.value = int(re.search(r"\d+", t.value).group())
+
+            return t 
         
-        # A string containing ignored characters (spaces and tabs)
-        t_ignore  = ' \t\n'
+        def t_UNIT(t):
+            r'\s((st)|(ask)|(kg)|(förp)|(g)|(l)|(lit)|(ml)|(cl))'
+            #t.value = to_unit(t.value)
+            t.value = to_unit(t.value[1:])
+            return t
+
+
+        def t_PER(t):
+            r'/((st)|(ask)|(kg)|(förp)|(g)|(l(it)?)|(ml)|(cl))'
+            t.value = to_unit(t.value[1:])
+            return t
+
+
+        def t_PRICE(t):
+            r'(\d+[ .:]\d\d)|(\d+:-)'
+            s = [s for s in re.split(r"[ .:-]+", t.value) if s!=""]
+            t.value = price(int(s[0]), int(s[1]) if len(s)>1 else 0)
+            assert len(s) <= 2
+            return t
+        
+        def t_NUMBER(t):
+            r'\d+'
+            t.value = int(t.value)
+            return t
+        
         
         # Error handling rule
         def t_error(t):
-            print("Illegal character '%s'" % t.value[0])
+            print("'%s'" % t.value[0])
             t.lexer.skip(1)
+
+        def t_ERROR(t):
+            r'.'
+            t.value = "'" + t.value + "'"
+            return t
+            
+        # A string containing ignored characters (spaces and tabs)
+        t_ignore  = ''
         
         # Build the lexer
         lexer = lex.lex()

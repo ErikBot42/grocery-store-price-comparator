@@ -143,23 +143,23 @@ class ExtractedInfo:
         # Give the lexer some input
         lexer.input(string)
 
-        def p_thing(p):
-            '''thing : thing thing
-                     | price_per
-                     | err'''
-            p[0] = p[1]
+        #def p_thing(p):
+        #    '''thing : thing thing
+        #             | price_per
+        #             | err'''
+        #    p[0] = p[1]
 
 
-        def p_price_per(p): 
-            '''price_per : PRICE PER'''
-            p[0] = (p[1],p[2])
-        
-        def p_error_propagation(p):
-            '''err : ERROR 
-                   | err ERROR
-                   | err TO
-                   '''
-            p[0] = p[1]
+        #def p_price_per(p): 
+        #    '''price_per : PRICE PER'''
+        #    p[0] = (p[1],p[2])
+        #
+        #def p_error_propagation(p):
+        #    '''err : ERROR 
+        #           | err ERROR
+        #           | err TO
+        #           '''
+        #    p[0] = p[1]
         
         
         # Tokenize

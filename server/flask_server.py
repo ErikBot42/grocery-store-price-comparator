@@ -102,16 +102,13 @@ def sendProductsInJson():
     data = []
     for item in prod:
         temp = {
-            "id":item[3],
+            "id":str(item[3]),
             "name":item[0],
             "price":item[1],
-            "image":item[5]
+            "image":item[5] 
         }
         data.append(temp)
     prod = json.dumps('{"products":'+str(data)+'}')
-    print("\nSending Json:")
-    print(prod)
-    print()
     return prod
 
 

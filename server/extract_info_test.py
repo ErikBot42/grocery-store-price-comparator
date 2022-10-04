@@ -187,7 +187,7 @@ class TestStringMethods(unittest.TestCase):
         #ex.try_read("350 blad")
         #ex.try_read("350 g")
         #ex.try_read("3×8 ml")
-        #ex.try_read("3 Vänners Glass. 500 ml. Välj mellan olika sorter. Jfr-pris 99:80/lit.")
+        ex.try_read("3 Vänners Glass. 500 ml. Välj mellan olika sorter. Jfr-pris 99:80/lit.")
         #ex.try_read("400 g")
         #ex.try_read("420 g/förp.")
         #ex.try_read("500 g")

@@ -76,7 +76,7 @@ class ExtractedInfo:
                 case "cl":
                     return (Units.L, 1/100.0)
                 case _:
-                    print(s)
+                    print("'",s,"'", sep="")
                     assert False
         
         # denotes a range of values
@@ -97,9 +97,9 @@ class ExtractedInfo:
             return t 
         
         def t_UNIT(t):
-            r'\s((st)|(ask)|(kg)|(förp)|(g)|(l)|(lit)|(ml)|(cl))'
+            r'((st)|(ask)|(kg)|(förp)|(g)|(l)|(lit)|(ml)|(cl))'
             #t.value = to_unit(t.value)
-            t.value = to_unit(t.value[1:])
+            t.value = to_unit(t.value)
             return t
 
 
@@ -133,7 +133,7 @@ class ExtractedInfo:
             return t
             
         # A string containing ignored characters (spaces and tabs)
-        t_ignore  = ''
+        t_ignore  = ' '
         
         # Build the lexer
         lexer = lex.lex()
@@ -142,47 +142,53 @@ class ExtractedInfo:
         print(string)
         # Give the lexer some input
         lexer.input(string)
+        token_list= []
+        while True:
+            tok = lexer.token()
+            if not tok:
+                break      # No more input
+            token_list+=[tok]
 
-        #def p_thing(p):
-        #    '''thing : thing thing
-        #             | price_per
-        #             | err'''
-        #    p[0] = p[1]
+            print(tok.type, ": " , tok.value, sep="")
+
+        print(token_list)
+
+        from itertools import zip_longest
+
+        i = 0
+        group_length = 2
+
+        # Incredible: 
+        token_iter = iter(token_list)
+        token_iter_next = iter(token_list)
+        token_iter_next.__next__()
+        token_iter_next2 = iter(token_list)
+        token_iter_next2.__next__()
+        token_iter_next2.__next__()
+
+        for (nxt2, nxt, curr) in zip_longest(token_iter_next2, token_iter_next, token_iter):
+
+    
+            if curr.type == "ERROR":
+                continue
+
+            
 
 
-        #def p_price_per(p): 
-        #    '''price_per : PRICE PER'''
-        #    p[0] = (p[1],p[2])
-        #
-        #def p_error_propagation(p):
-        #    '''err : ERROR 
-        #           | err ERROR
-        #           | err TO
-        #           '''
-        #    p[0] = p[1]
-        
-        
-        # Tokenize
-        #while True:
-        #    tok = lexer.token()
-        #    if not tok:
-        #        break      # No more input
+            if nxt.type != "ERROR" and nxt.type != None:
+                # 2 token rules here
 
-        #    print(tok.type, ": " , tok.value, sep="")
+                print(curr.type, ": '", curr.value, "', ", nxt.type, ": '", nxt.value, "' ", sep = "")
+                
+                #TODO:
+                #if match:
+                #    continue
+
+            # single token rules here.
+            pass
 
 
-        import ply.yacc as yacc
 
-        def p_error(p):
-            print("Syntax error in input:", p)
-            parser.errok()
-
-        parser = yacc.yacc(debug=True)
-
-        result = parser.parse(string)
-
-        print("Result:")
-        print(result)
 
 
 

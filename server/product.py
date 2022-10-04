@@ -222,6 +222,14 @@ class Product:
         self.price = price
         #self.product_url = product_url
         self.store = store
+        ex = ExtractedInfo()
+        ex.try_read(self.description)
+        ex.try_read(self.name)
+        ex.try_read(self.price)
+        self.ex = ex
+        self.price = str(self.ex.price)
+    def is_valid(self):
+        return self.name != ""
 
     def __str__(self):
         return self.name + ": (" + self.price + ") at " + str(self.store) + " " + self.description

@@ -1,7 +1,10 @@
+from genericpath import isfile
 from flask import Flask, render_template, url_for, session, redirect, request, flash, jsonify
 from database import Database
 from datetime import timedelta
 import json
+import os.path
+import sys
 
 CATEGORIES = [
     ["Vegetarian", [".*[vV]egetar.*", ".*[oO]stburgare.*", ".*[vV]ego.*"]], 
@@ -19,6 +22,10 @@ CATEGORIES = [
 app = Flask(__name__)
 app.secret_key = b".U,e-Xr))$I,/bK"
 app.permanent_session_lifetime = timedelta(days=1)
+if not os.path.isfile("Grocery_Store_Database.db"):
+    sys.exit("Could not find database")
+
+
  
 @app.route("/", methods=["GET", "POST"])
 def showHomePage():
@@ -109,7 +116,7 @@ def sendProductsInJson():
         }
         data.append(temp)
     prod = json.dumps('{"products":'+str(data)+'}')
-    return prod
+    return jsonify(prod)
 
 
 @app.route("/products/category/<category>", methods = ["GET"])

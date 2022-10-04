@@ -137,9 +137,40 @@ from product import ExtractedInfo
 from product import Product 
 
 
-class TestStringMethods(unittest.TestCase):
+class TestProducts(unittest.TestCase):
 
-    def test_basic(self):
+    def test_price_extract(self):
+        cases = [ # price, price_l, price_kg
+        ("89 90 /kg",       None,     None,        89.90,),                    
+        ("30:- /kg",        None,     None,        30,),                   
+        ("129:- /kg",       None,     None,        129,),                   
+        ("32.90",           32.90,     None,        None,),                   
+        ("52 90",           52.90,     None,        None,),                   
+        ("100:-",           100,     None,        None,),                   
+        #("2 för 42:-",      None,     None,        None,),                   
+        ("32 90 /st",       32.90,     None,        None,),                   
+        ("29 90 /förp",     29.90,     None,        None,),                   
+        ("30:- /ask",       30,     None,        None,),                   
+        ("30:00",           30,     None,        None,),                   
+        ("69:- /st",        69,     None,        None,),                   
+        ("Göl. 375 g. Kyld. Välj mellan olika sorter. Jfr-pris 106:40/kg.",      None,     None,        106.40,),                   
+        ("Italien. 500 g. Klass 1. Kärnfria. Jfr-pris 39:80/kg.",                None,     None,        39.80,),                   
+        ("OLW. 200-275 g. Flera olika sorter. Max 1 köp/hushåll",                None,     None,        None,),                   
+        ("Hälsans kök. 180-320 g. Flera olika sorter. Gäller ej Sojafärs, Plant-Based burger. Max 1 köp/hushåll",                None,     None,        None,),                   
+                ]
+
+        #ex.try_read("")
+        #ex.try_read("")
+        #ex.try_read("")
+        #ex.try_read("")
+
+        for (string, price, price_lit, price_kg) in cases:
+            ex = ExtractedInfo()
+            ex.try_read(string)
+            assert ex.price == price,                  (string, "price not matching",    ex.price, price)
+            assert ex.price_per_litre == price_lit,    (string, "price/l not matching",  ex.price_per_litre, price_lit)
+            assert ex.price_per_kg == price_kg,        (string, "price/kg not matching", ex.price_per_kg, price_kg)
+
         ex = ExtractedInfo()
 #89 90 /kg
 #30:- /kg
@@ -156,7 +187,7 @@ class TestStringMethods(unittest.TestCase):
 #19 90 /ask
 #Köp 4 betala för 3
 #20%  rabatt
-        ex.try_read("89 90 /kg")
+        #ex.try_read("89 90 /kg")
         #ex.try_read("30:- /kg")
         #ex.try_read("129:- /kg")
         #ex.try_read("32.90")
@@ -187,7 +218,7 @@ class TestStringMethods(unittest.TestCase):
         #ex.try_read("350 blad")
         #ex.try_read("350 g")
         #ex.try_read("3×8 ml")
-        ex.try_read("3 Vänners Glass. 500 ml. Välj mellan olika sorter. Jfr-pris 99:80/lit.")
+        #ex.try_read("3 Vänners Glass. 500 ml. Välj mellan olika sorter. Jfr-pris 99:80/lit.")
         #ex.try_read("400 g")
         #ex.try_read("420 g/förp.")
         #ex.try_read("500 g")

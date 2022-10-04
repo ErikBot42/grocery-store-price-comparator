@@ -28,13 +28,15 @@ class Units(Enum):
     NUMBER = 3 #number
     
 
-def price(kr: int, öre: int) -> int:
-    return 100*kr + öre
+def price(kr: int, öre: int) -> float:
+    return kr + öre/100.0
 
 class ExtractedInfo:
 
     def __init__(self):
-        self.price = ""
+        self.price: None | int = None
+        self.price_per_litre: None | int = None
+        self.price_per_kg: None | int = None
         pass
     def try_read(self, string: str):
 
@@ -138,8 +140,8 @@ class ExtractedInfo:
         # Build the lexer
         lexer = lex.lex()
 
-        print() 
-        print(string)
+        #print() 
+        #print(string)
         # Give the lexer some input
         lexer.input(string)
         token_list= []
@@ -148,53 +150,55 @@ class ExtractedInfo:
             if not tok:
                 break      # No more input
             token_list+=[tok]
-
-            print(tok.type, ": " , tok.value, sep="")
-
-        print(token_list)
-
+            #print(tok.type, ": " , tok.value, sep="")
+        #print(token_list)
         from itertools import zip_longest
 
-        i = 0
-        group_length = 2
 
-        # Incredible: 
+        # ♥♥♥ Iterator ♥♥♥
         token_iter = iter(token_list)
         token_iter_next = iter(token_list)
-        token_iter_next.__next__()
+        next(token_iter_next, None) 
         token_iter_next2 = iter(token_list)
-        token_iter_next2.__next__()
-        token_iter_next2.__next__()
-
-        for (nxt2, nxt, curr) in zip_longest(token_iter_next2, token_iter_next, token_iter):
-
-    
-            if curr.type == "ERROR":
+        next(token_iter_next2, None) 
+        next(token_iter_next2, None) 
+        #for (nxt2, nxt, curr) in zip_longest(token_iter_next2, token_iter_next, token_iter):
+        for curr in token_iter:
+            nxt = next(token_iter_next, None) 
+            nxt2 = next(token_iter_next2, None) 
+            if curr == None or curr.type == "ERROR": #no rules can apply
                 continue
-
-            
-
-
-            if nxt.type != "ERROR" and nxt.type != None:
-                # 2 token rules here
-
-                print(curr.type, ": '", curr.value, "', ", nxt.type, ": '", nxt.value, "' ", sep = "")
-                
-                #TODO:
-                #if match:
-                #    continue
-
-            # single token rules here.
-            pass
+            #print(curr.type, ": '", curr.value, sep = "")
+            curr_type = curr.type
+            nxt_type = ""
+            nxt2_type = ""
+            if nxt!= None and nxt.type != "ERROR":
+                nxt_type = nxt.type
+                if nxt2!= None and nxt2.type != "ERROR":
+                    nxt2_type = nxt2.type
 
 
-
-
-
-
-
-
-
+            match curr_type:
+                #case "NUMBER":
+                #    if nxt_type == "UNIT":
+                #        results.append(("number of things", curr.value, nxt.value))
+                #        
+                case "PRICE":
+                    if nxt_type == "PER":
+                        (unit, fac) = nxt.value;
+                        match unit:
+                            case Units.KG:
+                                self.price_per_kg = curr.value*fac
+                                #print("Found price/kg: ", self.price_per_kg, "kr/kg")
+                            case Units.L:
+                                self.price_per_litre = curr.value*fac
+                                #print("Found price/l: ", self.price_per_litre, "kr/l")
+                            case Units.NUMBER:
+                                #print("Found price/unit: ", curr.value, "kr/st")
+                                self.price = curr.value
+                    else:
+                        #print("Found price: ", curr.value, "kr")
+                        self.price = curr.value
 
 class Product:
     #TODO: create function that may return product if it's valid

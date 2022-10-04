@@ -2,6 +2,7 @@ package com.example.grocerystoreoffers;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,6 +17,11 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ProfileFragment #newInstance} factory method to
@@ -27,6 +33,7 @@ public class ProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private FirebaseAuth mAuth;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -60,22 +67,14 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-        /*
-        if (username.getText().toString().equals("admin") && password.getText().toString().equals("admin")) {
-
-            System.out.println("Correct login\n");
-            System.out.println(username);
-            System.out.println(password);
-
-        } else {
-            System.out.println("Wrong input");
-        }
-        */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,17 +84,29 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        Button login_btn = view.findViewById(R.id.btn_login);
+        Button btnLogin = view.findViewById(R.id.btn_login);
         Button register_btn = view.findViewById(R.id.btn_register);
 
         username = view.findViewById(R.id.et_email);
         password = view.findViewById(R.id.et_password);
 
-        // Login
-        login_btn.setOnClickListener(view1 -> {
-            //TODO: Check whether email is unused, if unused, prompt to register
-            System.out.println("Email: " + username.getText().toString() + "\n");
-            System.out.println("Password: " + password.getText().toString() + "\n");
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //btnLogin.setVisibility(View.INVISIBLE);
+
+                final String mail = username.getText().toString();
+                final String password1 = password.getText().toString();
+
+                if (mail.isEmpty() || password1.isEmpty()) {
+                    printToast("Please Verify All Field");
+                    btnLogin.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    signIn(mail,password1);
+                }
+            }
         });
 
         register_btn.setOnClickListener(view1 -> {
@@ -120,6 +131,39 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
+
+    private void signIn(String mail, String password) {
+
+        mAuth.signInWithEmailAndPassword(mail,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                if (task.isSuccessful()) {
+                    printToast("CORRECT LOGIN");
+                    replaceFragment(new HomeFragment());
+                    /*
+                    loginProgress.setVisibility(View.INVISIBLE);
+                    btnLogin.setVisibility(View.VISIBLE);
+                    updateUI();
+
+                     */
+
+                }
+                else {
+                    printToast("INCORRECT LOGIN");
+                    /*
+                    showMessage(task.getException().getMessage());
+                    btnLogin.setVisibility(View.VISIBLE);
+                    loginProgress.setVisibility(View.INVISIBLE);
+
+                     */
+                }
+
+
+            }
+        });
+    }
+
 
     private void replaceFragment(Fragment fragment){
 

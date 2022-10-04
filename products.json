@@ -1,0 +1,640 @@
+{  
+   "products":[  
+      {
+         "id":"1",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {  
+         "id":"2",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"3",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"4",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      },
+      {
+         "id":"5",
+         "name":"Vinröda vindruvor",
+         "price":"19.90",
+         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+      },
+      {  
+         "id":"6",
+         "name":"Fläskytterfilé",
+         "price":"59.90",
+         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg"
+      },
+      {  
+         "id":"7",
+         "name":"Färsk kycklingfilé",
+         "price":"129",
+         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png"
+      },
+      {
+         "id":"8",
+         "name":"Potatis Fast Klass 1",
+         "price":"19.90",
+         "image":"https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300"
+      }
+   ]
+}

@@ -15,15 +15,24 @@
 package com.example.grocerystoreoffers;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -52,11 +61,14 @@ public class MapsActivityRaw extends AppCompatActivity implements OnMapReadyCall
     private Marker markerLIDLRATTGATAN;
     private Marker markerLIDLOSTRA;
 
+    private Button backButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_maps_raw);
+
 
         // Get the SupportMapFragment and register for the callback
         // when the map is ready for use.
@@ -64,6 +76,18 @@ public class MapsActivityRaw extends AppCompatActivity implements OnMapReadyCall
                 (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+
+
+    }
+
+    private void replaceFragment(Fragment fragment){
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout,fragment);
+        fragmentTransaction.commit();
     }
 
     /**
@@ -86,16 +110,7 @@ public class MapsActivityRaw extends AppCompatActivity implements OnMapReadyCall
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
-        /*
-        if(checkPermission())
-            //googleMap.setMyLocationEnabled(true);
-        else askPermission();
 
-
-        googleMap.setOnMyLocationButtonClickListener(this);
-        googleMap.setOnMyLocationClickListener(this);
-
-         */
         // Position the map's camera near Karlstad, Sweden.
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(59.4022, 13.5115)));
         // Längdgrad = longitude
@@ -125,7 +140,12 @@ public class MapsActivityRaw extends AppCompatActivity implements OnMapReadyCall
                 .title("LIDL Östra Infarten"));
         markerLIDLOSTRA.setTag(0);
 
-
+        googleMap.setOnMarkerClickListener(marker -> {
+            // on marker click we are getting the title of our marker
+            // which is clicked and displaying it in a toast message.
+            String markerName = marker.getTitle();
+            Toast.makeText(MapsActivityRaw.this, "Clicked location is " + markerName, Toast.LENGTH_SHORT).show();
+            return false;
+        });
     }
-
 }

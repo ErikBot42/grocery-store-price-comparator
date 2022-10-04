@@ -7,7 +7,10 @@
     <item android:title="Profile"
         android:icon="@drawable/ic_baseline_person_24"
         android:id="@+id/profile"/>
-    <item android:title="Settings"
+    <item android:title="Offers"
         android:icon="@drawable/ic_baseline_local_offer_24"
         android:id="@+id/settings"/>
+    <item android:title="Map"
+        android:icon="@drawable/ic_baseline_map_24"
+        android:id="@+id/map"/>
 </menu>

@@ -12,6 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.AuthResult;
+
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
@@ -28,6 +32,9 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private Button button;
+    private FirebaseAuth mAuth;
+
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -58,8 +65,11 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mAuth = FirebaseAuth.getInstance();
 
     }
+
+
     /*
     public void openMapsActivityRaw() {
         Intent intent = new Intent(this, MapsActivityRaw.class);
@@ -72,15 +82,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        button = view.findViewById(R.id.mapButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MapsActivityRaw.class);
-                startActivity(intent);
-            }
+        button = view.findViewById(R.id.logOutButton);
+        button.setText(R.string.log_Btn);
+
+        button.setOnClickListener(view1 -> {
+            logOut();
         });
-        // Inflate the layout for this fragment
         return view;
     }
 
@@ -121,6 +128,10 @@ public class HomeFragment extends Fragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,fragment);
         fragmentTransaction.commit();
+    }
+
+    private void logOut(){
+        mAuth.signOut();
     }
 
 

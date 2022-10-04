@@ -142,14 +142,50 @@ class ExtractedInfo:
         print(string)
         # Give the lexer some input
         lexer.input(string)
+
+        def p_thing(p):
+            '''thing : thing thing
+                     | price_per
+                     | err'''
+            p[0] = p[1]
+
+
+        def p_price_per(p): 
+            '''price_per : PRICE PER'''
+            p[0] = (p[1],p[2])
+        
+        def p_error_propagation(p):
+            '''err : ERROR 
+                   | err ERROR
+                   | err TO
+                   '''
+            p[0] = p[1]
+        
         
         # Tokenize
-        while True:
-            tok = lexer.token()
-            if not tok:
-                break      # No more input
+        #while True:
+        #    tok = lexer.token()
+        #    if not tok:
+        #        break      # No more input
 
-            print(tok.type, ": " , tok.value, sep="")
+        #    print(tok.type, ": " , tok.value, sep="")
+
+
+        import ply.yacc as yacc
+
+        def p_error(p):
+            print("Syntax error in input:", p)
+            parser.errok()
+
+        parser = yacc.yacc(debug=True)
+
+        result = parser.parse(string)
+
+        print("Result:")
+        print(result)
+
+
+
 
 
 

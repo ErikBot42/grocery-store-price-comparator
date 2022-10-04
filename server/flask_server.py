@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, session, redirect, request, flash, jsonify
 from database import Database
 from datetime import timedelta
+import json
 
 CATEGORIES = [
     ["Vegetarian", [".*[vV]egetar.*", ".*[oO]stburgare.*", ".*[vV]ego.*"]], 
@@ -104,10 +105,14 @@ def sendProductsInJson():
             "id":item[3],
             "name":item[0],
             "price":item[1],
-            "image":item[4]
+            "image":item[5]
         }
         data.append(temp)
-    return jsonify(data)
+    prod = json.dumps('{"products":'+str(data)+'}')
+    print("\nSending Json:")
+    print(prod)
+    print()
+    return prod
 
 
 @app.route("/products/category/<category>", methods = ["GET"])

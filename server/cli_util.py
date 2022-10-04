@@ -20,11 +20,19 @@ from database import Database
 threads: list[Thread] = []
 for command in sys.argv[1:]:
     match command:
+
+        case "--scrape-fast":
+            print("scraping to database")
+            database = Database()
+            from web_scraper import add_all_to_database
+            add_all_to_database(database, True)
+            database.commitToDatabase()
+            database.close()
         case "--scrape":
             print("scraping to database")
             database = Database()
             from web_scraper import add_all_to_database
-            add_all_to_database(database)
+            add_all_to_database(database, False)
             database.commitToDatabase()
             database.close()
         case "--clear-database":

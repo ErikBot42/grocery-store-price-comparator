@@ -212,7 +212,6 @@ class Product:
         self.modifier = modifier
         self.name = name
         self.price = price
-        #self.product_url = product_url
         self.store = store
         ex = ExtractedInfo()
         ex.try_read(self.description)
@@ -221,7 +220,7 @@ class Product:
         self.ex = ex
         self.price = str(self.ex.price)
     def is_valid(self):
-        return self.name != ""
+        return self.name != "" and self.image_url != ""
 
     def __str__(self):
         return self.name + ": (" + self.price + ") at " + str(self.store) + " " + self.description

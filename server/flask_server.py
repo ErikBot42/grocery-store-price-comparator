@@ -35,7 +35,7 @@ def showHomePage():
         db = Database()
         password = request.form['Password']
         user_name = request.form["Username"]
-        if db.logginValidation(email=user_name, password=password) or (user_name=="admin" and password == "password"):
+        if db.loginValidation(email=user_name, password=password) or (user_name=="admin" and password == "password"):
             flash(f"Logged in as: {request.form['Username']}", "info")
             session["user"] = request.form["Username"]
             session.permanent = True
@@ -57,7 +57,7 @@ def products():
             prod = db.searchProduct(request.form["productSearch"])
             db.close()
         else:
-            prod = db.getAllProductsWhitCategories(CATEGORIES)
+            prod = db.getAllProductsWithCategories(CATEGORIES)
             db.close()
         return render_template("admin_products.html", products=prod)
     else:
@@ -97,7 +97,7 @@ def appLogin():
     db = Database()
     data = request.json
     print(f"INPUT: ({data['Username']}, {data['Password']})")
-    if (db.logginValidation(email = data['Username'], password = data['Password']) == True):
+    if (db.loginValidation(email = data['Username'], password = data['Password']) == True):
         db.close()
         result = {'login': 'True'}
     else:
@@ -108,7 +108,7 @@ def appLogin():
 @app.route("/app/products/", methods=["POST", "GET"])
 def sendProductsInJson():
     db = Database()
-    prod = db.getAllProductsWhitCategories(CATEGORIES)
+    prod = db.getAllProductsWithCategories(CATEGORIES)
     db.close()
     data = []
     for item in prod:
@@ -133,7 +133,7 @@ def productCategory(category: str):
                 break
         else:
             if category == "Misk":
-                prod = db.getProductWhithoutCategory(CATEGORIES)
+                prod = db.getProductWithoutCategory(CATEGORIES)
             elif category == "All":
                 prod = db.getProductDataForAdmin()
             else:

@@ -122,7 +122,7 @@ class Database:
             res = self.cursor.execute(query)
             res = res.fetchone()
             print(f"Result from query: {res}")
-            if (res is not None):
+            if (res != None):
                 res = res[0]
             else: 
                 res = ""
@@ -194,13 +194,13 @@ class Database:
         return res.fetchall()
 
     def getProductCategory(self, category_terms: list[str]):
-        if len(category_terms) is not 0:
+        if len(category_terms) != 0:
             query = f"""SELECT Product_Name, Price, Store_Name, Product_ID 
                 FROM Product JOIN Store USING (Store_ID)
                 WHERE REGEXP('{category_terms.pop(0)}', Product_Name)
             """
             for regex in category_terms:
-                query = f"{query} or REGEXP('{regex}', Product_Name)"
+                query = f"{query} or REGEXP('{regex}', lower(Product_Name)  )"
             try:
                 return self.cursor.execute(query).fetchall()
             except sqlite3.Error as er:
@@ -211,7 +211,7 @@ class Database:
             return []   
 
     def getAllProductsWhitCategories(self, category_list: list):
-        if len(category_list) is not 0:
+        if len(category_list) != 0:
             query = f"""SELECT Product_Name, Price, Store_Name, Product_ID, Store_Name, URL 
                 FROM Product JOIN Store USING (Store_ID) WHERE
             """
@@ -219,14 +219,14 @@ class Database:
                 for reg in category[1]:
                     if query[-1] == ')':
                         query = f"{query} OR"
-                    query = f"{query} REGEXP('{reg}', Product_Name)"
+                    query = f"{query} REGEXP('{reg}', lower(Product_Name))"
             
             return self.cursor.execute(query).fetchall()
         else:
             return []   
 
     def getProductWhithoutCategory(self, category_list: list):
-        if len(category_list) is not 0:
+        if len(category_list) != 0:
             query_category = f"SELECT Product_ID FROM Product JOIN Store USING (Store_ID) WHERE"
             for category in category_list:
                 for reg in category[1]:

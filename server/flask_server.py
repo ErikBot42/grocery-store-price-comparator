@@ -55,6 +55,7 @@ def products():
         db = Database()
         if request.method == "POST":
             prod = db.searchProduct(request.form["productSearch"])
+            db.close()
         else:
             prod = db.getAllProductsWhitCategories(CATEGORIES)
             db.close()
@@ -97,8 +98,10 @@ def appLogin():
     data = request.json
     print(f"INPUT: ({data['Username']}, {data['Password']})")
     if (db.logginValidation(email = data['Username'], password = data['Password']) == True):
+        db.close()
         result = {'login': 'True'}
     else:
+        db.close()
         result = {'login': 'False'}
     return jsonify(result)
 
@@ -106,6 +109,7 @@ def appLogin():
 def sendProductsInJson():
     db = Database()
     prod = db.getAllProductsWhitCategories(CATEGORIES)
+    db.close()
     data = []
     for item in prod:
         temp = {

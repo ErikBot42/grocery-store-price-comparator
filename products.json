@@ -5,7 +5,7 @@
          "name":"Blandfärs",
          "price":"59.90",
          "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319102300009.jpg",
-         "store":"1"
+         "store":"3"
       },
       {  
          "id":"2",
@@ -19,7 +19,7 @@
          "name":"Kanel malen",
          "price":"14.90",
          "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/166383/third/sm-retina/166383.jpg",
-         "store":"3"
+         "store":"1"
       },
       {
          "id":"4",

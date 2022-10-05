@@ -297,37 +297,43 @@ class Database:
         else: result = 'y'
         if (result == 'y'):
             print("Raderar all data...")
-            self.cursor.execute("DELETE FROM List_Items WHERE '1' == '1'")
-            self.cursor.execute("DELETE FROM List_Owner WHERE '1' == '1'")
-            self.cursor.execute("DELETE FROM List WHERE '1' == '1'")
-            self.cursor.execute("DELETE FROM Favourite_Products WHERE '1' == '1'")
-            self.cursor.execute("DELETE FROM Product WHERE '1' == '1'")
-            self.cursor.execute("DELETE FROM Register WHERE '1' == '1'")
-            self.cursor.execute("DELETE FROM Store WHERE '1' == '1'")
-            self.cursor.execute("DELETE FROM Category WHERE '1' == '1'")
-            self.cursor.execute("DELETE FROM List_Items WHERE '1' == '1'")
+            self.fallableExecute("DELETE FROM List_Items WHERE '1' == '1'")
+            self.fallableExecute("DELETE FROM List_Owner WHERE '1' == '1'")
+            self.fallableExecute("DELETE FROM List WHERE '1' == '1'")
+            self.fallableExecute("DELETE FROM Favourite_Products WHERE '1' == '1'")
+            self.fallableExecute("DELETE FROM Product WHERE '1' == '1'")
+            self.fallableExecute("DELETE FROM Register WHERE '1' == '1'")
+            self.fallableExecute("DELETE FROM Store WHERE '1' == '1'")
+            self.fallableExecute("DELETE FROM Category WHERE '1' == '1'")
+            self.fallableExecute("DELETE FROM List_Items WHERE '1' == '1'")
             self.addStoreToDatabase(ID = 1, name = "LIDL")
             self.addStoreToDatabase(ID = 2, name = "COOP")
             self.addStoreToDatabase(ID = 3, name = "ICA")
             self.addStoreToDatabase(ID = 4, name = "WILLYS")
         else:
             print("Avbryter")
-
+    
+    # try and execute, ignore errors
+    def fallableExecute(self, sql_string: str):
+        try:
+            self.cursor.execute(sql_string)
+        except sqlite3.OperationalError:
+            print("sqlite3.OperationalError for:", sql_string)
 
     def recreateDatabase(self):
         self.dropAllData(run = True)
-        self.cursor.execute("DROP TABLE Category")
-        self.cursor.execute("DROP TABLE Favourite_Products")
-        self.cursor.execute("DROP TABLE List")
-        self.cursor.execute("DROP TABLE List_Items")
-        self.cursor.execute("DROP TABLE List_owner")
-        self.cursor.execute("DROP TABLE Login")
-        self.cursor.execute("DROP TABLE Product")
-        self.cursor.execute("DROP TABLE Register")
-        self.cursor.execute("DROP TABLE Store")
-        self.cursor.execute("DROP TABLE Favourite_Store")
+        self.fallableExecute("DROP TABLE Category")
+        self.fallableExecute("DROP TABLE Favourite_Products")
+        self.fallableExecute("DROP TABLE List")
+        self.fallableExecute("DROP TABLE List_Items")
+        self.fallableExecute("DROP TABLE List_owner")
+        self.fallableExecute("DROP TABLE Login")
+        self.fallableExecute("DROP TABLE Product")
+        self.fallableExecute("DROP TABLE Register")
+        self.fallableExecute("DROP TABLE Store")
+        self.fallableExecute("DROP TABLE Favourite_Store")
         
-        self.cursor.execute("""CREATE TABLE "Favourite_Products" (
+        self.fallableExecute("""CREATE TABLE "Favourite_Products" (
                 "User_ID"	INTEGER,
                 "Product_ID"	INTEGER,
                 FOREIGN KEY("Product_ID") REFERENCES "Product"("Product_ID"),
@@ -335,28 +341,28 @@ class Database:
                 PRIMARY KEY("User_ID","Product_ID")
             )
         """)
-        self.cursor.execute("""CREATE TABLE "List" (
+        self.fallableExecute("""CREATE TABLE "List" (
                 "List_name"	INTEGER NOT NULL,
                 "List_ID"	INTEGER NOT NULL,
                 PRIMARY KEY("List_ID")
             )
         """)
         #TODO: is "LIst_ID" correct capitalization?
-        self.cursor.execute("""CREATE TABLE "List_Items" (
+        self.fallableExecute("""CREATE TABLE "List_Items" (
                 "LIst_ID"	INTEGER NOT NULL,
                 "Product_ID"	INTEGER NOT NULL,
                 "Amount"	INTEGER NOT NULL,
                 PRIMARY KEY("LIst_ID","Product_ID")
             )
         """)
-        self.cursor.execute("""CREATE TABLE "List_owner" (
+        self.fallableExecute("""CREATE TABLE "List_owner" (
                 "User_ID"	INTEGER NOT NULL,
                 "List_ID"	INTEGER NOT NULL,
                 PRIMARY KEY("User_ID","List_ID"),
                 FOREIGN KEY("List_ID") REFERENCES "List"("List_ID")
             )
         """)
-        self.cursor.execute("""CREATE TABLE "Login" (
+        self.fallableExecute("""CREATE TABLE "Login" (
                 "Day"	INTEGER,
                 "Time"	INTEGER,
                 "User_ID"	INTEGER,
@@ -364,7 +370,7 @@ class Database:
                 FOREIGN KEY("User_ID") REFERENCES "Register"("User_ID")
             )
         """)
-        self.cursor.execute("""CREATE TABLE "Product" (
+        self.fallableExecute("""CREATE TABLE "Product" (
                 "Category_ID"	INTEGER,
                 "Product_ID"	INTEGER,
                 "Product_Name"	TEXT,
@@ -376,12 +382,12 @@ class Database:
                 FOREIGN KEY("Store_ID") REFERENCES "Store"("Store_ID")
             )
         """)
-        self.cursor.execute("""CREATE TABLE "Category" (
+        self.fallableExecute("""CREATE TABLE "Category" (
             "Category_ID"	INTEGER,
             "Category_Name"	INTEGER NOT NULL UNIQUE,
             PRIMARY KEY("Category_ID")
             )""")
-        self.cursor.execute("""CREATE TABLE "Register" (
+        self.fallableExecute("""CREATE TABLE "Register" (
                 "User_ID"	INTEGER,
                 "Email"	TEXT NOT NULL UNIQUE,
                 "Password"	TEXT NOT NULL,
@@ -394,14 +400,14 @@ class Database:
                 PRIMARY KEY("User_ID")
             )
         """)
-        self.cursor.execute("""CREATE TABLE "Store" (
+        self.fallableExecute("""CREATE TABLE "Store" (
                 "Store_ID"	INTEGER,
                 "Store_Name"	TEXT,
                 PRIMARY KEY("Store_ID")
             )
         """)
 
-        self.cursor.execute("""CREATE TABLE "Favourite_Store" (
+        self.fallableExecute("""CREATE TABLE "Favourite_Store" (
                 "Store_ID"	INTEGER,
                 "User_ID"	INTEGER,
                 FOREIGN KEY("User_ID") REFERENCES "Register"("User_ID"),

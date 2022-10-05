@@ -415,8 +415,7 @@ class Database:
                 PRIMARY KEY("Store_ID","User_ID")
             )
         """)
-        self.addStoreToDatabase(ID = 1, name = "LIDL")
-        self.addStoreToDatabase(ID = 2, name = "COOP")
-        self.addStoreToDatabase(ID = 3, name = "ICA")
-        self.addStoreToDatabase(ID = 4, name = "WILLYS")
+        from product import Store
+        for store in Store:
+            self.addStoreToDatabase(ID = store.value, name = store.name)
         self.commitToDatabase()

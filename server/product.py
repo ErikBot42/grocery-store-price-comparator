@@ -11,15 +11,7 @@ class Store(Enum):
     ICA = 3
     WILLYS = 4
     def __str__(self):
-        match self:
-            case self.LIDL:
-                return "LIDL"
-            case self.COOP:
-                return "COOP"
-            case self.ICA:
-                return "ICA"
-            case self.WILLYS:
-                return "WILLYS"
+        return self.name
 
 @unique
 class Units(Enum):

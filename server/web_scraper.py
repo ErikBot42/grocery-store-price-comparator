@@ -86,7 +86,10 @@ def soup_get_attr(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None, at
         case bs4.NavigableString():
             return soup
         case _:
-            res: str | list[str] = soup[attribute]
+            try:
+                res: str | list[str] = soup[attribute]
+            except KeyError:
+                res = ""
             match res:
                 case str():
                     return res
@@ -173,17 +176,32 @@ def willys_parse(soup: BeautifulSoup) -> list[product.Product]:
     offers = soup_find_all(soup, "div", "Productstyles__StyledProduct-sc-16nua0l-0 aRuiG")
     product_list: list[product.Product] = []
     for offer_el in offers:
+        #print(offer_el.prettify())
+        #assert False
+        #<img alt="Färdigrätter" class="u-posAbsoluteCenter" src="//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1645060239/cloud/246920.png"/>
+        #<img data-nimg="intrinsic" decoding="async" itemprop="image" src="https://d2rfo6yapuixuu.cloudfront.net/h93/h9d/9440479739934/2355022700000_1555584076180_master_axfood_300" style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%;"/>
+
         price: str = soup_find_strs_joined(offer_el, " ", "div", "PriceLabelstyles__StyledProductPrice-sc-koui33-0 dCxjnV") # "yellow" price
         if price == "": # "red" price
             price = soup_find_strs_joined(offer_el, " ", "div", "PriceLabelstyles__StyledProductPriceTextWrapper-sc-koui33-1 fHVyJs")
         if price == "":
             assert False
+        imgs = offer_el.find_all("img")
+        image_url = ""
+        for img in imgs:
+            image_url = soup_get_attr(img, "src")
+            if soup_get_attr(img, "data-nimg") != "intrinsic":
+                continue
+            else:
+                break
+
         product_list.append(product.Product(
             description = soup_find_strs_joined(offer_el, " ", "div", "Productstyles__StyledProductManufacturer-sc-16nua0l-6 ksPmCk"),
             modifier    = soup_find_strs_joined(offer_el, " ", "div", "Productstyles__StyledProductSavePrice-sc-16nua0l-13 iyjqpG"),
             name        = soup_find_strs_joined(offer_el, " ", "div", "Productstyles__StyledProductName-sc-16nua0l-5 dqhhbm"), 
             price       = price, 
             store       = product.Store.WILLYS,
+            image_url = image_url
             ))
     return product_list
 

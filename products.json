@@ -1,32 +1,93 @@
-{  
-   "products":[  
-      {
-         "id":"1",
-         "name":"Blandfärs",
-         "price":"59.90",
-         "image":"https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319102300009.jpg",
-         "store":"3"
-      },
-      {  
-         "id":"2",
-         "name":"Juice",
-         "price":"20",
-         "image":"https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1529974034/302744.png",
-         "store":"2"
-      },
-      {  
-         "id":"3",
-         "name":"Kanel malen",
-         "price":"14.90",
-         "image":"https://se.cat-ret.assets.lidl/catalog5media/se/article/166383/third/sm-retina/166383.jpg",
-         "store":"1"
-      },
-      {
-         "id":"4",
-         "name":"Smör",
-         "price":"44.90",
-         "image":"https://d2rfo6yapuixuu.cloudfront.net/h73/h1e/9103132655646/7310865005168_1522748758296_master_axfood_300",
-         "store":"4"
-      }
-   ]
+{
+	"products": [{
+		"id": "1",
+		"name": "Vinröda vindruvor",
+		"price": "19.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg",
+		"store":"1"
+	}, {
+		"id": "2",
+		"name": "Fläskytterfilé",
+		"price": "59.90",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg",
+		"store":"3"
+	}, {
+		"id": "3",
+		"name": "Färsk kycklingfilé",
+		"price": "129",
+		"image": "https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png",
+		"store":"2"
+	}, {
+		"id": "4",
+		"name": "Potatis Fast Klass 1",
+		"price": "19.90",
+		"image": "https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300",
+		"store":"4"
+	}, {
+		"id": "47",
+		"name": "Mango",
+		"price": " 25:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7318690056720,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318690056720.jpg",
+		"store":"3"
+	}, {
+		"id": "48",
+		"name": "Gröna kärnfria druvor i ask",
+		"price": " 22:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318693555800_1.jpg",
+		"store":"3"
+	}, {
+		"id": "51",
+		"name": "Delikatesspotatis i påse",
+		"price": " 15:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7330671126925_2.jpg",
+		"store":"3"
+	}, {
+		"id": "53",
+		"name": "Päron i korg",
+		"price": " 15:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318690505693.jpg",
+		"store":"3"
+	}, {
+		"id": "54",
+		"name": "Romanticatomater i ask",
+		"price": " 25:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318690075516_1.jpg",
+		"store":"3"
+	}, {
+		"id": "55",
+		"name": "Cookies",
+		"price": " 20:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7622210081940,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7622300589882.jpg",
+		"store":"3"
+	}, {
+		"id": "57",
+		"name": "Original-, fiberrost",
+		"price": " 25:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7312200040797,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7312200040803.jpg",
+		"store":"3"
+	}, {
+		"id": "58",
+		"name": "Färsk kycklinglårfilé",
+		"price": " 119:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2332802700009.jpg",
+		"store":"3"
+	}, {
+		"id": "60",
+		"name": "Hushållsost",
+		"price": " 75:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2340375400004.jpg",
+		"store":"3"
+	}, {
+		"id": "61",
+		"name": "Bacon",
+		"price": " 20:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7318690177814,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318690177814.jpg",
+		"store":"3"
+	}, {
+		"id": "63",
+		"name": "Grillkorv",
+		"price": " 33:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7300201432000.jpg",
+		"store":"3"
+	}]
 }

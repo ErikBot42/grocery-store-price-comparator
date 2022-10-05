@@ -306,10 +306,10 @@ class Database:
             self.fallableExecute("DELETE FROM Store WHERE '1' == '1'")
             self.fallableExecute("DELETE FROM Category WHERE '1' == '1'")
             self.fallableExecute("DELETE FROM List_Items WHERE '1' == '1'")
-            self.addStoreToDatabase(ID = 1, name = "LIDL")
-            self.addStoreToDatabase(ID = 2, name = "COOP")
-            self.addStoreToDatabase(ID = 3, name = "ICA")
-            self.addStoreToDatabase(ID = 4, name = "WILLYS")
+
+            from product import Store
+            for store in Store:
+                self.addStoreToDatabase(ID = store.value, name = store.name)
         else:
             print("Avbryter")
     

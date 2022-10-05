@@ -22,17 +22,17 @@ class Database:
         query = f"{query} )"
         return query
 
-    def _runSQLQuerry(self, query: str, data: list[str]) -> bool:
+    def _runSQLQuery(self, query: str, data: list[str]) -> bool:
         try:
             self.cursor.execute(query, data)
             return True
         except sqlite3.Error as er:
-            print("\nCould not run querry: " + query)
+            print("\nCould not run query: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
             print("Om du saknar tabeller, testa att uppdatera databasen med Database.recreateDatabase()")
             return False
 
-    def _runSQLQueryWhitResults(self, query: str) -> list:
+    def _runSQLQueryWithResults(self, query: str) -> list:
         try:
             result = self.cursor.execute(query)
             return result.fetchall()
@@ -48,7 +48,7 @@ class Database:
             "Category_ID, Product_Name, Store_ID, Price, URL", 
             data
             )
-        return self._runSQLQuerry(query, data)
+        return self._runSQLQuery(query, data)
     
     def addUserToDatabase(self, email: str, mobile_nr: int, name: str = "TestName", password: str = "Password", date_of_birth: int = 19900101, city: str = "Karlstad", country: str = "Sweden", status: int = 0) -> bool:
         data = [name, email, password, str(mobile_nr), str(date_of_birth), city, country, str(status)]
@@ -57,7 +57,7 @@ class Database:
             "Name, Email, Password, Mobile_Number, Date_of_Birth, City, Country, Logged_in_Status",
             data
         ) 
-        return self._runSQLQuerry(query, data)
+        return self._runSQLQuery(query, data)
     
     def addStoreToDatabase(self, ID: int, name: str) -> bool:
         data = [str(ID), name]
@@ -66,7 +66,7 @@ class Database:
             ("Store_ID, Store_Name"),
             data
         )
-        return self._runSQLQuerry(query, data)
+        return self._runSQLQuery(query, data)
     
     def addCategoryToDatabase(self, ID: int, name: str) -> bool:
         data = [str(ID), name]
@@ -75,7 +75,7 @@ class Database:
             "Category_ID, Category_Name",
             data
         )
-        return self._runSQLQuerry(query, data)
+        return self._runSQLQuery(query, data)
 
 
     def addFavoriteProduct(self, user_ID: int, product_ID: int) -> bool:
@@ -85,7 +85,7 @@ class Database:
             "User_ID, Product_ID",
             data
             ) 
-        return self._runSQLQuerry(query, data)
+        return self._runSQLQuery(query, data)
 
     def addShopingList(self, list_name) -> bool:    #NOTE AutoIncrement needs to be added to List table in database, fix PascalCase on List.List_Name
         data = [list_name]
@@ -94,7 +94,7 @@ class Database:
             "List_Name",
             data
             ) 
-        return self._runSQLQuerry(query, data)
+        return self._runSQLQuery(query, data)
 
     def addShopingListOwner(self, user_ID: int, list_ID: int) -> bool: #NOTE Fix PascalCase on tale name: List_Owner
         data = [str(user_ID), str(list_ID)]
@@ -103,7 +103,7 @@ class Database:
             "User_ID, List_ID",
             data
             ) 
-        return self._runSQLQuerry(query, data)
+        return self._runSQLQuery(query, data)
 
     def addShopingListItem(self, list_ID: int, product_ID: int, amount: int) -> bool: #NOTE Fix PascalCase on List_Items.List_ID
         data = [str(list_ID), str(product_ID), str(amount)]
@@ -112,10 +112,10 @@ class Database:
             "List_ID, Product_ID, Amount",
             data
             ) 
-        return self._runSQLQuerry(query, data)
+        return self._runSQLQuery(query, data)
 
 
-    def logginValidation(self, email: str, password: str) -> bool:
+    def loginValidation(self, email: str, password: str) -> bool:
         query = f"SELECT Password FROM Register WHERE email == '{email}'"
         print(f"query is: {query}")
         try:
@@ -143,16 +143,16 @@ class Database:
             "User_ID, Store_ID",
             data
             ) 
-        return self._runSQLQuerry(query, data)
+        return self._runSQLQuery(query, data)
 
     def getProductDataForAdmin(self):
         query = "SELECT Product_Name, Price, Store_Name, Product_ID FROM Product JOIN Store USING (Store_ID)"
-        result = self._runSQLQueryWhitResults(query)
+        result = self._runSQLQueryWithResults(query)
         return result
 
     def getUserDataForAdmin(self):
         query = "SELECT User_id, Email, Password, Mobile_Number, Date_of_Birth, City, Name FROM Register"
-        result = self._runSQLQueryWhitResults(query)
+        result = self._runSQLQueryWithResults(query)
         return result
     
     def getStoreID(self, store_name: str) -> int:
@@ -163,11 +163,11 @@ class Database:
     def removeProduct(self, id):
         query = f"DELETE FROM Product WHERE Product_ID == '?'"
         data = [str(id)]
-        print(f"TODO: Handle exeptions in removeProduct")
+        print(f"TODO: Handle exceptions in removeProduct")
         try:
             self.cursor.execute(query, data)
         except sqlite3.Error:
-            print("Error in removing product: TODO: HAndle error in removeProduct")
+            print("Error in removing product: TODO: Handle error in removeProduct")
 
     def searchProduct(self, search_term: str):
         query = f"""SELECT Product_Name, Price, Store_Name, Product_ID 
@@ -210,7 +210,7 @@ class Database:
         else:
             return []   
 
-    def getAllProductsWhitCategories(self, category_list: list):
+    def getAllProductsWithCategories(self, category_list: list):
         if len(category_list) != 0:
             query = f"""SELECT Product_Name, Price, Store_Name, Product_ID, Store_Name, URL 
                 FROM Product JOIN Store USING (Store_ID) WHERE
@@ -225,7 +225,7 @@ class Database:
         else:
             return []   
 
-    def getProductWhithoutCategory(self, category_list: list):
+    def getProductWithoutCategory(self, category_list: list):
         if len(category_list) != 0:
             query_category = f"SELECT Product_ID FROM Product JOIN Store USING (Store_ID) WHERE"
             for category in category_list:
@@ -292,7 +292,7 @@ class Database:
         for i in range(input_nr): self.addFavoriteStore(user_ID=i, store_ID=min(i+1, 4))
 
 
-    def droppAllData(self, run: bool = False): #Använd endast för att rensa databasen vid testning
+    def dropAllData(self, run: bool = False): #Använd endast för att rensa databasen vid testning
         if (not run): result = input("\n\nVARNING!\nÄr du säker på att du tömma databasen? y/n\n")
         else: result = 'y'
         if (result == 'y'):
@@ -315,7 +315,7 @@ class Database:
 
 
     def recreateDatabase(self):
-        self.droppAllData(run = True)
+        self.dropAllData(run = True)
         self.cursor.execute("DROP TABLE Category")
         self.cursor.execute("DROP TABLE Favourite_Products")
         self.cursor.execute("DROP TABLE List")
@@ -341,6 +341,7 @@ class Database:
                 PRIMARY KEY("List_ID")
             )
         """)
+        #TODO: is "LIst_ID" correct capitalization?
         self.cursor.execute("""CREATE TABLE "List_Items" (
                 "LIst_ID"	INTEGER NOT NULL,
                 "Product_ID"	INTEGER NOT NULL,

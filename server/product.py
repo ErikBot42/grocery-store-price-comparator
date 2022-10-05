@@ -27,8 +27,8 @@ class ExtractedInfo:
 
     def __init__(self):
         self.price: None | int = None
-        self.price_per_litre: None | int = None
-        self.price_per_kg: None | int = None
+        self.price_l: None | int = None
+        self.price_kg: None | int = None
         pass
     def try_read(self, string: str):
 
@@ -180,10 +180,10 @@ class ExtractedInfo:
                         (unit, fac) = nxt.value;
                         match unit:
                             case Units.KG:
-                                self.price_per_kg = curr.value*fac
+                                self.price_kg = curr.value*fac
                                 #print("Found price/kg: ", self.price_per_kg, "kr/kg")
                             case Units.L:
-                                self.price_per_litre = curr.value*fac
+                                self.price_l = curr.value*fac
                                 #print("Found price/l: ", self.price_per_litre, "kr/l")
                             case Units.NUMBER:
                                 #print("Found price/unit: ", curr.value, "kr/st")

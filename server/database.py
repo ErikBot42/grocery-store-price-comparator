@@ -41,11 +41,20 @@ class Database:
             print('\tSQLite error: %s' % (' '.join(er.args)))
             return []
 
-    def addProductToDatabase(self, name: str, store: str, price: str, category: int, url: str = "") -> bool:
-        data = [str(category), name, str(self.getStoreID(store)), price, url]
+    def addProductToDatabase(self,
+            name: str,
+            store: str,
+            price: str,
+            category: int,
+            price_num: float|None = None,
+            price_kg: float|None = None,
+            price_l: float|None = None,
+            url: str = "",
+            ) -> bool:
+        data = [str(category), name, str(self.getStoreID(store)), price, price_num, price_kg, price_l, url]
         query = self._createInsertSQLQuery(
             "Product", 
-            "Category_ID, Product_Name, Store_ID, Price, URL", 
+            "Category_ID, Product_Name, Store_ID, Price, Price_num, Price_kg, Price_l, URL", 
             data
             )
         return self._runSQLQuery(query, data)
@@ -204,7 +213,7 @@ class Database:
             try:
                 return self.cursor.execute(query).fetchall()
             except sqlite3.Error as er:
-                print("\nCould not run querry: " + query)
+                print("\nCould not run query: " + query)
                 print('\tSQLite error: %s' % (' '.join(er.args)))
                 return []
         else:
@@ -317,8 +326,10 @@ class Database:
     def fallableExecute(self, sql_string: str):
         try:
             self.cursor.execute(sql_string)
+            return True
         except sqlite3.OperationalError:
             print("sqlite3.OperationalError for:", sql_string)
+            return False
 
     def recreateDatabase(self):
         self.dropAllData(run = True)
@@ -334,82 +345,84 @@ class Database:
         self.fallableExecute("DROP TABLE Favourite_Store")
         
         self.fallableExecute("""CREATE TABLE "Favourite_Products" (
-                "User_ID"	INTEGER,
-                "Product_ID"	INTEGER,
+                "User_ID" INTEGER,
+                "Product_ID" INTEGER,
                 FOREIGN KEY("Product_ID") REFERENCES "Product"("Product_ID"),
                 FOREIGN KEY("User_ID") REFERENCES "Register"("User_ID"),
                 PRIMARY KEY("User_ID","Product_ID")
             )
         """)
         self.fallableExecute("""CREATE TABLE "List" (
-                "List_name"	INTEGER NOT NULL,
-                "List_ID"	INTEGER NOT NULL,
+                "List_name" INTEGER NOT NULL,
+                "List_ID" INTEGER NOT NULL,
                 PRIMARY KEY("List_ID")
             )
         """)
-        #TODO: is "LIst_ID" correct capitalization?
         self.fallableExecute("""CREATE TABLE "List_Items" (
-                "LIst_ID"	INTEGER NOT NULL,
-                "Product_ID"	INTEGER NOT NULL,
-                "Amount"	INTEGER NOT NULL,
-                PRIMARY KEY("LIst_ID","Product_ID")
+                "List_ID" INTEGER NOT NULL,
+                "Product_ID" INTEGER NOT NULL,
+                "Amount" INTEGER NOT NULL,
+                PRIMARY KEY("List_ID","Product_ID")
             )
         """)
         self.fallableExecute("""CREATE TABLE "List_owner" (
-                "User_ID"	INTEGER NOT NULL,
-                "List_ID"	INTEGER NOT NULL,
+                "User_ID" INTEGER NOT NULL,
+                "List_ID" INTEGER NOT NULL,
                 PRIMARY KEY("User_ID","List_ID"),
                 FOREIGN KEY("List_ID") REFERENCES "List"("List_ID")
             )
         """)
         self.fallableExecute("""CREATE TABLE "Login" (
-                "Day"	INTEGER,
-                "Time"	INTEGER,
-                "User_ID"	INTEGER,
+                "Day" INTEGER,
+                "Time" INTEGER,
+                "User_ID" INTEGER,
                 PRIMARY KEY("User_ID"),
                 FOREIGN KEY("User_ID") REFERENCES "Register"("User_ID")
             )
         """)
         self.fallableExecute("""CREATE TABLE "Product" (
-                "Category_ID"	INTEGER,
-                "Product_ID"	INTEGER,
-                "Product_Name"	TEXT,
-                "Store_ID"	INTEGER,
-                "Price"	TEXT,
-                "URL"	TEXT,
+                "Category_ID" INTEGER,
+                "Product_ID" INTEGER,
+                "Product_Name" TEXT,
+                "Store_ID" INTEGER,
+                "Price" TEXT,
+                "Price_num" TEXT,
+                "Price_kg" TEXT,
+                "Price_l" TEXT,
+                "URL" TEXT,
                 PRIMARY KEY("Product_ID"),
                 FOREIGN KEY("Category_ID") REFERENCES "Category"("Category_ID"),
                 FOREIGN KEY("Store_ID") REFERENCES "Store"("Store_ID")
             )
         """)
         self.fallableExecute("""CREATE TABLE "Category" (
-            "Category_ID"	INTEGER,
-            "Category_Name"	INTEGER NOT NULL UNIQUE,
+            "Category_ID" INTEGER,
+            "Category_Name" INTEGER NOT NULL UNIQUE,
             PRIMARY KEY("Category_ID")
             )""")
         self.fallableExecute("""CREATE TABLE "Register" (
-                "User_ID"	INTEGER,
-                "Email"	TEXT NOT NULL UNIQUE,
-                "Password"	TEXT NOT NULL,
-                "Mobile_Number"	INTEGER UNIQUE,
-                "Date_of_Birth"	INTEGER,
-                "City"	TEXT,
-                "Country"	TEXT,
-                "Logged_in_Status"	INTEGER,
-                "Name"	TEXT,
+                "User_ID" INTEGER,
+                "Email" TEXT NOT NULL UNIQUE,
+                "Password" TEXT NOT NULL,
+                "Mobile_Number" INTEGER UNIQUE,
+                "Date_of_Birth" INTEGER,
+                "City" TEXT,
+                "Country" TEXT,
+                "Logged_in_Status" INTEGER,
+                "Name" TEXT,
                 PRIMARY KEY("User_ID")
             )
         """)
         self.fallableExecute("""CREATE TABLE "Store" (
-                "Store_ID"	INTEGER,
-                "Store_Name"	TEXT,
+                "Store_ID" INTEGER,
+                "Store_Name" TEXT,
                 PRIMARY KEY("Store_ID")
             )
         """)
 
         self.fallableExecute("""CREATE TABLE "Favourite_Store" (
-                "Store_ID"	INTEGER,
-                "User_ID"	INTEGER,
+                "Store_ID" INTEGER,
+                "User_ID" INTEGER,
                 FOREIGN KEY("User_ID") REFERENCES "Register"("User_ID"),
                 FOREIGN KEY("Store_ID") REFERENCES "Store"("Store_ID"),
                 PRIMARY KEY("Store_ID","User_ID")

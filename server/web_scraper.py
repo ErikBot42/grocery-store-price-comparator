@@ -259,8 +259,10 @@ def add_all_to_database(data: Database, skip_selenium: bool = False):
     product_list = request_all(skip_selenium)
 
     for product in product_list:
+        pass
+
         #print(product.store, product.name,"::", product.price)
-        print(product.description)
+        #print(product.description)
 
         #name may contain amount, but not price
         #COOP:
@@ -296,7 +298,11 @@ def add_all_to_database(data: Database, skip_selenium: bool = False):
                 store=str(product.store),\
                 price=product.modifier + " " + product.price,\
                 category=-1,\
-                url=product.image_url):
+                url=product.image_url,
+                price_num=product.ex.price,
+                price_kg=product.ex.price_kg,
+                price_l=product.ex.price_l ,
+                ):
             print("Could not add product:")
             product.print()
     print("scraper done.")

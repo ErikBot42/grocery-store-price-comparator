@@ -13,9 +13,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +28,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 /*
@@ -33,11 +37,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
- */
+*/
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
+
+import modal.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,9 +64,11 @@ public class RegisterFragment extends Fragment {
     public RegisterFragment() {
         // Required empty public constructor
     }
-    EditText fullName,email,password,rePassword;
+    EditText fullName,email,password,rePassword,telephone;
     FirebaseFirestore fStore;
     private FirebaseAuth mAuth;
+    FirebaseDatabase database;
+    DatabaseReference ref;
     String userID;
     private String TAG;
     private Button regBtn;
@@ -100,17 +108,25 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_register, container, false);
-
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("server/saving-data/fireblog");
         regBtn = view.findViewById(R.id.btn_register);
         Button backToLogin_btn = view.findViewById(R.id.btn_login);
         fullName = view.findViewById(R.id.et_name);
         password = view.findViewById(R.id.et_password);
-        //TODO: Check if email is taken
         email = view.findViewById(R.id.et_email);
         rePassword = view.findViewById(R.id.et_repassword);
+        telephone = view.findViewById(R.id.et_telephone);
         loadingProgress = view.findViewById(R.id.regProgressBar);
-
         loadingProgress.setVisibility(View.INVISIBLE);
+        Spinner spinner = view.findViewById(R.id.favStores);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.stores_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
 
         regBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +137,8 @@ public class RegisterFragment extends Fragment {
                 final String password1 = password.getText().toString();
                 final String password2 = rePassword.getText().toString();
                 final String name = fullName.getText().toString();
+                final String telephone1 = telephone.getText().toString();
+                final String favStore = spinner.getSelectedItem().toString();
 
 
                 if (email1.isEmpty() || name.isEmpty() || password1.isEmpty() || !password2.equals(password2)) {
@@ -136,66 +154,53 @@ public class RegisterFragment extends Fragment {
                     // everything is ok and all fields are filled now we can start creating user account
                     // CreateUserAccount method will try to create the user if the email is valid
 
-                    CreateUserAccount(email1, name, password1);
+                    CreateUserAccount(email1, name, password1,telephone1,favStore);
                 }
             }
         });
         // Change to login fragment
         backToLogin_btn.setOnClickListener(view1 -> {
-            replaceFragment(new ProfileFragment());
+            replaceFragment(new LoginFragment());
 
         });
         return view;
     }
 
-    private void CreateUserAccount(String email, String name, String password) {
+    private void CreateUserAccount(String email, String name, String password,String telephone,String favStore) {
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                .addOnCompleteListener(getActivity(), task -> {
+                    if (task.isSuccessful()) {
+                        // user account created successfully
+                        printToast("Account created");
+                        userID = mAuth.getCurrentUser().getUid();
+                        DocumentReference documentReference = fStore.collection("user_profile").document(userID);
+                        Map<String, Object> user = new HashMap<>();
+                        user.put("Name", name);
+                        user.put("Email", email);
+                        user.put("Password", password);
+                        user.put("Telephone",telephone);
+                        user.put("Favorite store", favStore);
+                        replaceFragment(new LoginFragment());
+                        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
 
-                            // user account created successfully
-                            printToast("Account created");
-                            userID = mAuth.getCurrentUser().getUid();
-                            DocumentReference documentReference = fStore.collection("user_profile").document(userID);
-                            Map<String, Object> user = new HashMap<>();
-                            user.put("Name", name);
-                            user.put("Email", email);
-                            user.put("Password", password);
-                            replaceFragment(new ProfileFragment());
-                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "onSuccess: user Profile is created for " + userID);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "onFailure: " + e.toString());
+                            }
+                        });
 
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG, "onSuccess: user Profile is created for " + userID);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "onFailure: " + e.toString());
-                                }
-                            });
-                            // after we created user account we need to update his profile picture and name
-                            //check user photo is picked or no
-
-                        } else {
-                            // account creation failed
-                            printToast("account creation failed" + task.getException().getMessage());
-                            regBtn.setVisibility(View.VISIBLE);
-                            loadingProgress.setVisibility(View.INVISIBLE);
-                        }
+                    } else {
+                        // account creation failed
+                        printToast("account creation failed" + task.getException().getMessage());
+                        regBtn.setVisibility(View.VISIBLE);
+                        loadingProgress.setVisibility(View.INVISIBLE);
                     }
                 });
-    }
-
-    // Function to check if email is in correct format (abc(.abc)@abc.abc)
-    private boolean validateEmail(CharSequence email){
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private boolean passwordSameCheck(CharSequence password, CharSequence rePassword){
-        return password.equals(rePassword);
     }
 
     private void printToast(String message){
@@ -213,3 +218,5 @@ public class RegisterFragment extends Fragment {
 
 
 }
+
+

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="app_name">ButiksErbjudanden</string>
     <string name="login">inloggning</string>
@@ -19,3 +20,4 @@
     <string name="eng_Btn" >Engelska</string>
     <string name="log_Btn">Logga ut</string>
 </resources>
+

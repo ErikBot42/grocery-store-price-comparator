@@ -1,28 +1,78 @@
 package com.example.grocerystoreoffers;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+
 import androidx.fragment.app.Fragment;
+
+
 import androidx.fragment.app.FragmentManager;
+
+
 import androidx.fragment.app.FragmentTransaction;
 
+
+
+
+
+
+
+
 import android.app.AlarmManager;
+
+
 import android.app.PendingIntent;
+
+
 import android.content.Context;
+
+
 import android.content.Intent;
+
+
 import android.content.SharedPreferences;
+
+
 import android.content.res.Configuration;
+
+
 import android.content.res.Resources;
+
+
 import android.os.Build;
+
+
 import android.os.Bundle;
+
+
 import android.util.DisplayMetrics;
+
+
 import android.view.View;
+
+
 import android.widget.Button;
+
+
 import android.widget.EditText;
+
+
 import android.widget.Toast;
 
+
+
+
+
+
+
 import com.example.grocerystoreoffers.databinding.ActivityMainBinding;
+import com.google.firebase.auth.FirebaseAuth;
+
 
 import java.util.ArrayList;
+import java.util.Locale;
+
+
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,41 +86,45 @@ public class MainActivity extends AppCompatActivity {
     public static final String TEXT = "text";
 
     private String text;
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         loadData();
         String loadedLang = text;
         setAppLocale(text);
         setTitle(R.string.app_name);
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        firebaseAuth = FirebaseAuth.getInstance();
+
         setContentView(binding.getRoot());
         replaceFragment(new HomeFragment());
-        usernameEdt =(EditText) findViewById(R.id.et_email);
-        passwordEdt =(EditText) findViewById(R.id.et_password);
-
+        //usernameEdt =(EditText) findViewById(R.id.et_email);
+        //passwordEdt =(EditText) findViewById(R.id.et_password);
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-
             switch(item.getItemId()){
-
                 case R.id.home:
                     replaceFragment(new HomeFragment());
                     break;
                 case R.id.profile:
-                    replaceFragment(new ProfileFragment());
+                    if(firebaseAuth.getCurrentUser() != null){
+                        replaceFragment(new ProfileFragment());
+                        break;
+                    }
+                    else{
+                        replaceFragment(new LoginFragment());
+                    }
                     break;
                 case R.id.settings:
-                    replaceFragment(new NearbyStoresFragment());
-                    //replaceFragment(new SettingsFragment());
+                    replaceFragment(new Offers());
                     break;
                 case R.id.map:
-                    Intent intent = new Intent(this, MapsActivityRaw.class);
-                    startActivity(intent);
+                    replaceFragment(new NearbyStoresFragment());
                     break;
             }
-
             return true;
         });
         engBtn = (Button) findViewById(R.id.engBtn);
@@ -117,6 +171,20 @@ public class MainActivity extends AppCompatActivity {
         res.updateConfiguration(conf,dm);
     }
 
+    private void setAppLocale(String localeCode){
+
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            conf.setLocale(new Locale(localeCode.toLowerCase()));
+        }else{
+            conf.locale = new Locale(localeCode.toLowerCase());
+        }
+        res.updateConfiguration(conf,dm);
+    }
+
     private void replaceFragment(Fragment fragment){
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -142,5 +210,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    public void loadData() {
 
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        text = sharedPreferences.getString(TEXT, "");
+
+    }
 }

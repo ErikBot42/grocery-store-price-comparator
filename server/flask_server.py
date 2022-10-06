@@ -18,7 +18,7 @@ CATEGORIES = [
 app = Flask(__name__)
 app.secret_key = b".U,e-Xr))$I,/bK"
 app.permanent_session_lifetime = timedelta(days=1)
- 
+
 @app.route("/", methods=["GET", "POST"])
 def showHomePage():
     if "user" in session:

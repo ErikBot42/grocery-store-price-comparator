@@ -92,7 +92,7 @@ def removeProduct(id):
     db.close()
     return redirect(url_for("admin_products.html"))
 
-@app.route("/app/loggin/", methods=["POST"])
+@app.route("/app/login/", methods=["POST"])
 def appLogin():
     db = Database()
     data = request.json

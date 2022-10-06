@@ -219,7 +219,7 @@ class Database:
         else:
             return []   
 
-    def getAllProductsWithCategories(self, category_list: list):
+    def getAllProductsWithCategories(self, category_list: list) -> list:
         if len(category_list) != 0:
             query = f"""SELECT Product_Name, Price, Store_Name, Product_ID, Store_Name, URL 
                 FROM Product JOIN Store USING (Store_ID) WHERE
@@ -229,6 +229,11 @@ class Database:
                     if query[-1] == ')':
                         query = f"{query} OR"
                     query = f"{query} REGEXP('{reg}', lower(Product_Name))"
+            #TODO: sort by: 
+            #    "Price_num" FLOAT,
+            #    "Price_kg" FLOAT,
+            #    "Price_l" FLOAT,
+
             
             return self.cursor.execute(query).fetchall()
         else:
@@ -386,9 +391,9 @@ class Database:
                 "Product_Name" TEXT,
                 "Store_ID" INTEGER,
                 "Price" TEXT,
-                "Price_num" TEXT,
-                "Price_kg" TEXT,
-                "Price_l" TEXT,
+                "Price_num" FLOAT,
+                "Price_kg" FLOAT,
+                "Price_l" FLOAT,
                 "URL" TEXT,
                 PRIMARY KEY("Product_ID"),
                 FOREIGN KEY("Category_ID") REFERENCES "Category"("Category_ID"),

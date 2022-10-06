@@ -12,6 +12,20 @@
     <div id="currListings">
         <h2 class="text-primary d-flex justify-content-center">Current Listings</h2>
         <table class="table  table-dark table-striped">
+            <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/products/new">                          
+                <div class="form-group">
+                    <input type="text" class="form-control" id="Category_ID" name="Category_ID"  placeholder="Category_ID">
+                    <input type="text" class="form-control" id="Product_Name" name="Product_Name" required placeholder="Product_Name">
+                    <input type="text" class="form-control" id="Store_ID" name="Store_ID" required placeholder="Store">
+                    <input type="text" class="form-control" id="Price" name="Price"  placeholder="Price">
+                    <input type="text" class="form-control" id="Price_num" name="Price_num" required placeholder="Price_num">
+                    <input type="text" class="form-control" id="Price_kg" name="Price_kg"  placeholder="Price_kg">
+                    <input type="text" class="form-control" id="Price_l" name="Price_l"  placeholder="Price_l">
+                    <input type="text" class="form-control" id="URL" name="URL" placeholder="URL">         
+                    <button type="submit" class="btn btn-primary mr-0">Add Product</button>                  
+                </div>
+            </form>
+            <br>
             <thead>
                 <tr>
                     <th scope="col">name</th>

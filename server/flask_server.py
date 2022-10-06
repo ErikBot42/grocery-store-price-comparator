@@ -1,4 +1,3 @@
-from genericpath import isfile
 from flask import Flask, render_template, url_for, session, redirect, request, flash, jsonify
 from database import Database
 from datetime import timedelta
@@ -11,8 +10,8 @@ CATEGORIES = [
     ["Vegan", [".*[vV]egan.*"]], 
     ["Meat", [".*[kK]ött.*", ".*[pP]rosciutto.*", ".*[wW]urst.*", ".*[sS]alame .*", ".*[sS]kinka.*", ".*[bB]acon.*", ".*[hH]amburgare.*", ".*[fF]ish.*", ".*[nN]uggets.*", ".*[lL]amm.*", ".*[fF]läsk.*", ".*[sS]tek.*", ".*[rR]ostas.*", ".*[fF]isk.*", ".*[kK]arré.*", ".*[kK]orv.*", ".*[fF]ilé.*", ".*[kK]yckling.*", ".*[kK]ebab.*", ".*[sS]alami.*", ".*[bB]iff.*", ".*[fF]ärs .*"]], 
     ["Fruit", [".*[pP]otatis.*", ".*[bB]önor.*", ".*[oO]liver.*", ".*[aA]vocado.*", ".*[mM]ango.*", ".*[sS]allad.*", ".*[kK]iwi.*", ".*[pP]umpa.*",".*[fF]rukt.*", ".*[äÄ]pple.*", ".*[pP]äron.*", ".*[bB]anan.*", ".*[dD]ruvor.*", ".*[tT]omat.*", ".*[pP]aprika.*", ".*[sS]alad.*", ".*[aA]vokado.*", ".*[cC]itro(n|nera).*"]], 
-    ["Dairy", [".*[mM]jölk.*", ".*[pP]armigiano.*", ".*[sS]mör.*", ".*[äÄ]gg$", ".*[oO]st$", ".*[yY]oghurt.*", ".*[mM]ilk.*", ".*[mM]ozzarella.*", ".*[bB]rie.*", ".*[gG]revé.*", ".*[cC]reme .*", ".*[kK]varg.*"]], 
-    ["Drink", [".*[lL]äsk$", ".*[jJ]uice.*", ".*.[sS]moothie*", ".*[kK]affe.*", ".*[dD]rika.*", ".*[bB]ords[vV]atten.*", ".*(^| )[öÖ]l($| ).*", ".*.[dD]ryck*"]], 
+    ["Dairy", [".*[mM]jölk.*", ".*[bB]regott.*", ".*[pP]armigiano.*", ".*[sS]mör.*", ".*[äÄ]gg$", ".*[oO]st$", ".*[yY]oghurt.*", ".*[mM]ilk.*", ".*[mM]ozzarella.*", ".*[bB]rie.*", ".*[gG]revé.*", ".*[cC]reme .*", ".*[kK]varg.*"]], 
+    ["Drink", [".*[lL]äsk$", ".*[cC]ider.*", ".*[jJ]uice.*", ".*.[sS]moothie*", ".*[kK]affe.*", ".*[dD]rika.*", ".*[bB]ords[vV]atten.*", ".*(^| )[öÖ]l($| ).*", ".*.[dD]ryck*"]], 
     ["Sweets", [".*(^| )[gG]odis.*", ".*[cC]andie.*", ".*[tT]offee.*", ".*[pP]lopp.*", ".*[gG]lass.*", ".*[cC]hips.*", ".*[oO]stbågar.*", ".*[cC]hoklad.*", ".*[nN]ötter.*"]], 
     ["Bread", [".*[bB]röd.*", ".*[lL]antgoda.*", ".*[bB]agel.*", ".*[kK]ak(a|or).*", ".*[cC]ookie.*", ".*([^t])[bB]ull(e|ar).*", ".*[bB]allerina.*", ".*[sS]ingoalla.*", ".*[tT]årt(a|or).*"]]
     ]   
@@ -92,6 +91,23 @@ def removeProduct(id):
     db.close()
     return redirect(url_for("admin_products.html"))
 
+@app.route("/products/new", methods = ["POST"])
+def addPRoduct():
+    db = Database()
+    query = db.addProductToDatabase(
+        category=request.form["Category_ID"],
+        name=request.form["Product_Name"],
+        store=request.form["Store_ID"],
+        price=request.form["Price"],
+        price_num=request.form["Price_num"],
+        price_kg=request.form["Price_kg"],
+        price_l=request.form["Price_l"],
+        url=request.form["URL"]
+    )
+    db.commitToDatabase()
+    db.close()
+    return redirect(url_for("products"))
+
 @app.route("/app/login/", methods=["POST"])
 def appLogin():
     db = Database()
@@ -112,13 +128,15 @@ def sendProductsInJson():
     db.close()
     data = []
     for item in prod:
-        temp = {
-            "id":str(item[3]),
-            "name":item[0],
-            "price":item[1],
-            "image":item[5] 
-        }
-        data.append(temp)
+        if item[1] != None:  
+            temp = {
+                "id":str(item[3]),
+                "name":item[0],
+                "price":item[1],
+                "image":item[5],
+                "store":item[4]
+            }
+            data.append(temp)
     prod = json.dumps('{"products":'+str(data)+'}')
     return jsonify(prod)
 

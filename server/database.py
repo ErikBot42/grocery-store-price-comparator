@@ -155,7 +155,7 @@ class Database:
         return self._runSQLQuery(query, data)
 
     def getProductDataForAdmin(self):
-        query = "SELECT Product_Name, Price, Store_Name, Product_ID FROM Product JOIN Store USING (Store_ID)"
+        query = "SELECT Product_Name, Price_num, Store_Name, Product_ID FROM Product JOIN Store USING (Store_ID)"
         result = self._runSQLQueryWithResults(query)
         return result
 
@@ -179,10 +179,10 @@ class Database:
             print("Error in removing product: TODO: Handle error in removeProduct")
 
     def searchProduct(self, search_term: str):
-        query = f"""SELECT Product_Name, Price, Store_Name, Product_ID 
+        query = f"""SELECT Product_Name, Price_num, Store_Name, Product_ID 
             FROM Product JOIN Store USING (Store_ID)
             WHERE Product_Name LIKE '%{search_term}%' 
-            OR Price LIKE '%{search_term}%' 
+            OR Price_num LIKE '%{search_term}%' 
             OR Store_Name LIKE '%{search_term}%' 
         """
         res = self.cursor.execute(query)
@@ -221,7 +221,7 @@ class Database:
 
     def getAllProductsWithCategories(self, category_list: list) -> list:
         if len(category_list) != 0:
-            query = f"""SELECT Product_Name, Price, Store_Name, Product_ID, Store_Name, URL 
+            query = f"""SELECT Product_Name, Price_num, Store_Name, Product_ID, Store_Name, URL 
                 FROM Product JOIN Store USING (Store_ID) WHERE
             """
             for category in category_list:

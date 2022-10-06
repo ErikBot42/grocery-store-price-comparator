@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="16dp"
+    tools:context=".Offers">
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:orientation="horizontal"
+        >
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/favouriteStore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:text="Favourite Store"
+            android:onClick="onCheckboxClicked"
+            />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/icaStore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:text="ICA"
+            />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/lidlStore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:text="Lidl"
+            android:onClick="onCheckboxClicked"
+            />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/willysStore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:text="Willys"
+            android:onClick="onCheckboxClicked"
+            />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/coopStore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:text="COOP"
+            android:onClick="onCheckboxClicked"
+            />
+    </androidx.appcompat.widget.Toolbar>
+    </HorizontalScrollView>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listView"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        />
+
+</LinearLayout>
+

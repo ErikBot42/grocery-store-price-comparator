@@ -140,6 +140,12 @@ public class MapsActivityRaw extends AppCompatActivity implements OnMapReadyCall
                 .title("LIDL Östra Infarten"));
         markerLIDLOSTRA.setTag(0);
 
+        googleMap.setOnInfoWindowClickListener(marker -> {
+            //Toast.makeText(MapsActivityRaw.this, "Clicked title is " + marker.getTitle(), Toast.LENGTH_SHORT).show();
+            System.out.println("CLICKED MARKER TITLE");
+            replaceFragment(new HomeFragment());
+        });
+
         googleMap.setOnMarkerClickListener(marker -> {
             // on marker click we are getting the title of our marker
             // which is clicked and displaying it in a toast message.

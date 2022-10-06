@@ -14,8 +14,17 @@
     <string name="login_back">Back to login</string>
     <string name="back_to_home">Back to home</string>
     <string name="remember">Remember me</string>
-    <string name="login">login</string>
-    <string name="swe_Btn" >Swedish</string>
-    <string name="eng_Btn" >English</string>
+    <string name="phone">Phone number</string>
     <string name="log_Btn">logout</string>
+    <string name="swe_Btn">swedish</string>
+    <string name="eng_Btn">english</string>
+    <string-array name="stores_array">
+        <item>Choose favorite store...</item>
+        <item>ICA</item>
+        <item>Coop</item>
+        <item>Willys</item>
+        <item>LIDL</item>
+    </string-array>
 </resources>
+
+

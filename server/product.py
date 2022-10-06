@@ -26,10 +26,34 @@ def price(kr: int, öre: int) -> float:
 class ExtractedInfo:
 
     def __init__(self):
-        self.price: None | int = None
-        self.price_l: None | int = None
-        self.price_kg: None | int = None
+        self.price: None | float = None
+        self.price_l: None | float = None
+        self.price_kg: None | float = None
+        self.amount_kg: None | float = None
+        self.amount_l: None | float = None
         pass
+    
+    # try calc missing values from current values.
+    def infer_missing(self):
+        if self.price == None:
+            if self.price_kg != None and self.amount_kg != None:
+                self.price = self.price_kg * self.amount_kg
+        
+        if self.price == None:
+            if self.price_l != None and self.amount_l!= None:
+                self.price = self.price_l * self.amount_l
+
+        if self.price != None:
+            if self.amount_kg == None and self.price_kg != None:
+                self.amount_kg = self.price / self.price_kg
+            if self.amount_kg != None and self.price_kg == None:
+                self.price_kg = self.price / self.amount_kg
+            
+            if self.amount_l == None and self.price_l != None:
+                self.amount_l = self.price / self.price_l
+            if self.amount_l != None and self.price_l == None:
+                self.price_l = self.price / self.amount_l
+
     def try_read(self, string: str):
 
         #price represented as "öre"
@@ -176,21 +200,35 @@ class ExtractedInfo:
                 #        results.append(("number of things", curr.value, nxt.value))
                 #        
                 case "PRICE":
-                    if nxt_type == "PER":
-                        (unit, fac) = nxt.value;
-                        match unit:
-                            case Units.KG:
-                                self.price_kg = curr.value*fac
-                                #print("Found price/kg: ", self.price_per_kg, "kr/kg")
-                            case Units.L:
-                                self.price_l = curr.value*fac
-                                #print("Found price/l: ", self.price_per_litre, "kr/l")
-                            case Units.NUMBER:
-                                #print("Found price/unit: ", curr.value, "kr/st")
-                                self.price = curr.value
-                    else:
-                        #print("Found price: ", curr.value, "kr")
-                        self.price = curr.value
+                    match nxt_type:
+                        case "PER": 
+                            (unit, fac) = nxt.value;
+                            match unit:
+                                case Units.KG:
+                                    self.price_kg = curr.value*fac
+                                    #print("Found price/kg: ", self.price_per_kg, "kr/kg")
+                                case Units.L:
+                                    self.price_l = curr.value*fac
+                                    #print("Found price/l: ", self.price_per_litre, "kr/l")
+                                case Units.NUMBER:
+                                    #print("Found price/unit: ", curr.value, "kr/st")
+                                    self.price = curr.value
+                        case _:
+                            #print("Found price: ", curr.value, "kr")
+                            self.price = curr.value
+                case "NUMBER":
+                    match nxt_type:
+                        case "UNIT":
+                            (unit, fac) = nxt.value;
+                            match unit:
+                                case Units.KG:
+                                    self.amount_kg = curr.value*fac
+                                case Units.L:
+                                    self.amount_l = curr.value*fac
+                        case _:
+                            pass
+
+        self.infer_missing()
 
 class Product:
     #TODO: create function that may return product if it's valid
@@ -211,8 +249,8 @@ class Product:
         self.image_url = image_url
         self.modifier = modifier
         self.name = name
-        self.price = price
         self.store = store
+        self.price = price
         ex = ExtractedInfo()
         ex.try_read(self.description)
         ex.try_read(self.name)

@@ -43,6 +43,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
 /**
  * A styled map using JSON styles from a raw resource.
  */
@@ -139,6 +140,12 @@ public class MapsActivityRaw extends AppCompatActivity implements OnMapReadyCall
                 .position(LIDL_OSTRA)
                 .title("LIDL Östra Infarten"));
         markerLIDLOSTRA.setTag(0);
+
+        googleMap.setOnInfoWindowClickListener(marker -> {
+            //Toast.makeText(MapsActivityRaw.this, "Clicked title is " + marker.getTitle(), Toast.LENGTH_SHORT).show();
+            System.out.println("CLICKED MARKER TITLE");
+            replaceFragment(new HomeFragment());
+        });
 
         googleMap.setOnMarkerClickListener(marker -> {
             // on marker click we are getting the title of our marker

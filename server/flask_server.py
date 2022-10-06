@@ -1,6 +1,10 @@
+from genericpath import isfile
 from flask import Flask, render_template, url_for, session, redirect, request, flash, jsonify
 from database import Database
 from datetime import timedelta
+import json
+import os.path
+import sys
 
 CATEGORIES = [
     ["Vegetarian", [".*[vV]egetar.*", ".*[oO]stburgare.*", ".*[vV]ego.*"]], 
@@ -19,6 +23,14 @@ app = Flask(__name__)
 app.secret_key = b".U,e-Xr))$I,/bK"
 app.permanent_session_lifetime = timedelta(days=1)
 
+
+
+if not os.path.isfile("Grocery_Store_Database.db"):
+    sys.exit("Could not find database")
+
+
+ 
+
 @app.route("/", methods=["GET", "POST"])
 def showHomePage():
     if "user" in session:
@@ -27,7 +39,7 @@ def showHomePage():
         db = Database()
         password = request.form['Password']
         user_name = request.form["Username"]
-        if db.logginValidation(email=user_name, password=password) or (user_name=="admin" and password == "password"):
+        if db.loginValidation(email=user_name, password=password) or (user_name=="admin" and password == "password"):
             flash(f"Logged in as: {request.form['Username']}", "info")
             session["user"] = request.form["Username"]
             session.permanent = True
@@ -47,8 +59,9 @@ def products():
         db = Database()
         if request.method == "POST":
             prod = db.searchProduct(request.form["productSearch"])
+            db.close()
         else:
-            prod = db.getAllProductsWhitCategories(CATEGORIES)
+            prod = db.getAllProductsWithCategories(CATEGORIES)
             db.close()
         return render_template("admin_products.html", products=prod)
     else:
@@ -83,16 +96,36 @@ def removeProduct(id):
     db.close()
     return redirect(url_for("admin_products.html"))
 
-@app.route("/login/app", methods=["POST"])
+@app.route("/app/login/", methods=["POST"])
 def appLogin():
-    database = Database()
+    db = Database()
     data = request.json
     print(f"INPUT: ({data['Username']}, {data['Password']})")
-    if (database.logginValidation(email = data['Username'], password = data['Password']) == True):
+    if (db.loginValidation(email = data['Username'], password = data['Password']) == True):
+        db.close()
         result = {'login': 'True'}
     else:
+        db.close()
         result = {'login': 'False'}
     return jsonify(result)
+
+@app.route("/app/products/", methods=["POST", "GET"])
+def sendProductsInJson():
+    db = Database()
+    prod = db.getAllProductsWithCategories(CATEGORIES)
+    db.close()
+    data = []
+    for item in prod:
+        temp = {
+            "id":str(item[3]),
+            "name":item[0],
+            "price":item[1],
+            "image":item[5] 
+        }
+        data.append(temp)
+    prod = json.dumps('{"products":'+str(data)+'}')
+    return jsonify(prod)
+
 
 @app.route("/products/category/<category>", methods = ["GET"])
 def productCategory(category: str):
@@ -100,18 +133,17 @@ def productCategory(category: str):
         db = Database()
         for cat in CATEGORIES:
             if category == cat[0]:
-                print(f"#### Found match!: {category} matches {cat[0]}")
                 prod = db.getProductCategory(cat[1])
                 break
         else:
             if category == "Misk":
-                prod = db.getProductWhithoutCategory(CATEGORIES)
+                prod = db.getProductWithoutCategory(CATEGORIES)
             elif category == "All":
                 prod = db.getProductDataForAdmin()
             else:
                 print(f"#### Not a mach found for: {category}")
                 prod = []
-        db.close()
+        db.close()  
         return render_template("admin_products.html", products=prod)
     else:
         return redirect(url_for("showHomePage"))

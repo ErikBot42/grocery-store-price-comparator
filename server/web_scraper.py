@@ -14,7 +14,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-from typing import AnyStr, Iterable
+from typing import Iterable #AnyStr
 #import colorama
 
 from database import Database
@@ -86,7 +86,10 @@ def soup_get_attr(soup: BeautifulSoup | bs4.Tag | bs4.NavigableString | None, at
         case bs4.NavigableString():
             return soup
         case _:
-            res: str | list[str] = soup[attribute]
+            try:
+                res: str | list[str] = soup[attribute]
+            except KeyError:
+                res = ""
             match res:
                 case str():
                     return res
@@ -173,17 +176,32 @@ def willys_parse(soup: BeautifulSoup) -> list[product.Product]:
     offers = soup_find_all(soup, "div", "Productstyles__StyledProduct-sc-16nua0l-0 aRuiG")
     product_list: list[product.Product] = []
     for offer_el in offers:
+        #print(offer_el.prettify())
+        #assert False
+        #<img alt="Färdigrätter" class="u-posAbsoluteCenter" src="//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1645060239/cloud/246920.png"/>
+        #<img data-nimg="intrinsic" decoding="async" itemprop="image" src="https://d2rfo6yapuixuu.cloudfront.net/h93/h9d/9440479739934/2355022700000_1555584076180_master_axfood_300" style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%;"/>
+
         price: str = soup_find_strs_joined(offer_el, " ", "div", "PriceLabelstyles__StyledProductPrice-sc-koui33-0 dCxjnV") # "yellow" price
         if price == "": # "red" price
             price = soup_find_strs_joined(offer_el, " ", "div", "PriceLabelstyles__StyledProductPriceTextWrapper-sc-koui33-1 fHVyJs")
         if price == "":
             assert False
+        imgs = offer_el.find_all("img")
+        image_url = ""
+        for img in imgs:
+            image_url = soup_get_attr(img, "src")
+            if soup_get_attr(img, "data-nimg") != "intrinsic":
+                continue
+            else:
+                break
+
         product_list.append(product.Product(
             description = soup_find_strs_joined(offer_el, " ", "div", "Productstyles__StyledProductManufacturer-sc-16nua0l-6 ksPmCk"),
             modifier    = soup_find_strs_joined(offer_el, " ", "div", "Productstyles__StyledProductSavePrice-sc-16nua0l-13 iyjqpG"),
             name        = soup_find_strs_joined(offer_el, " ", "div", "Productstyles__StyledProductName-sc-16nua0l-5 dqhhbm"), 
             price       = price, 
             store       = product.Store.WILLYS,
+            image_url = image_url
             ))
     return product_list
 
@@ -233,34 +251,76 @@ def get_willys_html(url: str) -> str:
     else:
         return ""
 
-def request_all() -> list[product.Product]:
+def request_all(skip_selenium: bool) -> list[product.Product]:
     product_list: list[product.Product] = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
         ica_future = executor.submit(address_to_soup, "https://www.ica.se/butiker/maxi/karlstad/maxi-ica-stormarknad-karlstad-11010/erbjudanden/")
         coop_future = executor.submit(address_to_soup, "https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/")
         lidl_future = executor.submit(address_to_soup, "https://www.lidl.se/veckans-erbjudanden")
-        willys_future = executor.submit(get_willys_html, "https://www.willys.se/erbjudanden/butik?StoreID=2117")
+        
+        if not skip_selenium:
+            willys_future = executor.submit(get_willys_html, "https://www.willys.se/erbjudanden/butik?StoreID=2117")
+            print("parse willys html")
+            product_list += willys_parse(html_to_soup(willys_future.result()))
+        else:
+            print("skipping willys (needs selenium)")
+
         print("parse coop html")
         product_list += coop_parse(coop_future.result())
         print("parse ica html")
         product_list += ica_parse(ica_future.result())
         print("parse lidl html")
         product_list += lidl_parse(lidl_future.result())
-        print("parse willys html")
-        product_list += willys_parse(html_to_soup(willys_future.result()))
     return product_list
 
-def add_all_to_database(data: Database):
-    product_list = request_all()
-    
+def add_all_to_database(data: Database, skip_selenium: bool = False):
+    product_list = request_all(skip_selenium)
+
+    for product in product_list:
+        pass
+
+        #print(product.store, product.name,"::", product.price)
+        #print(product.description)
+
+        #name may contain amount, but not price
+        #COOP:
+        #Snackpaprika 2-pack
+        #Rosor 9-pack Fairtrade
+        #Vetemjöl 2 kg
+        #Jordnötter
+        #ICA:
+        #Frysta räkor med skal 90/120 (=90 till 120 st)
+        #Godispåse, pingvinstänger 3-pack
+        #Te 100-pack
+        #Öl 3,5%
+        #LIDL:
+        #Toalettpapper, 4 lager
+
+
+
+
+
+    #1/0
+
+
     print("add products to database")
     for product in product_list:
+        if not product.is_valid():
+            print()
+            print("INVALID PRODUCT:")
+            product.print()
+
+
         if not data.addProductToDatabase(\
                 name=product.name,\
                 store=str(product.store),\
                 price=product.modifier + " " + product.price,\
                 category=-1,\
-                url=product.image_url):
+                url=product.image_url,
+                price_num=product.ex.price,
+                price_kg=product.ex.price_kg,
+                price_l=product.ex.price_l ,
+                ):
             print("Could not add product:")
             product.print()
     print("scraper done.")

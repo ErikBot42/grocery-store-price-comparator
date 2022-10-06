@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 
 
+
 import android.app.AlarmManager;
 
 
@@ -69,18 +70,21 @@ import com.google.firebase.auth.FirebaseAuth;
 
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Button sweBtn, engBtn;
     ActivityMainBinding binding;
     EditText usernameEdt, passwordEdt;
     Resources resources;
     Context context;
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String TEXT = "text";
+
     private String text;
     FirebaseAuth firebaseAuth;
 
@@ -123,6 +127,48 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
+        engBtn = (Button) findViewById(R.id.engBtn);
+
+        //engBtn.setText(text);
+        engBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveData("en");
+
+
+            }
+        });
+
+
+
+        sweBtn = (Button) findViewById(R.id.sweBtn);
+        sweBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveData("sv");
+
+
+
+            }
+        });
+        engBtn.setText(R.string.eng_Btn);
+        sweBtn.setText(R.string.swe_Btn);
+
+
+    }
+
+
+
+    private void setAppLocale(String localeCode){
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            conf.setLocale(new Locale(localeCode.toLowerCase()));
+        }else{
+            conf.locale = new Locale(localeCode.toLowerCase());
+        }
+        res.updateConfiguration(conf,dm);
     }
 
     private void setAppLocale(String localeCode){
@@ -146,6 +192,23 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout,fragment);
         fragmentTransaction.commit();
     }
+    public void saveData(String lang) {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(TEXT, lang);
+
+        editor.commit();
+
+        Toast.makeText(this, "Data saved", Toast.LENGTH_SHORT).show();
+    }
+    public void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        text = sharedPreferences.getString(TEXT, "");
+
+    }
+
+
 
     public void loadData() {
 

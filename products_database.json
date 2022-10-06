@@ -1,0 +1,669 @@
+{
+	"products": [{
+		"id": "1",
+		"name": "Vinröda vindruvor",
+		"price": "19.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg",
+		"store":"1"
+	}, {
+		"id": "2",
+		"name": "Fläskytterfilé",
+		"price": "59.90",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319124000000.jpg",
+		"store":"3"
+	}, {
+		"id": "3",
+		"name": "Färsk kycklingfilé",
+		"price": "129",
+		"image": "https://res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580775841/392332.png",
+		"store":"2"
+	}, {
+		"id": "4",
+		"name": "Potatis Fast Klass 1",
+		"price": "19.90",
+		"image": "https://d2rfo6yapuixuu.cloudfront.net/h29/h55/9734297157662/7311042006398_1576592660160_master_axfood_300",
+		"store":"4"
+	}, {
+		"id": "5",
+		"name": "Vinröda vindruvor",
+		"price": "19.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg"
+	}, {
+		"id": "7",
+		"name": "Juice",
+		"price": " 20:- /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1529974034/302744.png"
+	}, {
+		"id": "8",
+		"name": "Paprika",
+		"price": " 6 90 /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1563263546/376558.png"
+	}, {
+		"id": "9",
+		"name": "Färsk fläskfilé",
+		"price": " 69 90 /kg",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1651671893/cloud/251579.png"
+	}, {
+		"id": "10",
+		"name": "Smörgåspålägg",
+		"price": " 2 för 49:-",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1530094309/308538.png"
+	}, {
+		"id": "12",
+		"name": "Färska Hamburgare",
+		"price": " 44 90 /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1637854688/cloud/239971.png"
+	}, {
+		"id": "14",
+		"name": "Juice",
+		"price": " 20:- /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1529974034/302744.png"
+	}, {
+		"id": "15",
+		"name": "Paprika",
+		"price": " 6 90 /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1563263546/376558.png"
+	}, {
+		"id": "16",
+		"name": "Färsk fläskfilé",
+		"price": " 69 90 /kg",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1651671893/cloud/251579.png"
+	}, {
+		"id": "17",
+		"name": "Smörgåspålägg",
+		"price": " 2 för 49:-",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1530094309/308538.png"
+	}, {
+		"id": "19",
+		"name": "Färska Hamburgare",
+		"price": " 44 90 /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1637854688/cloud/239971.png"
+	}, {
+		"id": "20",
+		"name": "Yoghurt",
+		"price": " 2 för 35:-",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1588844921/399209.png"
+	}, {
+		"id": "21",
+		"name": "Kaffebröd",
+		"price": " 3 för 25:-",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1603189798/410378.png"
+	}, {
+		"id": "23",
+		"name": "Fläsklägg",
+		"price": " 44 90 /kg",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1564650497/376996.png"
+	}, {
+		"id": "25",
+		"name": "Ekologisk wienerkorv",
+		"price": " 29 90 /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1568216577/381816.png"
+	}, {
+		"id": "27",
+		"name": "Päron Conference i korg",
+		"price": " 15:- /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1625736175/cloud/230672.png"
+	}, {
+		"id": "28",
+		"name": "Ost",
+		"price": " 99:- /kg",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1633382063/cloud/235580.png"
+	}, {
+		"id": "29",
+		"name": "Öl 6-pack",
+		"price": " 54 90 /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1576254285/387079.png"
+	}, {
+		"id": "30",
+		"name": "Kyckling Slow cooked",
+		"price": " 54 90 /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1562699241/375991.png"
+	}, {
+		"id": "31",
+		"name": "Klassisk kebab",
+		"price": " 44 90 /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1652959031/cloud/252408.png"
+	}, {
+		"id": "32",
+		"name": "Mjukost",
+		"price": " 42 90 /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1623234780/219568.png"
+	}, {
+		"id": "36",
+		"name": "Kycklingbacon",
+		"price": " 16 90 /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1615767471/424756.png"
+	}, {
+		"id": "37",
+		"name": "Bröd",
+		"price": " 22 90 /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1655270820/cloud/253615.png"
+	}, {
+		"id": "39",
+		"name": "Chokladkakor",
+		"price": " 20:- /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1657610792/cloud/255554.png"
+	}, {
+		"id": "41",
+		"name": "Kaffekapslar 10-pack",
+		"price": " 2 för 59:-",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1649846912/cloud/192670.png"
+	}, {
+		"id": "42",
+		"name": "Glass flerpack",
+		"price": " 34 90 /st",
+		"image": "//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1649686095/cloud/250856.png"
+	}, {
+		"id": "47",
+		"name": "Mango",
+		"price": " 25:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7318690056720,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318690056720.jpg",
+		"store":"3"
+	}, {
+		"id": "48",
+		"name": "Gröna kärnfria druvor i ask",
+		"price": " 22:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318693555800_1.jpg",
+		"store":"3"
+	}, {
+		"id": "51",
+		"name": "Delikatesspotatis i påse",
+		"price": " 15:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7330671126925_2.jpg",
+		"store":"3"
+	}, {
+		"id": "53",
+		"name": "Päron i korg",
+		"price": " 15:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318690505693.jpg",
+		"store":"3"
+	}, {
+		"id": "54",
+		"name": "Romanticatomater i ask",
+		"price": " 25:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318690075516_1.jpg",
+		"store":"3"
+	}, {
+		"id": "55",
+		"name": "Cookies",
+		"price": " 20:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7622210081940,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7622300589882.jpg",
+		"store":"3"
+	}, {
+		"id": "57",
+		"name": "Original-, fiberrost",
+		"price": " 25:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7312200040797,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7312200040803.jpg",
+		"store":"3"
+	}, {
+		"id": "58",
+		"name": "Färsk kycklinglårfilé",
+		"price": " 119:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2332802700009.jpg",
+		"store":"3"
+	}, {
+		"id": "60",
+		"name": "Hushållsost",
+		"price": " 75:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2340375400004.jpg",
+		"store":"3"
+	}, {
+		"id": "61",
+		"name": "Bacon",
+		"price": " 20:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7318690177814,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318690177814.jpg",
+		"store":"3"
+	}, {
+		"id": "63",
+		"name": "Grillkorv",
+		"price": " 33:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7300201432000.jpg",
+		"store":"3"
+	}, {
+		"id": "66",
+		"name": "Korvfärs",
+		"price": " 39 90",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318690505211.jpg",
+		"store":"3"
+	}, {
+		"id": "70",
+		"name": "Mozzarella",
+		"price": " 30:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_8000430133035,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/8000430133035.jpg"
+	}, {
+		"id": "71",
+		"name": "Nötstek av fransyska",
+		"price": " 99:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/2319117000000.jpg"
+	}, {
+		"id": "75",
+		"name": "Vegetarisk pastej",
+		"price": " 15:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7310941801202.jpg"
+	}, {
+		"id": "77",
+		"name": "Chips, Jordnötsringar",
+		"price": " 40:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7310532106518,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7310532113950.jpg"
+	}, {
+		"id": "78",
+		"name": "Chokladkaka premium",
+		"price": " 30:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7622300544010,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7622400624520.jpg"
+	}, {
+		"id": "80",
+		"name": "Kaffe",
+		"price": " 85:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7310050001142,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7310050001982.jpg"
+	}, {
+		"id": "84",
+		"name": "Läsk",
+		"price": " 20:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7310401000374,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7310401034584.jpg"
+	}, {
+		"id": "91",
+		"name": "Tortillabröd",
+		"price": " 35:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7311311021152,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7311311021169.jpg"
+	}, {
+		"id": "92",
+		"name": "Bara yoghurt frukt & bär",
+		"price": " 20:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7310867531306,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7310867531313.jpg"
+	}, {
+		"id": "93",
+		"name": "Drickyoghurt",
+		"price": " 33:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7318690140368,x_$y_mul_-0.3,y_$x_mul_-0.3/c_fit,w_$x,h_$y,u_7318690140368,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318690140368.jpg"
+	}, {
+		"id": "94",
+		"name": "Fruktdryck",
+		"price": " 20:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7350000550535,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7350000550573.jpg"
+	}, {
+		"id": "95",
+		"name": "Juice",
+		"price": " 30:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7310860007372,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7310865074225.jpg"
+	}, {
+		"id": "98",
+		"name": "Ägg",
+		"price": " 20:-",
+		"image": "https://assets.icanet.se/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318690106593_1.jpg"
+	}, {
+		"id": "106",
+		"name": "Frysta kanelbullar, vaniljbullar",
+		"price": " 40:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_7318690000648,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/7318690059301.jpg"
+	}, {
+		"id": "107",
+		"name": "Glass flerpack & bägare",
+		"price": " 65:-",
+		"image": "https://assets.icanet.se/$y_h,$x_w,$pi_current:public_id/c_fit,w_$x,h_$y,u_8711327480438,x_$y_mul_-0.3,y_$x_mul_0.6,g_south_east/q_auto,f_auto/c_lpad,h_150,w_150,e_sharpen:70/8714100635650.jpg"
+	}, {
+		"id": "122",
+		"name": "Mellanmjölk 1,5%",
+		"price": "SUPERPRIS! 17.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/7005305/xs/7005305.jpg"
+	}, {
+		"id": "123",
+		"name": "Juice",
+		"price": "2 FÖR: 35:-",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/151952/xs/151952.jpg"
+	}, {
+		"id": "125",
+		"name": "Arla yoghurtkvarg",
+		"price": "SUPERPRIS! 24.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/7001280/xs/7001280.jpg"
+	}, {
+		"id": "126",
+		"name": "Hushållsost",
+		"price": "-22% 69.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/7000361/xs/7000361.jpg"
+	}, {
+		"id": "128",
+		"name": "Skinka",
+		"price": "2 FÖR: 35:-",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/10039/xs/10039.jpg"
+	}, {
+		"id": "135",
+		"name": "Risenta Linskakor",
+		"price": "SUPERPRIS! 14.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/7005529/xs/7005529.jpg"
+	}, {
+		"id": "136",
+		"name": "Scan köttbullar",
+		"price": "-25% 49.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/7005998/xs/7005998.jpg"
+	}, {
+		"id": "137",
+		"name": "Risenta pumpakärnor",
+		"price": "SUPERPRIS! 24.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/7001397/xs/7001397.jpg"
+	}, {
+		"id": "138",
+		"name": "Rödbetssallad",
+		"price": "SUPERPRIS! 19.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/6944/xs/6944.jpg"
+	}, {
+		"id": "139",
+		"name": "Grekisk yoghurt 0%",
+		"price": "SUPERPRIS! 17.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/6200737/xs/6200737.jpg"
+	}, {
+		"id": "141",
+		"name": "Svenskt gårdsvilt hjortstek benfri",
+		"price": "SUPERPRIS! 299:-",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/7006651/xs/7006651.jpg"
+	}, {
+		"id": "142",
+		"name": "Rådjursstek",
+		"price": "SUPERPRIS! 199:-",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/7709440/xs/7709440.jpg"
+	}, {
+		"id": "143",
+		"name": "Hamburgare av hjortfärs",
+		"price": "SUPERPRIS! 39.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/180182/xs/180182.jpg"
+	}, {
+		"id": "149",
+		"name": "Salami med viltkött",
+		"price": "SUPERPRIS! 24.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/139016/xs/139016.jpg"
+	}, {
+		"id": "150",
+		"name": "Ost med frukt & nötter",
+		"price": " 39.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/120716/xs/120716.jpg"
+	}, {
+		"id": "151",
+		"name": "Munsterost",
+		"price": "SUPERPRIS! 24.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/5600059/xs/5600059.jpg"
+	}, {
+		"id": "154",
+		"name": "Spansk lagrad ost",
+		"price": " 44.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/5704255/xs/5704255.jpg"
+	}, {
+		"id": "158",
+		"name": "Fylld vitmögelost",
+		"price": "SUPERPRIS! 34.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/48339/xs/48339.jpg"
+	}, {
+		"id": "159",
+		"name": "Smaksatt goudaost",
+		"price": " 29.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/6603457/xs/6603457.jpg"
+	}, {
+		"id": "161",
+		"name": "Scamorzaost",
+		"price": "SUPERPRIS! 29.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/6000888/xs/6000888.jpg"
+	}, {
+		"id": "167",
+		"name": "Smör",
+		"price": " 44 90 /st",
+		"image": ""
+	}, {
+		"id": "171",
+		"name": "Färska hamburgare",
+		"price": " 39 90 /st",
+		"image": ""
+	}, {
+		"id": "172",
+		"name": "Skinkstek",
+		"price": " 72 90 /kg",
+		"image": ""
+	}, {
+		"id": "173",
+		"name": "Kycklingbröstfilé, kycklinglårfilé",
+		"price": " 89 90 /st",
+		"image": ""
+	}, {
+		"id": "176",
+		"name": "Falukorv",
+		"price": " 24 90 /st",
+		"image": ""
+	}, {
+		"id": "178",
+		"name": "Orientaliskt bröd",
+		"price": " 12 00",
+		"image": ""
+	}, {
+		"id": "179",
+		"name": "Kanelbulle, vaniljbulle",
+		"price": " 18 00",
+		"image": ""
+	}, {
+		"id": "180",
+		"name": "Juice",
+		"price": " 22 90 /st",
+		"image": ""
+	}, {
+		"id": "181",
+		"name": "Flankstek",
+		"price": " 129 00 /kg",
+		"image": ""
+	}, {
+		"id": "182",
+		"name": "Fläsklägg",
+		"price": " 32 90 /kg",
+		"image": ""
+	}, {
+		"id": "184",
+		"name": "Äpple Royal Gala",
+		"price": " 17 90 /kg",
+		"image": ""
+	}, {
+		"id": "185",
+		"name": "Äpple Aroma",
+		"price": " 22 90 /kg",
+		"image": ""
+	}, {
+		"id": "186",
+		"name": "Röda vindruvor",
+		"price": " 19 90 /st",
+		"image": ""
+	}, {
+		"id": "188",
+		"name": "Granatäpple",
+		"price": " 9 90 /st",
+		"image": ""
+	}, {
+		"id": "189",
+		"name": "Röd paprika",
+		"price": " 29 90 /kg",
+		"image": ""
+	}, {
+		"id": "190",
+		"name": "Kycklingkebab",
+		"price": " 59 90 /st",
+		"image": ""
+	}, {
+		"id": "191",
+		"name": "Kardemummabullar",
+		"price": " 27 90 /st",
+		"image": ""
+	}, {
+		"id": "192",
+		"name": "Fiskfiléer",
+		"price": " 19 90 /st",
+		"image": ""
+	}, {
+		"id": "193",
+		"name": "Kanelbullar",
+		"price": " 35 90 /st",
+		"image": ""
+	}, {
+		"id": "194",
+		"name": "Kycklinglårfilé",
+		"price": " 59 90 /st",
+		"image": ""
+	}, {
+		"id": "197",
+		"name": "Laxfilé",
+		"price": " 79 90 /st",
+		"image": ""
+	}, {
+		"id": "199",
+		"name": "Mixbox glass",
+		"price": " 44 90 /st",
+		"image": ""
+	}, {
+		"id": "201",
+		"name": "Skivat smörgåspålägg",
+		"price": " 9 90 /st",
+		"image": ""
+	}, {
+		"id": "202",
+		"name": "Varmkorv",
+		"price": " 39 90 /st",
+		"image": ""
+	}, {
+		"id": "203",
+		"name": "Ölkorv",
+		"price": " 24 90 /st",
+		"image": ""
+	}, {
+		"id": "204",
+		"name": "Cognacmedwurst",
+		"price": " 26 90 /st",
+		"image": ""
+	}, {
+		"id": "205",
+		"name": "Skinka",
+		"price": " 45 00",
+		"image": ""
+	}, {
+		"id": "206",
+		"name": "Prosciutto crudo",
+		"price": " 24 90 /st",
+		"image": ""
+	}, {
+		"id": "207",
+		"name": "Grillkorv",
+		"price": " 44 90 /st",
+		"image": ""
+	}, {
+		"id": "208",
+		"name": "Riven parmigiano reggiano",
+		"price": " 22 90 /st",
+		"image": ""
+	}, {
+		"id": "210",
+		"name": "Skivad ost",
+		"price": " 24 90 /st",
+		"image": ""
+	}, {
+		"id": "211",
+		"name": "Torskfilé",
+		"price": " 99 00 /st",
+		"image": ""
+	}, {
+		"id": "222",
+		"name": "Kokosmjölk, kokosgrädde",
+		"price": " 25 00",
+		"image": ""
+	}, {
+		"id": "223",
+		"name": "Oliver med pimientos",
+		"price": " 14 90 /st",
+		"image": ""
+	}, {
+		"id": "226",
+		"name": "Vegansk ch**se dip",
+		"price": " 25 90 /st",
+		"image": ""
+	}, {
+		"id": "231",
+		"name": "Veganska tortilla chips",
+		"price": " 14 90 /st",
+		"image": ""
+	}, {
+		"id": "237",
+		"name": "Gröna oliver med kärnor",
+		"price": " 27 90 /st",
+		"image": ""
+	}, {
+		"id": "238",
+		"name": "Kaffe",
+		"price": " 69 00",
+		"image": ""
+	}, {
+		"id": "241",
+		"name": "Ballerina",
+		"price": " 26 90 /st",
+		"image": ""
+	}, {
+		"id": "242",
+		"name": "Italienskt surdegsbröd",
+		"price": " 27 90 /st",
+		"image": ""
+	}, {
+		"id": "243",
+		"name": "Ägg",
+		"price": " 24 90 /st",
+		"image": ""
+	}, {
+		"id": "244",
+		"name": "Barista havredryck",
+		"price": " 28 00",
+		"image": ""
+	}, {
+		"id": "245",
+		"name": "Propudding, milkshake",
+		"price": " 34 00",
+		"image": ""
+	}, {
+		"id": "252",
+		"name": "Yoghurt",
+		"price": " 42 00",
+		"image": ""
+	}, {
+		"id": "269",
+		"name": "Energidryck",
+		"price": " 34 00 +pant",
+		"image": ""
+	}, {
+		"id": "271",
+		"name": "Sportdryck",
+		"price": " 25 00 +pant",
+		"image": ""
+	}, {
+		"id": "272",
+		"name": "Läsk",
+		"price": " 42 90 /st  +pant",
+		"image": ""
+	}, {
+		"id": "273",
+		"name": "Energidryck",
+		"price": " 25 00 +pant",
+		"image": ""
+	}, {
+		"id": "274",
+		"name": "Västkustchips",
+		"price": " 42 00",
+		"image": ""
+	}, {
+		"id": "275",
+		"name": "Plopp, center",
+		"price": " 15 00",
+		"image": ""
+	}, {
+		"id": "276",
+		"name": "Chokladkaka",
+		"price": " 45 00",
+		"image": ""
+	}, {
+		"id": "278",
+		"name": "Cream candies, cream toffees",
+		"price": " 28 00",
+		"image": ""
+	}, {
+		"id": "279",
+		"name": "Chokladbit",
+		"price": " 18 00",
+		"image": ""
+	}]
+}

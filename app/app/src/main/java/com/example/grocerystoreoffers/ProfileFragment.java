@@ -1,11 +1,14 @@
 package com.example.grocerystoreoffers;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +17,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +35,7 @@ import android.widget.Toast;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,17 +50,19 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-    EditText username;
-    EditText password;
+    FirebaseUser user;
+    TextView fullname_field,username_field,favoritestore_field;
+    Button button2;
+    FirebaseFirestore fStore;
 
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment ProfileFragment.
+     */
     // TODO: Rename and change types and number of parameters
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
@@ -60,66 +76,77 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        fStore = FirebaseFirestore.getInstance();
     }
-        /*
-        if (username.getText().toString().equals("admin") && password.getText().toString().equals("admin")) {
-
-            System.out.println("Correct login\n");
-            System.out.println(username);
-            System.out.println(password);
-
-        } else {
-            System.out.println("Wrong input");
-        }
-        */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //TODO: Check if user is logged in, then get to profile page, else goto login/register page
 
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        fullname_field = view.findViewById(R.id.fullname_field);
+        username_field = view.findViewById(R.id.username_field);
+        favoritestore_field = view.findViewById(R.id.favoritestore_field);
+        button2 = view.findViewById(R.id.button2);
+        //TODO: Check if user is logged in, then get to profile page, else goto login/register page
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        DocumentReference documentReference = fStore.collection("user_profile").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        if(user != null) {
+            // Name, email address, and profile photo Url
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null) {
+                            String name = document.getString("Name");
+                            String favStore = document.getString("Favorite store");
+                            favoritestore_field.setText("Favorite store: " + favStore);
+                            fullname_field.setText(name);
+                            Log.i("LOGGER","First "+document.getString("first"));
+                            Log.i("LOGGER","Last "+document.getString("last"));
+                            Log.i("LOGGER","Born "+document.getString("born"));
+                        } else {
+                            Log.d("LOGGER", "No such document");
+                        }
+                    } else {
+                        Log.d("LOGGER", "get failed with ", task.getException());
+                    }
+                }
 
-        Button login_btn = view.findViewById(R.id.btn_login);
-        Button register_btn = view.findViewById(R.id.btn_register);
+            });
+            //String name = user.getDisplayName();
+            String email = user.getEmail();
+            username_field.setText("Email: "+email);
+            //Uri photoUrl = user.getPhotoUrl();
 
-        username = view.findViewById(R.id.et_email);
-        password = view.findViewById(R.id.et_password);
+            // Check if user's email is verified
+            boolean emailVerified = user.isEmailVerified();
 
-        // Login
-        login_btn.setOnClickListener(view1 -> {
-            //TODO: Check whether email is unused, if unused, prompt to register
-            System.out.println("Email: " + username.getText().toString() + "\n");
-            System.out.println("Password: " + password.getText().toString() + "\n");
-        });
-
-        register_btn.setOnClickListener(view1 -> {
-            System.out.println("Register button clicked from profFrag");
-            replaceFragment(new RegisterFragment());
-        });
-
-        CheckBox checkBox = (CheckBox) view.findViewById(R.id.remember);
-        //checkBox.setChecked(checkPasswordExist()); Kolla JSON token
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getIdToken() instead.
+            String uid = user.getUid();
+        }
+        // Inflate the layout for this fragment
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (checkBox.isChecked()) {
-                    //TODO: Get JSON-token with extended time
-                    printToast("Checked");
-                }
-                else {
-                    printToast("Unchecked");
-                }
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                replaceFragment(new LoginFragment());
             }
         });
 
+
         return view;
     }
+
+
 
     private void replaceFragment(Fragment fragment){
 
@@ -130,8 +157,10 @@ public class ProfileFragment extends Fragment {
     }
     private void printToast(String message){
         Toast toast = Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
+        //toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
         toast.show();
     }
 
 }
+
+

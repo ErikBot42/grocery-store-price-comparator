@@ -1,0 +1,76 @@
+{% extends 'admin_base.html'%}
+<!-- Definerar vilken fil vvi ärver från -->
+
+<!-- blocket titel sätter sidans titel i headern-->
+{% block title %}
+    Products
+{% endblock %}
+
+<!-- blocket content fyller ut sidans body -->
+{% block content %}
+<div class="container">
+    <div id="currListings">
+        <h2 class="text-primary d-flex justify-content-center">Current Listings</h2>
+        <table class="table  table-dark table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Store</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Lopar igenom alla produkter och lägger till en rad för varje -->
+                {% for item in products %}
+                    <tr>
+                        <td>{{item[0]}}</td>
+                        <td>{{item[1]}}</td>
+                        <td>{{item[2]}}</td>
+                        <td>
+                            <ul class="">
+                                <li class="list-inline-item">
+                                    <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">New Product</button>
+    <div class="container mt-5">
+        <div class="modal" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">New Product</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="mb-3">
+                        
+                            <label class="form-label required" >Name</label>
+                            <input type="text" class="form-control" id="name">
+                        
+                            <label class="form-label required" >Price</label>
+                            <input type="text" class="form-control" id="price">
+                        
+                            <label class="form-label required" >Store</label>
+                            <input type="text" class="form-control mb-5" id="store" >
+                            <button type="submit" class="btn btn-primary" id="createButton" data-bs-toggle="modal" data-bs-target="#myModal">Create</button>
+                            <button type="reset" class="btn btn-dark" value="Reset">Reset</button>
+                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
+
+
+{% endblock %}

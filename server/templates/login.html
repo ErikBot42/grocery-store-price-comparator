@@ -1,17 +1,19 @@
-<!DOCTYPE html>
-<html lang="sv">
-    <head>
-        <meta charset="utf-8">
-        <title>Admin</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    </head>
-    <body class="container ">
+{% extends 'admin_base.html'%}
+<!-- Definerar vilken fil vvi ärver från -->
+
+<!-- blocket titel sätter sidans titel i headern-->
+{% block title %}
+    Login
+{% endblock %}
+
+<!-- blocket content fyller ut sidans body -->
+{% block content%}
+    <body class="container "></body>
         <main class="jumbotron text-center mb-5 pb-4">
             <h1 class="display-3">Admin Login</h1>
-            <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded">                          
+            <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="#">                          
                 <div class="form-group">
+                    <h1 id="wrongLogin"></h1>
                     <label for="nickname">Username:</label>
                     <input type="text" class="form-control" id="Username" name="Username" required placeholder="Username">
                     <label for="nickname">Password:</label>
@@ -22,6 +24,5 @@
                 </div>
             </form>
         </main>
-        <script src="login.js"></script>
     </body>
-</html>
+{% endblock %}

@@ -46,15 +46,17 @@ class Database:
             store: str,
             price: str,
             category: int,
-            price_num: float|None = None,
-            price_kg: float|None = None,
-            price_l: float|None = None,
+            price_num: float | None = None,
+            price_kg: float | None = None,
+            price_l: float | None = None,
+            amount_kg: float | None = None,
+            amount_l: float | None = None,
             url: str = "",
             ) -> bool:
-        data = [str(category), name, str(self.getStoreID(store)), price, price_num, price_kg, price_l, url]
+        data = [str(category), name, str(self.getStoreID(store)), price, price_num, price_kg, price_l, amount_kg, amount_l, url]
         query = self._createInsertSQLQuery(
             "Product", 
-            "Category_ID, Product_Name, Store_ID, Price, Price_num, Price_kg, Price_l, URL", 
+            "Category_ID, Product_Name, Store_ID, Price, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL", 
             data
             )
         return self._runSQLQuery(query, data)
@@ -394,6 +396,8 @@ class Database:
                 "Price_num" FLOAT,
                 "Price_kg" FLOAT,
                 "Price_l" FLOAT,
+                "Amount_kg" FLOAT,
+                "Amount_l" FLOAT,
                 "URL" TEXT,
                 PRIMARY KEY("Product_ID"),
                 FOREIGN KEY("Category_ID") REFERENCES "Category"("Category_ID"),

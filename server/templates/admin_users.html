@@ -12,6 +12,17 @@
     <div id="currListings">
         <h2 class="text-primary d-flex justify-content-center">Users</h2>
         <table class="table  table-dark table-striped">
+            <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/users/new">                          
+                <div class="form-group">
+                    <input type="mail"  id="Email" name="Email" required placeholder="Email">
+                    <input type="text"  id="Password" name="Password" required placeholder="Password">
+                    <input type="text"  id="Mobile_Number" name="Mobile_Number" required required placeholder="Mobile Number">
+                    <input type="text"  id="Date_Of_Birth" name="Date_Of_Birth" required placeholder="Date Of Birth">
+                    <input type="text"  id="City" name="City" required placeholder="City">
+                    <input type="text"  id="Name" name="Name" required placeholder="Name">  
+                    <button type="submit" class="btn btn-primary mr-0">Add User</button>                  
+                </div>
+            </form>
             <thead>
                 <tr>
                     <th scope="col">User ID</th>
@@ -39,7 +50,9 @@
                             <!-- Call to action buttons -->
                             <ul class="">
                                 <li class="list-inline-item">
-                                    <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
+                                    <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/users/remove/{{item[0]}}">
+                                        <button class="btn btn-danger btn-sm rounded-0" type="submit" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
+                                    </form>
                                 </li>
                             </ul>
                         </td>
@@ -50,74 +63,5 @@
     </div>
     <button type="button" id="newProduct" class="btn btn-primary">Add User</button>
 </div>
-<script >window.addEventListener('load', ()=>{
-    console.log('Page Loaded')
-    let Table = document.querySelector('table')
-    let allDeleteButtons = document.querySelectorAll('.btn-danger')
-    let createButton = document.querySelector('#createButton')
-    let name = document.querySelector('#name')
-    let price = document.querySelector('#price')
-    let store = document.querySelector('#store')
-    for (let index = 0; index < allDeleteButtons.length; index++) {
-        allDeleteButtons[index].addEventListener('click', (e)=>{
-            console.log('Delete product')
-            allDeleteButtons[index].closest('tr').remove()
-        })
-        
-    }
-    createButton.addEventListener('click', ()=>{
 
-        console.log('Creating new Product')
-        event.preventDefault()
-        console.log('Name ' + name.value + ' Price ' + price.value + ' Store' + store.value)
-        createNewRow(name.value,price.value,store.value)
-        name.value = ''
-        price.value = ''
-        store.value = ''
-        
-    })
-
-    function createNewRow(name, price, store){
-        var row = Table.insertRow()
-        var cell = row.insertCell()
-        cell.innerHTML = name
-        var cell = row.insertCell()
-        cell.innerHTML = price
-        var cell = row.insertCell()
-        cell.innerHTML = store
-        var cell = row.insertCell()
-
-        const newUl = document.createElement('ul')
-        newUl.setAttribute('class', '')
-        cell.appendChild(newUl)
-
-        const newEditLi = document.createElement('li')
-        newUl.appendChild(newEditLi)
-        newEditLi.setAttribute('class', 'list-inline-item')
-        const newEditButton = document.createElement('button')
-        newEditLi.appendChild(newEditButton)
-        newEditButton.setAttribute('class', 'btn btn-success btn-sm rounded-0')
-        newEditButton.setAttribute('type', 'button')
-        newEditButton.setAttribute('data-toggle','tooltip')
-        newEditButton.setAttribute('data-placement', 'top')
-        newEditButton.setAttribute('title', 'edit')
-        newEditButton.textContent = 'Edit'
-
-        const newDeleteLi = document.createElement('li')
-        newUl.appendChild(newDeleteLi);
-        newDeleteLi.setAttribute('class', 'list-inline-item')
-        const newDeleteButton = document.createElement('button')
-        newDeleteLi.appendChild(newDeleteButton)
-        newDeleteButton.setAttribute('class', 'btn btn-danger btn-sm rounded-0')
-        newDeleteButton.setAttribute('type', 'button')
-        newDeleteButton.setAttribute('data-toggle','tooltip')
-        newDeleteButton.setAttribute('data-placement', 'top')
-        newDeleteButton.setAttribute('title', 'edit')
-        newDeleteButton.textContent = 'Delete'
-        newDeleteButton.addEventListener('click',()=>{
-            newDeleteButton.closest('tr').remove()
-        })
-    }
-})</script>
-</body>
 {% endblock %}

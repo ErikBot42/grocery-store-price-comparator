@@ -87,16 +87,16 @@ def logout():
         flash("You have been loged out", "info")
     return redirect(url_for("showHomePage"))
 
-@app.route("/remove/product/<id>", methods=["Post"])
+@app.route("/product/remove/<id>", methods=["Post"])
 def removeProduct(id):
     db = Database()
     db.removeProduct(id)
     db.commitToDatabase()
     db.close()
-    return redirect(url_for("admin_products.html"))
+    return redirect(url_for("products"))
 
-@app.route("/products/new", methods = ["POST"])
-def addPRoduct():
+@app.route("/products/new/", methods = ["POST"])
+def addProduct():
     db = Database()
     query = db.addProductToDatabase(
         category=request.form["Category_ID"],
@@ -111,6 +111,30 @@ def addPRoduct():
     db.commitToDatabase()
     db.close()
     return redirect(url_for("products"))
+
+@app.route("/users/new/", methods = ["POST"])
+def addUser():
+    db = Database()
+    query = db.addUserToDatabase(
+        email=request.form["Email"],
+        mobile_nr=request.form["Mobile_Number"],
+        password=request.form["Password"],
+        date_of_birth=request.form["Date_Of_Birth"],
+        city=request.form["City"],
+        name=request.form["Name"]
+    )
+    db.commitToDatabase()
+    db.close()
+    return redirect(url_for("users"))
+
+@app.route("/users/remove/<id>", methods=["Post"])
+def removeUser(id):
+    db = Database()
+    db.removeUser(id)
+    db.commitToDatabase()
+    db.close()
+    return redirect(url_for("users"))
+
 
 @app.route("/app/login/", methods=["POST"])
 def appLogin():

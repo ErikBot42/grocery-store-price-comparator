@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, session, redirect, request, flash, jsonify
 from database import Database
+from firebaseHandeler import firebaseHandeler
 from datetime import timedelta
 import json
 import os.path
@@ -21,6 +22,7 @@ CATEGORIES = [
 app = Flask(__name__)
 app.secret_key = b".U,e-Xr))$I,/bK"
 app.permanent_session_lifetime = timedelta(days=1)
+fdb = firebaseHandeler()
 
 
 
@@ -74,8 +76,8 @@ def users():
         if request.method == "POST":
             usr = db.searchUser(request.form["userSearch"])
         else:
-            usr = db.getUserDataForAdmin()
-        db.close()
+            #usr = db.getUserDataForAdmin()
+            usr = fdb.getUserData()
         return render_template("admin_users.html", users=usr)
     else:
         return redirect(url_for("showHomePage"))

@@ -31,9 +31,12 @@ class firebaseHandeler():
     def firestore(self):
         temp = firebase_admin.firestore.client()
         print(temp)
-
+        usrs_ref = temp.collection(u'usrs_profiles')
+        print(usrs_ref)
+        usrs = usrs_ref.where('Email', '==', True)
+        print(usrs)
 if __name__ == "__main__":
     db = firebaseHandeler()
-    db.printUsers()
-    db.getUserData()
+    #db.printUsers()
+    #db.getUserData()
     db.firestore()

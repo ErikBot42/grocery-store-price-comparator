@@ -3,6 +3,36 @@
 import sqlite3
 import re
 
+
+
+class DbProd:
+    def __init__(self,
+        i: int,
+        name: str,
+        store: str,
+        store_id: int,
+        price: str,
+        category: int,
+        price_num: float | None = None,
+        price_kg: float | None = None,
+        price_l: float | None = None,
+        amount_kg: float | None = None,
+        amount_l: float | None = None,
+        url: str = ""):
+        self.i         = i       
+        self.name      = name
+        self.store     = store
+        self.store_id  = store_id
+        self.price     = price
+        self.category  = category
+        self.price_num = price_num
+        self.price_kg  = price_kg
+        self.price_l   = price_l
+        self.amount_kg = amount_kg
+        self.amount_l  = amount_l
+        self.url       = url        
+
+
 class Database:
 
     def _generateSuggestedIdsFromIds(self, ids: list[int]) -> list[int]:
@@ -33,6 +63,7 @@ class Database:
             print("\nCould not run query: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
             print("Om du saknar tabeller, testa att uppdatera databasen med Database.recreateDatabase()")
+            exit(1)
             return False
 
     def _runSQLQueryWithResults(self, query: str) -> list:
@@ -42,6 +73,7 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run querry: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
+            exit(1)
             return []
 
     def addProductToDatabase(self,
@@ -143,6 +175,7 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run querry: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
+            exit(1)
             return False
         print(f"Password from database is {res}, input is {password}")
         if (res == password): 
@@ -158,11 +191,42 @@ class Database:
             data
             ) 
         return self._runSQLQuery(query, data)
+    
 
-    def getProductDataForAdmin(self):
-        query = "SELECT Product_Name, Price_num, Store_Name, Product_ID FROM Product JOIN Store USING (Store_ID)"
+    def queryResultToObject(self, result) -> list[DbProd]:
+        rval = []
+        for r in result:
+            rval.append(DbProd(
+            i           = r[0], 
+            name        = r[1], 
+            store       = r[2], 
+            store_id    = r[3], 
+            price       = r[4], 
+            category    = r[5], 
+            price_num   = r[6], 
+            price_kg    = r[7], 
+            price_l     = r[8], 
+            amount_kg   = r[9], 
+            amount_l    = r[10], 
+            url         = r[11], 
+            ))
+        return rval
+
+    def getProductObject(self, mod: str = "") -> list[DbProd]:
+        query = f"""SELECT Product_ID, Product_name, Store_Name, Store_ID, Price, Category_ID, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL 
+
+        FROM Product JOIN Store USING (Store_ID)
+        """+mod
         result = self._runSQLQueryWithResults(query)
-        return result
+        return self.queryResultToObject(result)
+        
+
+    def getProductDataForAdmin(self) -> list[DbProd]:
+        return self.getProductObject()
+        #print("DEPRICATED")
+        #query = "SELECT Product_Name, Price_num, Store_Name, Product_ID FROM Product JOIN Store USING (Store_ID)"
+        #result = self._runSQLQueryWithResults(query)
+        #return result
 
     def getUserDataForAdmin(self):
         query = "SELECT User_id, Email, Password, Mobile_Number, Date_of_Birth, City, Name FROM Register"
@@ -181,6 +245,7 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run query: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
+            exit(1)
 
     def removeUser(self, id):
         query = f"DELETE FROM Register Where User_ID == '{str(id)}'"
@@ -189,16 +254,26 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run query: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
+            exit(1)
 
-    def searchProduct(self, search_term: str):
-        query = f"""SELECT Product_Name, Price_num, Store_Name, Product_ID 
-            FROM Product JOIN Store USING (Store_ID)
+    def searchProduct(self, search_term: str) -> list[DbProd]:
+
+
+        query = f"""SELECT Product_ID, Product_name, Store_Name, Store_ID, Price, Category_ID, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL 
+
+        FROM Product JOIN Store USING (Store_ID)
             WHERE Product_Name LIKE '%{search_term}%' 
             OR Price_num LIKE '%{search_term}%' 
             OR Store_Name LIKE '%{search_term}%' 
         """
+        #query = f"""SELECT Product_Name, Price_num, Store_Name, Product_ID 
+        #    FROM Product JOIN Store USING (Store_ID)
+        #    WHERE Product_Name LIKE '%{search_term}%' 
+        #    OR Price_num LIKE '%{search_term}%' 
+        #    OR Store_Name LIKE '%{search_term}%' 
+        #"""
         res = self.cursor.execute(query)
-        return res.fetchall()
+        return self.queryResultToObject(res.fetchall())
 
     def searchUser(self, search_term: str):
         query = f"""SELECT User_id, Email, Password, Mobile_Number, Date_of_Birth, City, Name 
@@ -214,28 +289,40 @@ class Database:
         res = self.cursor.execute(query)
         return res.fetchall()
 
-    def getProductCategory(self, category_terms: list[str]):
+    def getProductCategory(self, category_terms_imm: list[str]) -> list[DbProd]:
+        category_terms = category_terms_imm.copy()
         if len(category_terms) != 0:
-            query = f"""SELECT Product_Name, Price_num, Store_Name, Product_ID 
-                FROM Product JOIN Store USING (Store_ID)
-                WHERE REGEXP('{category_terms.pop(0)}', Product_Name)
+            
+            query = f"""SELECT Product_ID, Product_name, Store_Name, Store_ID, Price, Category_ID, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL 
+            FROM Product JOIN Store USING (Store_ID)
+            WHERE REGEXP('{category_terms.pop(0)}', Product_Name)
             """
+            #
+            #query = f"""SELECT Product_Name, Price_num, Store_Name, Product_ID 
+            #    FROM Product JOIN Store USING (Store_ID)
+            #    WHERE REGEXP('{category_terms.pop(0)}', Product_Name)
+            #"""
             for regex in category_terms:
                 query = f"{query} or REGEXP('{regex}', lower(Product_Name)  )"
             try:
-                return self.cursor.execute(query).fetchall()
+                return self.queryResultToObject(self.cursor.execute(query).fetchall())
             except sqlite3.Error as er:
                 print("\nCould not run query: " + query)
                 print('\tSQLite error: %s' % (' '.join(er.args)))
+                exit(1)
                 return []
         else:
             return []   
 
-    def getAllProductsWithCategories(self, category_list: list) -> list:
+    def getAllProductsWithCategories(self, category_list: list) -> list[DbProd]:
         if len(category_list) != 0:
-            query = f"""SELECT Product_ID, Product_name, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, Store_Name, URL, Store_ID
+            query = f"""SELECT Product_ID, Product_name, Store_Name, Store_ID, Price, Category_ID, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL 
                 FROM Product JOIN Store USING (Store_ID) WHERE
+
             """
+            #query = f"""SELECT Product_ID, Product_name, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, Store_Name, URL, Store_ID
+            #    FROM Product JOIN Store USING (Store_ID) WHERE
+            #"""
             for category in category_list:
                 for reg in category[1]:
                     if query[-1] == ')':
@@ -246,8 +333,9 @@ class Database:
             #    "Price_kg" FLOAT,
             #    "Price_l" FLOAT,
 
-            
-            return self.cursor.execute(query).fetchall()
+            res =   self.queryResultToObject(self.cursor.execute(query).fetchall())
+            print(res, len(res))
+            return res
         else:
             return []   
 

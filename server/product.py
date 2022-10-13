@@ -246,7 +246,12 @@ class Product:
         self.amount = amount
         self.category = category
         self.description = description
+
+        image_url = image_url.strip() 
+        if image_url.startswith("/"):
+            image_url = "https:"+image_url
         self.image_url = image_url
+
         self.modifier = modifier
         self.name = name
         self.store = store

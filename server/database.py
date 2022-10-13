@@ -12,7 +12,7 @@ class DbProd:
         store: str,
         store_id: int,
         price: str,
-        category: int,
+                 #category: int,
         price_num: float | None = None,
         price_kg: float | None = None,
         price_l: float | None = None,
@@ -24,7 +24,7 @@ class DbProd:
         self.store     = store
         self.store_id  = store_id
         self.price     = price
-        self.category  = category
+        #self.category  = category
         self.price_num = price_num
         self.price_kg  = price_kg
         self.price_l   = price_l
@@ -63,7 +63,6 @@ class Database:
             print("\nCould not run query: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
             print("Om du saknar tabeller, testa att uppdatera databasen med Database.recreateDatabase()")
-            exit(1)
             return False
 
     def _runSQLQueryWithResults(self, query: str) -> list:
@@ -73,7 +72,6 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run querry: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
-            exit(1)
             return []
 
     def addProductToDatabase(self,
@@ -175,7 +173,6 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run querry: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
-            exit(1)
             return False
         print(f"Password from database is {res}, input is {password}")
         if (res == password): 
@@ -197,18 +194,18 @@ class Database:
         rval = []
         for r in result:
             rval.append(DbProd(
-            i           = r[0], 
-            name        = r[1], 
-            store       = r[2], 
-            store_id    = r[3], 
-            price       = r[4], 
-            category    = r[5], 
-            price_num   = r[6], 
-            price_kg    = r[7], 
-            price_l     = r[8], 
-            amount_kg   = r[9], 
-            amount_l    = r[10], 
-            url         = r[11], 
+            i           = int(r[0]), 
+            name        = str(r[1]), 
+            store       = str(r[2]), 
+            store_id    = int(r[3]), 
+            price       = str(r[4]), 
+            #category    = int(r[5]), 
+            price_num   = float(r[6]  or -1), 
+            price_kg    = float(r[7]  or -1), 
+            price_l     = float(r[8]  or -1), 
+            amount_kg   = float(r[9]  or -1), 
+            amount_l    = float(r[10] or -1), 
+            url         = str(r[11]), 
             ))
         return rval
 
@@ -245,7 +242,6 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run query: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
-            exit(1)
 
     def removeUser(self, id):
         query = f"DELETE FROM Register Where User_ID == '{str(id)}'"
@@ -254,7 +250,6 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run query: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
-            exit(1)
 
     def searchProduct(self, search_term: str) -> list[DbProd]:
 
@@ -309,7 +304,6 @@ class Database:
             except sqlite3.Error as er:
                 print("\nCould not run query: " + query)
                 print('\tSQLite error: %s' % (' '.join(er.args)))
-                exit(1)
                 return []
         else:
             return []   

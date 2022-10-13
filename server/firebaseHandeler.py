@@ -4,7 +4,7 @@ from firebase_admin import credentials, auth, firestore
 class firebaseHandeler():
 
     def __init__(self):
-        cred = credentials.Certificate("server/grocery-store-price-comparator-firebase-adminsdk-imgjg-5bb8ccbbaf.json")
+        cred = credentials.Certificate("key.json")
         firebase_admin.initialize_app(cred)
 
     def getUserData(self):

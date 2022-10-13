@@ -159,7 +159,7 @@ public class Offers extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new ReadJSON().execute("http://127.0.0.1:5000/app/products/");
+                new ReadJSON().execute("https://raw.githubusercontent.com/ErikBot42/grocery-store-price-comparator/main/tmp.json");
             }
         });
         return contentView;
@@ -255,10 +255,18 @@ public class Offers extends Fragment {
 
         @Override
         protected void onPostExecute(String content) {
-            try {
-                JSONObject jsonObject = new JSONObject(content);
-                JSONArray jsonArray = jsonObject.getJSONArray("products");
 
+            try {
+                Log.d("MyApp","I am your father");
+                content = content.replace("\\\"", "\"");
+                content = content.substring(1);
+                //Log.d("contentfirst",content.substring(0));
+                Log.d("content",content);
+
+                JSONObject jsonObject = new JSONObject(content);
+                Log.d("MyApp","I am your father1");
+                JSONArray jsonArray = jsonObject.getJSONArray("products");
+                Log.d("MyApp","I am your father2");
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject productObject = jsonArray.getJSONObject(i);
                     arrayList.add(new Product(
@@ -267,6 +275,7 @@ public class Offers extends Fragment {
                             productObject.getString("price"),
                             productObject.getString("store")
                     ));
+                    Log.d("MyApp","I am here");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

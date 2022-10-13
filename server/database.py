@@ -289,14 +289,15 @@ class Database:
         res = self.cursor.execute(query)
         return res.fetchall()
 
-    def getProductCategory(self, category_terms: list[str]) -> list[DbProd]:
+    def getProductCategory(self, category_terms_imm: list[str]) -> list[DbProd]:
+        category_terms = category_terms_imm.copy()
         if len(category_terms) != 0:
-
-
+            
             query = f"""SELECT Product_ID, Product_name, Store_Name, Store_ID, Price, Category_ID, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL 
             FROM Product JOIN Store USING (Store_ID)
             WHERE REGEXP('{category_terms.pop(0)}', Product_Name)
             """
+            #
             #query = f"""SELECT Product_Name, Price_num, Store_Name, Product_ID 
             #    FROM Product JOIN Store USING (Store_ID)
             #    WHERE REGEXP('{category_terms.pop(0)}', Product_Name)

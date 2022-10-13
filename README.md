@@ -11,6 +11,13 @@ or
 ```
 git clone https://github.com/ErikBot42/grocery-store-price-comparator.git
 ```
+## Dependencies
+uses `python 3.10`
+```
+firebase-admin
+selenium
+```
+
 ## Build and run
 Install `python 3`, `sqlite3`, `android-studio`
 

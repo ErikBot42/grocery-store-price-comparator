@@ -32,8 +32,6 @@ class firebaseHandeler():
         temp = firebase_admin.firestore.client()
         print(temp)
 
-        NOP
-
 if __name__ == "__main__":
     db = firebaseHandeler()
     db.printUsers()

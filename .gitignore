@@ -1,6 +1,12 @@
 parsetab.py
 parser.out
 
+
+server/key.json
+server/get-pip.py
+app.zip
+.DS_Store
+
 *.db
 *.sqbpro
 grocery-store-price-comparator-firebase-adminsdk-imgjg-5bb8ccbbaf.json

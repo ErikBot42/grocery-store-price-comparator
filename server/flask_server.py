@@ -172,7 +172,8 @@ def sendProductsInJson():
             }   
             data.append(temp)
     prod = '{"products":'+str(data)+'}'
-    return jsonify(prod.replace("'", '"'))
+    prod = prod.replace("'", '"').replace("\\", "")
+    return jsonify(prod)
 
 
 @app.route("/products/category/<category>", methods = ["GET"])

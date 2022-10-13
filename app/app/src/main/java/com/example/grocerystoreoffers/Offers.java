@@ -3,6 +3,7 @@ package com.example.grocerystoreoffers;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -17,6 +18,14 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +35,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +50,8 @@ public class Offers extends Fragment {
     private SearchView searchView;
     private Toolbar toolbar;
     CustomListAdapter customListAdapter;
+    FirebaseFirestore fStore;
+    FirebaseUser user;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -76,7 +88,6 @@ public class Offers extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.fragment_offers);
 
     }
 
@@ -93,6 +104,13 @@ public class Offers extends Fragment {
         CheckBox coopBox = contentView.findViewById(R.id.coopStore);
         CheckBox lidlBox = contentView.findViewById(R.id.lidlStore);
         CheckBox willysBox = contentView.findViewById(R.id.willysStore);
+
+        favBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFavstore();
+            }
+        });
 
         icaBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,13 +159,13 @@ public class Offers extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new ReadJSON().execute("https://raw.githubusercontent.com/ErikBot42/grocery-store-price-comparator/main/products.json");
+                new ReadJSON().execute("https://raw.githubusercontent.com/ErikBot42/grocery-store-price-comparator/main/tmp.json");
             }
         });
         return contentView;
     }
 
-    private void filterStore(String text)  {
+    public void filterStore(String text)  {
 
         ArrayList<Product> filteredList = new ArrayList<>();
         customListAdapter = new CustomListAdapter(getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList);
@@ -188,7 +206,44 @@ public class Offers extends Fragment {
     }
 
 
+    public void getFavstore(){
+        fStore = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        DocumentReference documentReference = fStore.collection("user_profile").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        String favStore = document.getString("Favorite store");
+                        //To prevent null-pointer exeptions
+                        switch (Objects.requireNonNull(favStore)){
+                            case "ICA":
+                                filterStore("3");
+                                break;
+                            case "Coop":
+                                filterStore("2");
+                                break;
+                            case "Willys":
+                                filterStore("4");
+                                break;
+                            case "LIDL":
+                                filterStore("1");
+                                break;
+                            default:
+                                break;
+                        }
+                    } else {
+                        Log.d("LOGGER", "No such document");
+                    }
+                } else {
+                    Log.d("LOGGER", "get failed with ", task.getException());
+                }
+            }
 
+        });
+    }
 
 
     class ReadJSON extends AsyncTask<String, Integer, String> {
@@ -200,10 +255,18 @@ public class Offers extends Fragment {
 
         @Override
         protected void onPostExecute(String content) {
-            try {
-                JSONObject jsonObject = new JSONObject(content);
-                JSONArray jsonArray = jsonObject.getJSONArray("products");
 
+            try {
+                Log.d("MyApp","I am your father");
+                content = content.replace("\\\"", "\"");
+                content = content.substring(1);
+                //Log.d("contentfirst",content.substring(0));
+                Log.d("content",content);
+
+                JSONObject jsonObject = new JSONObject(content);
+                Log.d("MyApp","I am your father1");
+                JSONArray jsonArray = jsonObject.getJSONArray("products");
+                Log.d("MyApp","I am your father2");
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject productObject = jsonArray.getJSONObject(i);
                     arrayList.add(new Product(
@@ -212,6 +275,7 @@ public class Offers extends Fragment {
                             productObject.getString("price"),
                             productObject.getString("store")
                     ));
+                    Log.d("MyApp","I am here");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -244,5 +308,3 @@ public class Offers extends Fragment {
         return content.toString();
     }
 }
-
-

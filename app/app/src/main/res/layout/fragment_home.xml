@@ -1,87 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
-
     xmlns:tools="http://schemas.android.com/tools"
-
-
     android:layout_width="match_parent"
-
-
     android:layout_height="match_parent"
-
-
     tools:context=".HomeFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Welcome to \nFood Huzzle!"
+        android:gravity="center"
+        android:textSize="50dp"
+        />
 
-    <Button
-
-
-        android:label="@string/swe_Btn"
-
-
-        android:id="@+id/sweBtn"
-
-
-        android:layout_width="wrap_content"
-
-
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-
-        android:text="Swedish"
-
-
-        android:layout_marginLeft="110dp" />
-
-
-
-
-
-
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:gravity="center">
 
     <Button
-
-
-        android:label="@string/eng_Btn"
-
-
         android:id="@+id/engBtn"
-
-
         android:layout_width="wrap_content"
-
-
         android:layout_height="wrap_content"
+        android:label="@string/eng_Btn"
+        android:text="English"
+        android:layout_gravity="bottom"
+        />
 
-
-        android:text="English" />
-
-
-    <!-- TODO: Update blank fragment layout -->
     <Button
-
-
-        android:id="@+id/logOutButton"
-
-
+        android:label="@string/swe_Btn"
+        android:id="@+id/sweBtn"
         android:layout_width="wrap_content"
-
-
         android:layout_height="wrap_content"
-
-
-        android:layout_marginLeft="150dp"
-
-
-        android:layout_marginRight="20dp"
-
-
-        android:layout_marginTop="100dp"
-        android:text="Log out"
-        android:label="@string/log_Btn"/>
+        android:text="Swedish"
+        android:layout_marginLeft="110dp"
+        android:layout_gravity="bottom"
+        />
+    </LinearLayout>
 </FrameLayout>

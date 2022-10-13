@@ -162,10 +162,10 @@ def sendProductsInJson():
             temp = {
                 "id":str(item[0]),
                 "name":item[1],
-                "price":item[2],
+                "price":str(item[2]),
                 "image":item[8],
-                "store":item[9]
-            }
+                "store":str(item[9])
+            }   
             data.append(temp)
     prod = json.dumps('{"products":'+str(data)+'}')
     return jsonify(prod)

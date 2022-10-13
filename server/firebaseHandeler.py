@@ -1,5 +1,5 @@
 import firebase_admin
-from firebase_admin import credentials, auth
+from firebase_admin import credentials, auth, firestore
 
 class firebaseHandeler():
 
@@ -28,6 +28,14 @@ class firebaseHandeler():
         for usr in usrs.iterate_all():
             print(f"User mail is: {usr.email}")
 
+    def firestore(self):
+        temp = firebase_admin.firestore.client()
+        print(temp)
+
+        NOP
+
 if __name__ == "__main__":
     db = firebaseHandeler()
     db.printUsers()
+    db.getUserData()
+    db.firestore()

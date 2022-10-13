@@ -43,19 +43,19 @@
                 <!-- Lopar igenom alla produkter och lägger till en rad för varje -->
                 {% for item in products %}
                     <tr>
-                        <td>{{item[0]}}</td>
-                        <td>{{item[1]}}</td>
-                        <td>{{item[2]}}</td>
-                        <td>{{item[3]}}</td>
-                        <td>{{item[4]}}</td>
-                        <td>{{item[5]}}</td>
-                        <td>{{item[6]}}</td>
-                        <td>{{item[7]}}</td>
-                        <td>{{item[8]}}</td>
+                        <td>{{item.i}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.price_num}}</td>
+                        <td>{{item.price_kg}}</td>
+                        <td>{{item.price_l}}</td>
+                        <td>{{item.amount_kg}}</td>
+                        <td>{{item.amount_l}}</td>
+                        <td>{{item.store}}</td>
+                        <td>{{item.url}}</td>
                         <td>
                             <ul class="">
                                 <li class="list-inline-item">
-                                    <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/product/remove/{{item[0]}}">
+                                    <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/product/remove/{{item.i}}">
                                         <button class="btn btn-danger btn-sm rounded-0" type="submit" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
                                     </form>
                                 </li>

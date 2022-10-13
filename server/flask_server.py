@@ -56,13 +56,14 @@ def showHomePage():
 @app.route("/admin/")
 @app.route("/products/", methods=["GET", "POST"])
 def products():
+    from database import DbProd
     if "user" in session:
         db = Database()
         if request.method == "POST":
-            prod = db.searchProduct(request.form["productSearch"])
+            prod: list[DbProd] = db.searchProduct(request.form["productSearch"])
             db.close()
         else:
-            prod = db.getAllProductsWithCategories(CATEGORIES)
+            prod: list[DbProd] = db.getAllProductsWithCategories(CATEGORIES)
             db.close()
         return render_template("admin_products.html", products=prod)
     else:
@@ -158,13 +159,13 @@ def sendProductsInJson():
     db.close()
     data = []
     for item in prod:
-        if item[1] != None:  
+        if item.name != None:  
             temp = {
-                "id":str(item[0]),
-                "name":item[1],
-                "price":str(item[2]),
-                "image":item[8],
-                "store":str(item[9])
+                "id":str(item.i),
+                "name":item.name,
+                "price":str(item.price_num),
+                "image":item.url,
+                "store":str(item.store)
             }   
             data.append(temp)
     prod = '{"products":'+str(data)+'}'
@@ -177,20 +178,23 @@ def sendProductsInJson():
 
 @app.route("/products/category/<category>", methods = ["GET"])
 def productCategory(category: str):
+    from database import DbProd
     if "user" in session:
         db = Database()
         for cat in CATEGORIES:
             if category == cat[0]:
-                prod = db.getProductCategory(cat[1])
+                prod: list[DbProd] = db.getProductCategory(cat[1])
                 break
         else:
             if category == "Misk":
-                prod = db.getProductWithoutCategory(CATEGORIES)
+                #prod = db.getProductWithoutCategory(CATEGORIES)
+                print("TODO, OOPS")
+                prod: list[DbProd] = []
             elif category == "All":
-                prod = db.getProductDataForAdmin()
+                prod: list[DbProd] = db.getProductDataForAdmin()
             else:
                 print(f"#### Not a mach found for: {category}")
-                prod = []
+                prod: list[DbProd] = []
         db.close()  
         return render_template("admin_products.html", products=prod)
     else:

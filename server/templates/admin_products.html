@@ -31,6 +31,10 @@
                     <th scope="col">id</th>
                     <th scope="col">name</th>
                     <th scope="col">Price</th>
+                    <th scope="col">Price/kg</th>
+                    <th scope="col">Price/l</th>
+                    <th scope="col">Amount_kg</th>
+                    <th scope="col">Amount_l</th>
                     <th scope="col">Store</th>
                     <th scope="col"></th>
                 </tr>
@@ -39,14 +43,19 @@
                 <!-- Lopar igenom alla produkter och lägger till en rad för varje -->
                 {% for item in products %}
                     <tr>
-                        <td>{{item[3]}}</td>
                         <td>{{item[0]}}</td>
                         <td>{{item[1]}}</td>
                         <td>{{item[2]}}</td>
+                        <td>{{item[3]}}</td>
+                        <td>{{item[4]}}</td>
+                        <td>{{item[5]}}</td>
+                        <td>{{item[6]}}</td>
+                        <td>{{item[7]}}</td>
+                        <td>{{item[8]}}</td>
                         <td>
                             <ul class="">
                                 <li class="list-inline-item">
-                                    <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/product/remove/{{item[3]}}">
+                                    <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/product/remove/{{item[0]}}">
                                         <button class="btn btn-danger btn-sm rounded-0" type="submit" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
                                     </form>
                                 </li>

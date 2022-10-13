@@ -233,7 +233,7 @@ class Database:
 
     def getAllProductsWithCategories(self, category_list: list) -> list:
         if len(category_list) != 0:
-            query = f"""SELECT Product_Name, Price_num, Store_Name, Product_ID, Store_Name, URL 
+            query = f"""SELECT Product_ID, Product_name, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, Store_ID 
                 FROM Product JOIN Store USING (Store_ID) WHERE
             """
             for category in category_list:

@@ -28,6 +28,7 @@
             <br>
             <thead>
                 <tr>
+                    <th scope="col">id</th>
                     <th scope="col">name</th>
                     <th scope="col">Price</th>
                     <th scope="col">Store</th>
@@ -38,6 +39,7 @@
                 <!-- Lopar igenom alla produkter och lägger till en rad för varje -->
                 {% for item in products %}
                     <tr>
+                        <td>{{item[3]}}</td>
                         <td>{{item[0]}}</td>
                         <td>{{item[1]}}</td>
                         <td>{{item[2]}}</td>

@@ -138,18 +138,13 @@ from product import Product
 
 
 class TestProducts(unittest.TestCase):
-
-
     #def test_extract_infer(self):
-
     #    ex = ExtractedInfo()
     #    ex.try_read("89 90 /kg 500 g")
     #    print(ex.price)
     #    print(ex.price_kg)
     #    print(ex.price_l)
     #    assert ex.price == 89.90*0.5
-
-
     def test_price_extract(self):
         cases = [
                 #input,                                                                                                   price,         price_l, price_kg
@@ -166,16 +161,14 @@ class TestProducts(unittest.TestCase):
                 ("30:00",                                                                                                    30,         None,        None, ),
                 ("69:- /st",                                                                                                 69,         None,        None, ),
                 ("Göl. 375 g. Kyld. Välj mellan olika sorter. Jfr-pris 106:40/kg.",                                0.375*106.40,         None,      106.40, ),
-                ("Italien. 500 g. Klass 1. Kärnfria. Jfr-pris 39:80/kg.",                                                  0.5*39.80,         None,       39.80, ),
+                ("Italien. 500 g. Klass 1. Kärnfria. Jfr-pris 39:80/kg.",                                             0.5*39.80,         None,       39.80, ),
                 ("OLW. 200-275 g. Flera olika sorter. Max 1 köp/hushåll",                                                  None,         None,        None, ),
                 ("Hälsans kök. 180-320 g. Flera olika sorter. Gäller ej Sojafärs, Plant-Based burger. Max 1 köp/hushåll",  None,         None,        None, ),
                 ]
-
         #ex.try_read("")
         #ex.try_read("")
         #ex.try_read("")
         #ex.try_read("")
-
         for (string, price, price_lit, price_kg) in cases:
             ex = ExtractedInfo()
             ex.try_read(string)

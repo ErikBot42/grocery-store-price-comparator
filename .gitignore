@@ -1,6 +1,12 @@
 parsetab.py
 parser.out
 
+
+server/key.json
+server/get-pip.py
+app.zip
+.DS_Store
+
 *.db
 *.sqbpro
 

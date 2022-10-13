@@ -12,7 +12,7 @@ or
 git clone https://github.com/ErikBot42/grocery-store-price-comparator.git
 ```
 ## Dependencies
-uses `python 3.10`
+uses `python 3.10` and `android studio`
 ```
 firebase-admin
 selenium

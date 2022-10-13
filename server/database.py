@@ -4,6 +4,9 @@ import sqlite3
 import re
 
 class Database:
+
+    def _generateSuggestedIdsFromIds(self, ids: list[int]) -> list[int]:
+        return ids;
     
     def __del__(self):
         self.close()

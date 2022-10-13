@@ -157,7 +157,7 @@ class Database:
         return self._runSQLQuery(query, data)
 
     def getProductDataForAdmin(self):
-        query = "SELECT Product_Name, Price, Store_Name, Product_ID FROM Product JOIN Store USING (Store_ID)"
+        query = "SELECT Product_Name, Price_num, Store_Name, Product_ID FROM Product JOIN Store USING (Store_ID)"
         result = self._runSQLQueryWithResults(query)
         return result
 
@@ -172,19 +172,26 @@ class Database:
         else: return result[0]
 
     def removeProduct(self, id):
-        query = f"DELETE FROM Product WHERE Product_ID == '?'"
-        data = [str(id)]
-        print(f"TODO: Handle exceptions in removeProduct")
+        query = f"DELETE FROM Product WHERE Product_ID == '{str(id)}'"
         try:
-            self.cursor.execute(query, data)
-        except sqlite3.Error:
-            print("Error in removing product: TODO: Handle error in removeProduct")
+            self.cursor.execute(query)
+        except sqlite3.Error as er:
+            print("\nCould not run query: " + query)
+            print('\tSQLite error: %s' % (' '.join(er.args)))
+
+    def removeUser(self, id):
+        query = f"DELETE FROM Register Where User_ID == '{str(id)}'"
+        try:
+            self.cursor.execute(query)
+        except sqlite3.Error as er:
+            print("\nCould not run query: " + query)
+            print('\tSQLite error: %s' % (' '.join(er.args)))
 
     def searchProduct(self, search_term: str):
-        query = f"""SELECT Product_Name, Price, Store_Name, Product_ID 
+        query = f"""SELECT Product_Name, Price_num, Store_Name, Product_ID 
             FROM Product JOIN Store USING (Store_ID)
             WHERE Product_Name LIKE '%{search_term}%' 
-            OR Price LIKE '%{search_term}%' 
+            OR Price_num LIKE '%{search_term}%' 
             OR Store_Name LIKE '%{search_term}%' 
         """
         res = self.cursor.execute(query)
@@ -206,7 +213,7 @@ class Database:
 
     def getProductCategory(self, category_terms: list[str]):
         if len(category_terms) != 0:
-            query = f"""SELECT Product_Name, Price, Store_Name, Product_ID 
+            query = f"""SELECT Product_Name, Price_num, Store_Name, Product_ID 
                 FROM Product JOIN Store USING (Store_ID)
                 WHERE REGEXP('{category_terms.pop(0)}', Product_Name)
             """
@@ -223,7 +230,7 @@ class Database:
 
     def getAllProductsWithCategories(self, category_list: list) -> list:
         if len(category_list) != 0:
-            query = f"""SELECT Product_Name, Price, Store_Name, Product_ID, Store_Name, URL 
+            query = f"""SELECT Product_Name, Price_num, Store_Name, Product_ID, Store_Name, URL 
                 FROM Product JOIN Store USING (Store_ID) WHERE
             """
             for category in category_list:
@@ -255,32 +262,7 @@ class Database:
             FROM Product JOIN Store USING (Store_ID) WHERE Product_ID NOT IN ({query_category})"""
         return self.cursor.execute(query_no_category).fetchall()
        
-       
-        
-        
 
-    def getProductString(self, values: list):
-        print("(***WARNING***)Function is no longer supported")
-        temp = f"""<h1>This method is no longer suposed to be used!</h1>
-                    <tr>
-                            <td>{values[0]}</td>
-                            <td>{values[1]}</td>
-                            <td>{values[2]}</td>
-                            <td>
-                                <ul class="">
-                                    <li class="list-inline-item">
-                                        <button class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i>Edit</button>
-                                    </li>
-                                    <li class="list-inline-item">
-                                        <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
-                                    </li>
-                                </ul>
-                            </td>
-                            
-                        </tr>"""
-        return temp
-    
-    
     #Save all new changes to the database. 
     def commitToDatabase(self):
         self.connection.commit()

@@ -1,0 +1,9 @@
+{
+	"products": [{
+		"id": "1",
+		"name": "Vinröda vindruvor",
+		"price": "19.90",
+		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg",
+		"store":"1"
+	}]
+}

@@ -165,7 +165,8 @@ def sendProductsInJson():
                 "name":item.name,
                 "price":str(item.price_num),
                 "image":item.url,
-                "store":str(item.store)
+                "store":str(item.store),
+                "store_id":str(item.store_id)
             }   
             data.append(temp)
     prod = '{"products":'+str(data)+'}'

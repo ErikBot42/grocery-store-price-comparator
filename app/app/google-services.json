@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "461910437671",
+    "project_id": "grocery-store-price-comparator",
+    "storage_bucket": "grocery-store-price-comparator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461910437671:android:cc83c322b5beb00dde0302",
+        "android_client_info": {
+          "package_name": "com.example.grocerystoreoffers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461910437671-eq33n7qufi2imktmum5lp9tn76b663br.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAK89CJVbUMbTnWReE1lkdj-XlhHWoRYuo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461910437671-eq33n7qufi2imktmum5lp9tn76b663br.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

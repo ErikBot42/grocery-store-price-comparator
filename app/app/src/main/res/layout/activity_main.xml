@@ -60,20 +60,17 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <Button
-            android:label="@string/swe_Btn"
-            android:id="@+id/sweBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Swedish"
-            android:layout_marginLeft="110dp" />
 
-        <Button
-            android:label="@string/eng_Btn"
-            android:id="@+id/engBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="English" />
+
+
+
+
+
+
+
+
+
+
 
 
     </FrameLayout>

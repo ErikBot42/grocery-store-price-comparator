@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GroceryStoreOffers</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -30,4 +29,5 @@
         <item>LIDL</item>
     </string-array>
 </resources>
+
 

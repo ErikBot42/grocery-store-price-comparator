@@ -1,5 +1,3 @@
-
-
 package com.example.grocerystoreoffers;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -64,22 +62,6 @@ import com.google.firebase.auth.AuthResult;
 
 import java.util.Locale;
 
-
-/**
-
-
- * A simple {@link Fragment} subclass.
-
-
- * Use the {@link HomeFragment#newInstance} factory method to
-
-
- * create an instance of this fragment.
-
-
- */
-
-
 public class HomeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -95,19 +77,13 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private Button button;
-    private FirebaseAuth mAuth;
 
     public HomeFragment() {
-
-
         // Required empty public constructor
-
-
     }
 
 
     public static HomeFragment newInstance(String param1, String param2) {
-
 
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -126,19 +102,12 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        button = view.findViewById(R.id.logOutButton);
-        button.setText(R.string.log_Btn);
-
-        button.setOnClickListener(view1 -> {
-            logOut();
-        });
 
         engBtn = (Button) view.findViewById(R.id.engBtn);
         engBtn.setOnClickListener(new View.OnClickListener() {
@@ -170,35 +139,30 @@ public class HomeFragment extends Fragment {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
             conf.setLocale(new Locale(localeCode.toLowerCase()));
-        }else{
+        }   else   {
             conf.locale = new Locale(localeCode.toLowerCase());
         }
         res.updateConfiguration(conf,dm);
     }
 
-    public void saveData(String lang) {
+    public void saveData(String lang)   {
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(TEXT, lang);
         editor.commit();
         Toast.makeText(getActivity(), "Data saved", Toast.LENGTH_SHORT).show();
-
     }
 
     public void loadData() {
-
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         text = sharedPreferences.getString(TEXT, "");
-
     }
 
     public static View replaceView(LayoutInflater inflater, View currentView, int newViewId) {
 
         View newView = inflater.inflate(newViewId, null);
         return replaceView(inflater, currentView, newView);
-
-
     }
 
     public static View replaceView(LayoutInflater inflater, View currentView, View newView) {
@@ -212,7 +176,6 @@ public class HomeFragment extends Fragment {
         removeView(currentView);
         parent.addView(newView, index);
         return newView;
-
     }
 
     public static ViewGroup getParent(View view) {
@@ -220,13 +183,10 @@ public class HomeFragment extends Fragment {
     }
 
     public static void removeView(View view) {
-
         if (view != null) {
             ViewGroup parent = getParent(view);
             if (parent != null) {
-
                 parent.removeView(view);
-
             }
         }
     }
@@ -236,11 +196,5 @@ public class HomeFragment extends Fragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,fragment);
         fragmentTransaction.commit();
-
-    }
-
-    private void logOut(){
-        mAuth.signOut();
-
     }
 }

@@ -38,7 +38,7 @@ for command in sys.argv[1:]:
         case "--clear-database":
             print("clearing database")
             database = Database()
-            database.droppAllData()
+            database.dropAllData()
             database.commitToDatabase()
             database.close()
         case "--add-placeholder":

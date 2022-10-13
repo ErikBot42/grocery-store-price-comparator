@@ -12,10 +12,29 @@
     <div id="currListings">
         <h2 class="text-primary d-flex justify-content-center">Current Listings</h2>
         <table class="table  table-dark table-striped">
+            <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/products/new">                          
+                <div class="form-group">
+                    <input type="text"  id="Category_ID" name="Category_ID"  placeholder="Category_ID">
+                    <input type="text"  id="Product_Name" name="Product_Name" required placeholder="Product_Name">
+                    <input type="text"  id="Store_ID" name="Store_ID" required placeholder="Store">
+                    <input type="text"  id="Price" name="Price"  placeholder="Price">
+                    <input type="text"  id="Price_num" name="Price_num" required placeholder="Price_num">
+                    <input type="text"  id="Price_kg" name="Price_kg"  placeholder="Price_kg">
+                    <input type="text"  id="Price_l" name="Price_l"  placeholder="Price_l">
+                    <input type="text"  id="URL" name="URL" placeholder="URL"><br>   
+                    <button type="submit" class="btn btn-primary mr-0">Add Product</button>                  
+                </div>
+            </form>
+            <br>
             <thead>
                 <tr>
+                    <th scope="col">id</th>
                     <th scope="col">name</th>
                     <th scope="col">Price</th>
+                    <th scope="col">Price/kg</th>
+                    <th scope="col">Price/l</th>
+                    <th scope="col">Amount_kg</th>
+                    <th scope="col">Amount_l</th>
                     <th scope="col">Store</th>
                     <th scope="col"></th>
                 </tr>
@@ -27,10 +46,18 @@
                         <td>{{item[0]}}</td>
                         <td>{{item[1]}}</td>
                         <td>{{item[2]}}</td>
+                        <td>{{item[3]}}</td>
+                        <td>{{item[4]}}</td>
+                        <td>{{item[5]}}</td>
+                        <td>{{item[6]}}</td>
+                        <td>{{item[7]}}</td>
+                        <td>{{item[8]}}</td>
                         <td>
                             <ul class="">
                                 <li class="list-inline-item">
-                                    <button class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
+                                    <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/product/remove/{{item[0]}}">
+                                        <button class="btn btn-danger btn-sm rounded-0" type="submit" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
+                                    </form>
                                 </li>
                             </ul>
                         </td>
@@ -39,35 +66,7 @@
             </tbody>
         </table>
     </div>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">New Product</button>
-    <div class="container mt-5">
-        <div class="modal" id="myModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">New Product</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form class="mb-3">
-                        
-                            <label class="form-label required" >Name</label>
-                            <input type="text" class="form-control" id="name">
-                        
-                            <label class="form-label required" >Price</label>
-                            <input type="text" class="form-control" id="price">
-                        
-                            <label class="form-label required" >Store</label>
-                            <input type="text" class="form-control mb-5" id="store" >
-                            <button type="submit" class="btn btn-primary" id="createButton" data-bs-toggle="modal" data-bs-target="#myModal">Create</button>
-                            <button type="reset" class="btn btn-dark" value="Reset">Reset</button>
-                        
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+   
     
     
 </div>

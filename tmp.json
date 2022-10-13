@@ -1,9 +1,15 @@
-{
-	"products": [{
-		"id": "1",
-		"name": "Vinröda vindruvor",
-		"price": "19.90",
-		"image": "https://se.cat-ret.assets.lidl/catalog5media/se/article/80485/third/sm/80485.jpg",
-		"store":"1"
-	}]
-}
+"\"{\\\"products\\\":[{'id': '1', 'name': 'Mjukt br\\u00f6d', 'price': '27.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1638807343/cloud/240433.png', 'store': '2'}, 
+{'id': '2', 'name': 'Falukorv i ring', 'price': '29.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1634299506/cloud/236767.png', 'store': '2'}, 
+{'id': '4', 'name': 'Fl\\u00e4skytterfil\\u00e9', 'price': '69.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1644726485/cloud/199919.png', 'store': '2'}, 
+{'id': '6', 'name': 'Glass', 'price': '44.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1580808907/392411.png', 'store': '2'},
+{'id': '7', 'name': 'Frukt-/Vaniljyoghurt', 'price': '19.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1597391801/405197.png', 'store': '2'},
+{'id': '8', 'name': 'F\\u00e4rsk strimlad kycklingfil\\u00e9', 'price': '79.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1637827371/cloud/159922.png', 'store': '2'},
+{'id': '9', 'name': 'Mjukt br\\u00f6d', 'price': '27.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1638807343/cloud/240433.png', 'store': '2'},
+{'id': '10', 'name': 'Falukorv i ring', 'price': '29.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1634299506/cloud/236767.png', 'store': '2'},
+{'id': '12', 'name': 'Fl\\u00e4skytterfil\\u00e9', 'price': '69.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1644726485/cloud/199919.png', 'store': '2'},
+{'id': '13', 'name': 'Frukt-/Vaniljyoghurt', 'price': '19.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1597391801/405197.png', 'store': '2'},
+{'id': '14', 'name': 'F\\u00e4rsk strimlad kycklingfil\\u00e9', 'price': '79.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1637827371/cloud/159922.png', 'store': '2'},
+{'id': '15', 'name': 'L\\u00e4sk', 'price': '30.0', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1602252998/409891.png', 'store': '2'},
+{'id': '16', 'name': 'Laktosfri yoghurt/kefir', 'price': '21.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1586954736/398377.png', 'store': '2'},
+{'id': '18', 'name': 'Sm\\u00f6rg\\u00e5sp\\u00e5l\\u00e4gg', 'price': '24.9', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1632746250/cloud/235225.png', 'store': '2'},
+{'id': '19', 'name': 'Sm\\u00f6r-&rapsolja', 'price': '44.0', 'image': '//res.cloudinary.com/coopsverige/image/upload//t_200x200_png/v1652096030/cloud/251716.png', 'store': '2'}]}

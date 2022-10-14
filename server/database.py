@@ -79,11 +79,11 @@ class Database:
             store: str,
             price: str,
             category: int,
-            price_num: float | None = None,
-            price_kg: float | None = None,
-            price_l: float | None = None,
-            amount_kg: float | None = None,
-            amount_l: float | None = None,
+            price_num: float | None ,
+            price_kg: float | None,
+            price_l: float | None,
+            amount_kg: float | None,
+            amount_l: float | None,
             url: str = "",
             ) -> bool:
         data = [str(category), name, str(self.getStoreID(store)), price, price_num, price_kg, price_l, amount_kg, amount_l, url]

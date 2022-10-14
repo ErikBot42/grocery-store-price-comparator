@@ -24,6 +24,16 @@ def price(kr: int, öre: int) -> float:
     return kr + öre/100.0
 
 class ExtractedInfo:
+    def __str__(self):
+        attrs = vars(self)
+        return '\n'.join("%s: %s" % item for item in attrs.items())
+
+    def __repr__(self):
+        attrs = vars(self)
+        return '\n'.join("%s: %s" % item for item in attrs.items())
+
+    def print(self):
+        print(str(self))
 
     def __init__(self):
         self.price: None | float = None
@@ -38,23 +48,31 @@ class ExtractedInfo:
         if self.price == None:
             if self.price_kg != None and self.amount_kg != None:
                 self.price = self.price_kg * self.amount_kg
+                print("inf: price", self.price)
         
         if self.price == None:
             if self.price_l != None and self.amount_l!= None:
                 self.price = self.price_l * self.amount_l
+                print("inf: price", self.price)
 
         if self.price != None:
             if self.amount_kg == None and self.price_kg != None:
                 self.amount_kg = self.price / self.price_kg
+                print("inf: amount_kg", self.amount_kg)
             if self.amount_kg != None and self.price_kg == None:
                 self.price_kg = self.price / self.amount_kg
+                print("inf: price_kg", self.price_kg)
             
             if self.amount_l == None and self.price_l != None:
                 self.amount_l = self.price / self.price_l
+                print("inf: amount_l", self.amount_l)
             if self.amount_l != None and self.price_l == None:
                 self.price_l = self.price / self.amount_l
+                print("inf: price_l", self.price_l)
+        print("------")
 
     def try_read(self, string: str):
+        print("try_read:", string)
 
         #price represented as "öre"
 
@@ -111,7 +129,6 @@ class ExtractedInfo:
             r'(\d+-pack)'
             #(\d+×) <- "3×212 ml" fails
             t.value = int(re.search(r"\d+", t.value).group())
-
             return t 
         
         def t_UNIT(t):
@@ -171,7 +188,7 @@ class ExtractedInfo:
         from itertools import zip_longest
 
 
-        # ♥♥♥ Iterator ♥♥♥
+        # ♥ ♥ ♥ Iterator ♥ ♥ ♥
         token_iter = iter(token_list)
         token_iter_next = iter(token_list)
         next(token_iter_next, None) 
@@ -193,40 +210,44 @@ class ExtractedInfo:
                 if nxt2!= None and nxt2.type != "ERROR":
                     nxt2_type = nxt2.type
 
+            #if nxt_type != None and nxt != None and nxt.value != None:
 
             match curr_type:
                 #case "NUMBER":
                 #    if nxt_type == "UNIT":
                 #        results.append(("number of things", curr.value, nxt.value))
                 #        
-                case "PRICE":
-                    match nxt_type:
-                        case "PER": 
-                            (unit, fac) = nxt.value;
-                            match unit:
-                                case Units.KG:
-                                    self.price_kg = curr.value*fac
-                                    #print("Found price/kg: ", self.price_per_kg, "kr/kg")
-                                case Units.L:
-                                    self.price_l = curr.value*fac
-                                    #print("Found price/l: ", self.price_per_litre, "kr/l")
-                                case Units.NUMBER:
-                                    #print("Found price/unit: ", curr.value, "kr/st")
-                                    self.price = curr.value
-                        case _:
-                            #print("Found price: ", curr.value, "kr")
-                            self.price = curr.value
-                case "NUMBER":
-                    match nxt_type:
-                        case "UNIT":
-                            (unit, fac) = nxt.value;
-                            match unit:
-                                case Units.KG:
-                                    self.amount_kg = curr.value*fac
-                                case Units.L:
-                                    self.amount_l = curr.value*fac
-                        case _:
-                            pass
+
+                    case "PRICE":
+                        match nxt_type:
+                            case "PER": 
+                                (unit, fac) = nxt.value;
+                                match unit:
+                                    case Units.KG:
+                                        self.price_kg = curr.value*fac
+                                        print("price/kg", self.price_kg)
+                                    case Units.L:
+                                        self.price_l = curr.value*fac
+                                        print("price/l", self.price_l)
+                                    case Units.NUMBER:
+                                        self.price = curr.value
+                                        print("price/unit", self.price)
+                            case _:
+                                self.price = curr.value
+                                print("price", self.price)
+                    case "NUMBER":
+                        match nxt_type:
+                            case "UNIT":
+                                (unit, fac) = nxt.value;
+                                match unit:
+                                    case Units.KG:
+                                        self.amount_kg = curr.value*fac
+                                        print("amount_kg", self.amount_kg)
+                                    case Units.L:
+                                        self.amount_l = curr.value*fac
+                                        print("amount_l", self.amount_l)
+                            case _:
+                                pass
 
         self.infer_missing()
 
@@ -236,13 +257,14 @@ class Product:
             name: str,
             price: str,
             store: Store,
+            image_url: str,
             description: str = "",
             category: str = "",
-            image_url: str = "",
             #product_url: str = "",
             amount: str = "",
             modifier: str = "",
             ):
+        self.price_raw_str = price
         self.amount = amount
         self.category = category
         self.description = description
@@ -260,19 +282,21 @@ class Product:
         ex.try_read(self.description)
         ex.try_read(self.name)
         ex.try_read(self.price)
+        ex.try_read(self.amount)
         self.ex = ex
         self.price = str(self.ex.price)
     def is_valid(self):
         return self.name != "" and self.image_url != ""
 
     def __str__(self):
-        return self.name + ": (" + self.price + ") at " + str(self.store) + " " + self.description
+        attrs = vars(self)
+        return '\n'.join("%s: %s" % item for item in attrs.items())
 
     def __repr__(self):
-        return self.name + ": (" + self.price + ") at " + str(self.store) + " " + self.description
+        attrs = vars(self)
+        return '\n'.join("%s: %s" % item for item in attrs.items())
 
     def print(self):
-        attrs = vars(self)
-        print('\n'.join("%s: %s" % item for item in attrs.items()))
+        print(str(self))
 
 

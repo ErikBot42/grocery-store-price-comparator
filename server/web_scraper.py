@@ -309,6 +309,8 @@ def add_all_to_database(data: Database, skip_selenium: bool = False):
             print()
             print("INVALID PRODUCT:")
             product.print()
+        print()
+        product.print()
 
 
         if not data.addProductToDatabase(\

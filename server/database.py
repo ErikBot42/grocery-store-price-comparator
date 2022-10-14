@@ -308,15 +308,11 @@ class Database:
         else:
             return []   
 
-    def getAllProductsWithCategories(self, category_list: list) -> list[DbProd]:
+    def getAllProductsWithCategories(self, category_list: list, order="Store_ID") -> list[DbProd]:
         if len(category_list) != 0:
             query = f"""SELECT Product_ID, Product_name, Store_Name, Store_ID, Price, Category_ID, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL 
                 FROM Product JOIN Store USING (Store_ID) WHERE
-
             """
-            #query = f"""SELECT Product_ID, Product_name, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, Store_Name, URL, Store_ID
-            #    FROM Product JOIN Store USING (Store_ID) WHERE
-            #"""
             for category in category_list:
                 for reg in category[1]:
                     if query[-1] == ')':
@@ -326,10 +322,13 @@ class Database:
             #    "Price_num" FLOAT,
             #    "Price_kg" FLOAT,
             #    "Price_l" FLOAT,
-
-            res =   self.queryResultToObject(self.cursor.execute(query).fetchall())
-            print(res, len(res))
-            return res
+            query = f"{query} ORDER BY {order}"
+            try:
+                return self.queryResultToObject(self.cursor.execute(query).fetchall())
+            except sqlite3.Error as er: 
+                print("\nCould not run query: " + query)
+                print('\tSQLite error: %s' % (' '.join(er.args)))
+                return []
         else:
             return []   
 
@@ -343,9 +342,9 @@ class Database:
                     query_category = f"{query_category} REGEXP('{reg}', Product_Name)"
         else: 
             query_category = "SELECT Product_ID FROM Product JOIN Store USING (Store_ID) WHERE Product_Name == ";""
-        query_no_category = f"""SELECT Product_Name, Price, Store_Name, Product_ID, URL 
-            FROM Product JOIN Store USING (Store_ID) WHERE Product_ID NOT IN ({query_category})"""
-        return self.cursor.execute(query_no_category).fetchall()
+        query_no_category = f"""SELECT Product_ID, Product_name, Store_Name, Store_ID, Price, Category_ID, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL 
+                FROM Product JOIN Store USING (Store_ID) WHERE Product_ID NOT IN ({query_category})"""
+        return self.queryResultToObject(self.cursor.execute(query_no_category).fetchall())
        
 
     #Save all new changes to the database. 

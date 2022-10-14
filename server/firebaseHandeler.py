@@ -1,42 +1,85 @@
+from itertools import tee
+import telnetlib
+from urllib import response
 import firebase_admin
 from firebase_admin import credentials, auth, firestore
+import json
+
+class userData():
+
+    def __init__(self, email,  password, telephone, name, city,ica, coop, lidl, willys, uid=None) -> None:
+        self.uid = uid
+        self.email = email
+        self.password = password
+        self.telephone = telephone
+        self.name = name
+        self.city = city
+        self.ica = ica
+        self.coop = coop
+        self.lidl = lidl
+        self.willys = willys
+
 
 class firebaseHandeler():
 
     def __init__(self):
-        cred = credentials.Certificate("key.json")
-        firebase_admin.initialize_app(cred)
+        self.usr_collection = u'user_profile'
+        try:
+            cred = credentials.Certificate("server/key.json")
+        except:
+            print("#####Could not authenticate to firestore\n")
+            exit()
+        try:
+            self.default_app = firebase_admin.initialize_app(cred)
+        except:
+            print("#####Could not initialise App\n")
+            exit()
+        try:
+            self.db = firestore.client()
+        except:
+            print("#####Could not start firebase client\n")
 
-    def getUserData(self):
-        usrs = firebase_admin.auth.list_users()
-        result = []
-        for usr in usrs.iterate_all():
-            temp = [
-                usr.uid,                            #id
-                usr.email,                          #Email
-                usr.password_hash[0:20] + "...",   #pass
-                usr.phone_number,                   #number
-                "No date avalible",                 #date
-                "No city avalible",                 #City
-                usr.display_name                    #name
-            ]
-            result.append(temp)
-        return result
+    def _getUserObject(self, uid, data) -> userData:
+        return userData(
+            uid=uid,
+            email=data["Email"] if "Email" in data else None,
+            name=data["Name"] if "Name" in data else None,
+            password=data["Password"] if "Password" in data else None,
+            telephone=data["Telephone"] if "Telephone" in data else None,
+            city=data["City"] if "City" in data else None,
+            ica = data["ICA"] if "ICA" in data else False,
+            coop = data["COOP"] if "COOP" in data else False,
+            lidl = data["LIDL"] if "LIDL" in data else False,
+            willys = data["Willys"] if "Willys" in data else False,
+        )
 
-    def printUsers(self):
-        usrs = firebase_admin.auth.list_users()
-        for usr in usrs.iterate_all():
-            print(f"User mail is: {usr.email}")
+    def getUserData(self) -> list[userData]:
+        data = []
+        usrs = self.db.collection(self.usr_collection).get()
+        for usr in usrs:
+            data.append(self._getUserObject(usr.id, usr._data))
+        return data
+    
+    def addUser(self, usr: userData):
+        usr_data = {
+            u'Email': usr.email,
+            u'Name': usr.name,
+            u'Password': usr.password,
+            u'Telephone': usr.telephone,
+            u'city': usr.city,
+            u'ICA': usr.ica,
+            u'COOP': usr.coop,
+            u'LIDL': usr.lidl,
+            u'Willys': usr.willys
+        }
+        self.db.collection(self.usr_collection).add(usr_data)
 
-    def firestore(self):
-        temp = firebase_admin.firestore.client()
-        print(temp)
-        usrs_ref = temp.collection(u'usrs_profiles')
-        print(usrs_ref)
-        usrs = usrs_ref.where('Email', '==', True)
-        print(usrs)
+    def removeUser(self, uid):
+        self.db.collection(self.usr_collection).document(uid).delete()
+
+
 if __name__ == "__main__":
-    db = firebaseHandeler()
-    #db.printUsers()
-    #db.getUserData()
-    db.firestore()
+    fire_db = firebaseHandeler()
+    #fire_db.firestore()
+    #fire_db.printUsers()
+    fire_db.getUserData()

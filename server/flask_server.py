@@ -77,11 +77,10 @@ def products():
 @app.route("/users/", methods=["GET", "POST"])
 def users():
     if "user" in session:
-        db = Database()
+        db = fdb
         if request.method == "POST":
-            usr = db.searchUser(request.form["userSearch"])
+            usr = db.getUserSearch(request.form["userSearch"])
         else:
-            #usr = db.getUserDataForAdmin()
             usr = fdb.getUserData()
         return render_template("admin_users.html", users=usr)
     else:

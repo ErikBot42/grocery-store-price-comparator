@@ -57,7 +57,7 @@ class firebaseHandeler():
         data = []
         usrs = self.db.collection(self.usr_collection).get()
         for usr in usrs:
-            data.append(self._getUserObject(usr.id, usr._data))
+            data.append(self._getUserObject(usr.id, usr.to_dict()))
         return data
     
     def addUser(self, usr: userData):
@@ -77,9 +77,15 @@ class firebaseHandeler():
     def removeUser(self, uid):
         self.db.collection(self.usr_collection).document(uid).delete()
 
+    def getUserSearch(self, search_str: str):
+        print(f"searching for {search_str}")
+        docs = self.db.collection(self.usr_collection).where(u'Name', u'==', search_str).stream()
+        data = []
+        for doc in docs:
+            data.append(self._getUserObject(doc.id, doc.to_dict()))
+        return data
+
 
 if __name__ == "__main__":
     fire_db = firebaseHandeler()
-    #fire_db.firestore()
-    #fire_db.printUsers()
-    fire_db.getUserData()
+    print(fire_db.getUserSearch(u"Demo"))

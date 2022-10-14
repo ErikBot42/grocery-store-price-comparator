@@ -45,7 +45,7 @@ class Database:
         self.cursor = self.connection.cursor()                          #cursor executes sql comands
         self.connection.create_function(
                            'REGEXP', 2, 
-                           lambda exp, item : re.search(exp, item) != None)
+                           lambda exp, item : re.search(exp, item.lower()) != None)
 
     def _createInsertSQLQuery(self, table: str, categories: str, values: list[str]) -> str:
         query = f"INSERT INTO {table} ({categories}) VALUES ("

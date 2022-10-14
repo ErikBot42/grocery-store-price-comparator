@@ -6,20 +6,7 @@ from datetime import timedelta
 import json
 import os.path
 import sys
-
-CATEGORIES = [
-    ["Vegetarian", ["(.*[vV]egetar.*)|(.*[oO]stburgare.*)|(.*[vV]ego.*)"]],
-    #["Vegetarian", [".*[vV]egetar.*", ".*[oO]stburgare.*", ".*[vV]ego.*"]], 
-    ["Vegan", [(".*[vV]egan.*")]], 
-    #["Vegan", [".*[vV]egan.*"]],       
-    #["Meat", [".*[kK]ött.*", ".*[hH]ögrev.*", ".*[pP]rosciutto.*", ".*[wW]urst.*", ".*[sS]alam.*", ".*[sS]kinka.*", ".*[bB]acon.*", ".*[hH]amburgare.*", ".*[fF]ish.*", ".*[nN]uggets.*", ".*[lL]amm.*", ".*[fF]läsk.*", ".*[sS]tek.*", ".*[rR]ostas.*", ".*[fF]isk.*", ".*[kK]arré.*", ".*[kK]orv.*", ".*[fF]ilé.*", ".*[kK]yckling.*", ".*[kK]ebab.*", ".*[sS]alami.*", ".*[bB]iff.*", ".*[bB]land[fF]ärs.*"]], 
-    ["Meat", ["(.*([bB]land)|([nN]öt)[fF]ärs.*)|(.*[bB]iff.*)|(.*[kK]ebab.*)|(.*[kK]yckling.*)|(.*[kK]yckling.*)|(.*[fF]ilé.*)|(.*[kK]orv.*)|(.*[kK]arré.*)|(.*[sS]tek.*)|(.*[fF]läsk.*)|(.*[lL]amm.*)|(.*[nN]uggets.*)|([fF]ish)|(.*[hH]amburgare.*)|(.*[bB]acon.*)|(.*[sS]kinka.*)|(.*[sS]alam.)|(.*[wW]urst.*)|(.*[pP]rosciutto.*)|(.*[hH]ögrev.*)|(.*[kK]ött.*)"]],
-    ["Fruit", [".*[pP]otatis.*", ".*[sS]atsumas.*", ".*[bB]önor.*", ".*[oO]liver.*", ".*[aA]vocado.*", ".*[mM]ango.*", ".*[sS]allad.*", ".*[kK]iwi.*", ".*[pP]umpa.*",".*[fF]rukt.*", ".*[äÄ]pple.*", ".*[pP]äron.*", ".*[bB]anan.*", ".*[dD]ruvor.*", ".*[tT]omat.*", ".*[pP]aprika.*", ".*[sS]alad.*", ".*[aA]vokado.*", ".*[cC]itro(n|nera).*"]], 
-    ["Dairy", [".*[mM]jölk.*", ".*[bB]regott.*", ".*[pP]armigiano.*", ".*[sS]mör.*", ".*[äÄ]gg$", ".*[oO]st$", ".*[yY]oghurt.*", ".*[mM]ilk.*", ".*[mM]ozzarella.*", ".*[bB]rie.*", ".*[gG]revé.*", ".*[cC]reme .*", ".*[kK]varg.*"]], 
-    ["Drink", [".*[lL]äsk$", ".*[cC]ider.*", ".*[jJ]uice.*", ".*.[sS]moothie*", ".*[kK]affe.*", ".*[dD]rika.*", ".*[bB]ords[vV]atten.*", ".*(^| )[öÖ]l($| ).*", ".*.[dD]ryck*"]], 
-    ["Sweets", [".*(^| )[gG]odis.*", ".*[cC]andie.*", ".*[tT]offee.*", ".*[pP]lopp.*", ".*[gG]lass.*", ".*[cC]hips.*", ".*[oO]stbågar.*", ".*[cC]hoklad.*", ".*[nN]ötter.*"]], 
-    ["Bread", [".*[bB]röd.*", ".*[lL]antgoda.*", ".*[bB]agel.*", ".*[kK]ak(a|or).*", ".*[cC]ookie.*", ".*([^t])[bB]ull(e|ar).*", ".*[bB]allerina.*", ".*[sS]ingoalla.*", ".*[tT]årt(a|or).*"]]
-    ]   
+from category_regexes import CATEGORIES
 
 
 

@@ -322,6 +322,8 @@ def add_all_to_database(data: Database, skip_selenium: bool = False):
                 price_num=product.ex.price,
                 price_kg=product.ex.price_kg,
                 price_l=product.ex.price_l ,
+                amount_l=product.ex.amount_l,
+                amount_kg=product.ex.amount_kg,
                 ):
             print("Could not add product:")
             product.print()

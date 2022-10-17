@@ -39,6 +39,14 @@
             />
 
         <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/shoppingCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:text="Shopping Cart"
+            />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/icaStore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -74,6 +82,7 @@
             />
     </androidx.appcompat.widget.Toolbar>
     </HorizontalScrollView>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -81,6 +90,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+
         />
 
 </LinearLayout>

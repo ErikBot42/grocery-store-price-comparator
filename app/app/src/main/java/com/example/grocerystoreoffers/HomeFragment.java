@@ -152,6 +152,7 @@ public class HomeFragment extends Fragment {
         editor.putString(TEXT, lang);
         editor.commit();
         Toast.makeText(getActivity(), "Data saved", Toast.LENGTH_SHORT).show();
+        getActivity().recreate();
     }
 
     public void loadData() {

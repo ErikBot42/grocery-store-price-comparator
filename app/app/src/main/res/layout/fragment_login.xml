@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginFragment">
+    tools:context=".LoginFragment"
+    android:background="@color/creamwhite">
 
     <TextView
         android:id="@+id/tv_logo"
@@ -16,6 +17,7 @@
         android:text="@string/login"
         android:textAlignment="center"
         android:textSize="50sp"
+        android:textColor="@color/orange"
         android:onClick="register"/>
 
     <TextView
@@ -110,5 +112,3 @@
 
 
 </RelativeLayout>
-
-

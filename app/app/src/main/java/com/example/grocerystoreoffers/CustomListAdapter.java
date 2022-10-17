@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class CustomListAdapter extends ArrayAdapter<Product> {
@@ -48,8 +50,11 @@ public class CustomListAdapter extends ArrayAdapter<Product> {
         TextView txtName = (TextView) convertView.findViewById(R.id.txtName);
         txtName.setText(product.getName());
 
+        TextView txtId = (TextView) convertView.findViewById(R.id.txtId);
+        txtId.setText(product.getId());
+
         TextView txtPrice = (TextView) convertView.findViewById(R.id.txtPrice);
-        txtPrice.setText(product.getPrice());
+        txtPrice.setText(product.getPrice()+" :-");
 
         TextView txtStore = (TextView) convertView.findViewById(R.id.txtStore);
         if (product.getStore().equals("1"))    {

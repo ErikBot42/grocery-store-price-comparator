@@ -1,66 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-
-
 <resources>
-
-
-    <string name="app_name">ButiksErbjudanden</string>
-
-
-    <string name="login">Inloggning</string>
-
-
-    <string name="remember">Kom ihåg</string>
-
-
+    <string name="app_name">Food Huzzle</string>
+    <string name="login">Logga in</string>
+    <string name="remember">Kom ihåg mig</string>
     <string name="back_to_home">Tillbaka till Hem</string>
-
-
     <string name="login_back">Tillbaka till inloggning</string>
-
-
     <string name="new_user">Ny användare?</string>
-
-
     <string name="your_name">Fullständigt namn</string>
-
-
     <string name="re_type_password">Mata in lösenordet igen</string>
-
-
     <string name="register">Registrera</string>
-
-
     <string name="swipe_right_for_login">Swipa till höger</string>
-
-
     <string name="tag">Du kommer strax se dina erbjudanden</string>
-
-
     <string name="password">Lösenord</string>
-
-
     <string name="swipe_left_for_register">Swipa till vänster</string>
-
-
     <string name="e_mail">E-mail</string>
-
-
     <string name="hello_blank_fragment">Blankts fragment</string>
-
-
     <string name="swe_Btn" >Svenska</string>
-
-
     <string name="eng_Btn" >Engelska</string>
-
-
     <string name="log_Btn">Logga ut</string>
-
+    <string-array name="stores_array">
+        <item>Välj favoritbutik...</item>
+        <item>ICA</item>
+        <item>Coop</item>
+        <item>Willys</item>
+        <item>LIDL</item>
+    </string-array>
+    <string name="favStore_UI">Favoritbutiker</string>
+    <string name="phone">Telefonnummer</string>
+    <string name="update_Btn">Uppdatera</string>
 
 </resources>
-
-
-

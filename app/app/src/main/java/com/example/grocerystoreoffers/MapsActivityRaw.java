@@ -78,9 +78,6 @@ public class MapsActivityRaw extends AppCompatActivity implements OnMapReadyCall
                         .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
-
-
     }
 
     private void replaceFragment(Fragment fragment){

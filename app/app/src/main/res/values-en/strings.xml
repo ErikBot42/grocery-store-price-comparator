@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GroceryStoreOffers</string>
+    <string name="app_name">Food Huzzle</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -28,6 +28,8 @@
         <item>Willys</item>
         <item>LIDL</item>
     </string-array>
+    <string name="update_Btn">Update value</string>
+    <string name="favStore_UI">Favorite store</string>
 </resources>
 
 

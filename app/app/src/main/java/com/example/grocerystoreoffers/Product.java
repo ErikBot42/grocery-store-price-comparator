@@ -3,16 +3,26 @@ package com.example.grocerystoreoffers;
 //package com.example.grocerystoreoffers;
 
 public class Product {
+    private String id;
     private String image;
     private String name;
     private String price;
     private String store;
 
-    public Product(String image, String name, String price, String store) {
+    public Product(String id, String image, String name, String price, String store) {
+        this.id = id;
         this.image = image;
         this.name = name;
         this.price = price;
         this.store = store;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getImage() {

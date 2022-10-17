@@ -1,9 +1,11 @@
 package com.example.grocerystoreoffers;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -14,6 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -35,6 +38,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -100,10 +104,38 @@ public class Offers extends Fragment {
         lv = contentView.findViewById(R.id.listView);
 
         CheckBox favBox = contentView.findViewById(R.id.favouriteStore);
+        CheckBox shopCart = contentView.findViewById(R.id.shoppingCart);
         CheckBox icaBox = contentView.findViewById(R.id.icaStore);
         CheckBox coopBox = contentView.findViewById(R.id.coopStore);
         CheckBox lidlBox = contentView.findViewById(R.id.lidlStore);
         CheckBox willysBox = contentView.findViewById(R.id.willysStore);
+        List<String> shoppingList;
+        ArrayList<Product> filteredList = new ArrayList<>();
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                AlertDialog.Builder alertbox = new AlertDialog.Builder(getActivity());
+
+                // set the message to display
+                alertbox.setTitle("Choose option");
+                alertbox.setItems(new CharSequence[]{"Add to shopping list"}, (dialog, which) -> {
+                    // TODO Auto-generated method stub
+
+                });
+
+                // add a neutral button to the alert box and assign a click listener
+                alertbox.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+                    // click listener on the alert box
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        // the button was clicked
+
+                    }
+                });
+                alertbox.show();
+            }
+        });
 
         favBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +143,11 @@ public class Offers extends Fragment {
                 getFavstore();
             }
         });
+
+        shopCart.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { getCart(); }
+        }));
 
         icaBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +177,6 @@ public class Offers extends Fragment {
             }
         });
 
-
         searchView = contentView.findViewById(R.id.searchView);
         searchView.clearFocus();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -159,7 +195,7 @@ public class Offers extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new ReadJSON().execute("https://raw.githubusercontent.com/ErikBot42/grocery-store-price-comparator/main/tmp.json");
+                new ReadJSON().execute("http://193.10.238.209:5000/app/products/");
             }
         });
         return contentView;
@@ -180,7 +216,6 @@ public class Offers extends Fragment {
                 getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList
         );
         lv.setAdapter(adapter);
-
     }
 
     private void filterList(String text) {
@@ -190,9 +225,11 @@ public class Offers extends Fragment {
             if (product.getName().toLowerCase().contains(text.toLowerCase()))   {
                 filteredList.add(product);
             }
+            else if(product.getId().equals(text)){
+                filteredList.add(product);
+            }
         }
         if (filteredList.isEmpty())   {
-            //Toast.makeText(getContext().getApplicationContext(), "No product was found", Toast.LENGTH_SHORT).show();
             Toast toast = Toast.makeText(getActivity(), "No product was found",Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
             toast.show();
@@ -205,6 +242,50 @@ public class Offers extends Fragment {
         }
     }
 
+    public void getCart()   {
+        fStore = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        DocumentReference documentReference = fStore.collection("user_profile").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        List<String> group = (List<String>) document.get("shoppingList");
+                        Log.d("minLista", String.valueOf(group));
+                        ArrayList<Product> filteredList = new ArrayList<>();
+                        customListAdapter = new CustomListAdapter(getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList);
+                        for (String prodId : group) {
+                            for (Product product : arrayList) {
+                                if (product.getId().equals(prodId)) {
+                                    filteredList.add(product);
+                                }
+                            }
+                        }
+                        if (filteredList.isEmpty())   {
+                            Toast toast = Toast.makeText(getActivity(), "No product was found",Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
+                            toast.show();
+                        }   else    {
+                            customListAdapter.setFilteredList(filteredList);
+                            CustomListAdapter adapter = new CustomListAdapter(
+                                    getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList
+                            );
+                            lv.setAdapter(adapter);
+                        }
+                    } else {
+                        Log.d("LOGGER", "No such document");
+                    }
+                } else {
+                    Log.d("LOGGER", "get failed with ", task.getException());
+                }
+            }
+        });
+
+
+
+    }
 
     public void getFavstore(){
         fStore = FirebaseFirestore.getInstance();
@@ -241,7 +322,6 @@ public class Offers extends Fragment {
                     Log.d("LOGGER", "get failed with ", task.getException());
                 }
             }
-
         });
     }
 
@@ -257,25 +337,21 @@ public class Offers extends Fragment {
         protected void onPostExecute(String content) {
 
             try {
-                Log.d("MyApp","I am your father");
                 content = content.replace("\\\"", "\"");
                 content = content.substring(1);
-                //Log.d("contentfirst",content.substring(0));
                 Log.d("content",content);
 
                 JSONObject jsonObject = new JSONObject(content);
-                Log.d("MyApp","I am your father1");
                 JSONArray jsonArray = jsonObject.getJSONArray("products");
-                Log.d("MyApp","I am your father2");
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject productObject = jsonArray.getJSONObject(i);
                     arrayList.add(new Product(
+                            productObject.getString("id"),
                             productObject.getString("image"),
                             productObject.getString("name"),
                             productObject.getString("price"),
-                            productObject.getString("store")
+                            productObject.getString("store_id")
                     ));
-                    Log.d("MyApp","I am here");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -51,6 +51,8 @@
                               <a class="dropdown-item" href="/products/category/All">All items in database</a>
                             </div>
                           </li>
+                          {% block header%}
+                          {%endblock%}
                     {% endif %}
                 </ul>
                 {% if 'user' in session %}

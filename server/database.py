@@ -12,7 +12,7 @@ class DbProd:
         store: str,
         store_id: int,
         price: str,
-        category: int,
+                 #category: int,
         price_num: float | None = None,
         price_kg: float | None = None,
         price_l: float | None = None,
@@ -24,7 +24,7 @@ class DbProd:
         self.store     = store
         self.store_id  = store_id
         self.price     = price
-        self.category  = category
+        #self.category  = category
         self.price_num = price_num
         self.price_kg  = price_kg
         self.price_l   = price_l
@@ -45,7 +45,7 @@ class Database:
         self.cursor = self.connection.cursor()                          #cursor executes sql comands
         self.connection.create_function(
                            'REGEXP', 2, 
-                           lambda exp, item : re.search(exp, item) != None)
+                           lambda exp, item : re.search(exp, item.lower()) != None)
 
     def _createInsertSQLQuery(self, table: str, categories: str, values: list[str]) -> str:
         query = f"INSERT INTO {table} ({categories}) VALUES ("
@@ -63,7 +63,6 @@ class Database:
             print("\nCould not run query: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
             print("Om du saknar tabeller, testa att uppdatera databasen med Database.recreateDatabase()")
-            exit(1)
             return False
 
     def _runSQLQueryWithResults(self, query: str) -> list:
@@ -73,7 +72,6 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run querry: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
-            exit(1)
             return []
 
     def addProductToDatabase(self,
@@ -81,14 +79,15 @@ class Database:
             store: str,
             price: str,
             category: int,
-            price_num: float | None = None,
-            price_kg: float | None = None,
-            price_l: float | None = None,
-            amount_kg: float | None = None,
-            amount_l: float | None = None,
+            price_num: float | None ,
+            price_kg: float | None,
+            price_l: float | None,
+            amount_kg: float | None,
+            amount_l: float | None,
             url: str = "",
             ) -> bool:
         data = [str(category), name, str(self.getStoreID(store)), price, price_num, price_kg, price_l, amount_kg, amount_l, url]
+        print("AMOUNT", amount_kg, amount_l)
         query = self._createInsertSQLQuery(
             "Product", 
             "Category_ID, Product_Name, Store_ID, Price, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL", 
@@ -175,7 +174,6 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run querry: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
-            exit(1)
             return False
         print(f"Password from database is {res}, input is {password}")
         if (res == password): 
@@ -197,18 +195,18 @@ class Database:
         rval = []
         for r in result:
             rval.append(DbProd(
-            i           = r[0], 
-            name        = r[1], 
-            store       = r[2], 
-            store_id    = r[3], 
-            price       = r[4], 
-            category    = r[5], 
-            price_num   = r[6], 
-            price_kg    = r[7], 
-            price_l     = r[8], 
-            amount_kg   = r[9], 
-            amount_l    = r[10], 
-            url         = r[11], 
+            i           = int(r[0]), 
+            name        = str(r[1]), 
+            store       = str(r[2]), 
+            store_id    = int(r[3]), 
+            price       = str(r[4]), 
+            #category    = int(r[5]), 
+            price_num   = float(r[6]  or -1), 
+            price_kg    = float(r[7]  or -1), 
+            price_l     = float(r[8]  or -1), 
+            amount_kg   = float(r[9]  or -1), 
+            amount_l    = float(r[10] or -1), 
+            url         = str(r[11]), 
             ))
         return rval
 
@@ -245,7 +243,6 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run query: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
-            exit(1)
 
     def removeUser(self, id):
         query = f"DELETE FROM Register Where User_ID == '{str(id)}'"
@@ -254,7 +251,6 @@ class Database:
         except sqlite3.Error as er:
             print("\nCould not run query: " + query)
             print('\tSQLite error: %s' % (' '.join(er.args)))
-            exit(1)
 
     def searchProduct(self, search_term: str) -> list[DbProd]:
 
@@ -309,20 +305,15 @@ class Database:
             except sqlite3.Error as er:
                 print("\nCould not run query: " + query)
                 print('\tSQLite error: %s' % (' '.join(er.args)))
-                exit(1)
                 return []
         else:
             return []   
 
-    def getAllProductsWithCategories(self, category_list: list) -> list[DbProd]:
+    def getAllProductsWithCategories(self, category_list: list, order="Store_ID") -> list[DbProd]:
         if len(category_list) != 0:
             query = f"""SELECT Product_ID, Product_name, Store_Name, Store_ID, Price, Category_ID, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL 
                 FROM Product JOIN Store USING (Store_ID) WHERE
-
             """
-            #query = f"""SELECT Product_ID, Product_name, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, Store_Name, URL, Store_ID
-            #    FROM Product JOIN Store USING (Store_ID) WHERE
-            #"""
             for category in category_list:
                 for reg in category[1]:
                     if query[-1] == ')':
@@ -332,10 +323,13 @@ class Database:
             #    "Price_num" FLOAT,
             #    "Price_kg" FLOAT,
             #    "Price_l" FLOAT,
-
-            res =   self.queryResultToObject(self.cursor.execute(query).fetchall())
-            print(res, len(res))
-            return res
+            query = f"{query} ORDER BY {order}"
+            try:
+                return self.queryResultToObject(self.cursor.execute(query).fetchall())
+            except sqlite3.Error as er: 
+                print("\nCould not run query: " + query)
+                print('\tSQLite error: %s' % (' '.join(er.args)))
+                return []
         else:
             return []   
 
@@ -349,9 +343,9 @@ class Database:
                     query_category = f"{query_category} REGEXP('{reg}', Product_Name)"
         else: 
             query_category = "SELECT Product_ID FROM Product JOIN Store USING (Store_ID) WHERE Product_Name == ";""
-        query_no_category = f"""SELECT Product_Name, Price, Store_Name, Product_ID, URL 
-            FROM Product JOIN Store USING (Store_ID) WHERE Product_ID NOT IN ({query_category})"""
-        return self.cursor.execute(query_no_category).fetchall()
+        query_no_category = f"""SELECT Product_ID, Product_name, Store_Name, Store_ID, Price, Category_ID, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL 
+                FROM Product JOIN Store USING (Store_ID) WHERE Product_ID NOT IN ({query_category})"""
+        return self.queryResultToObject(self.cursor.execute(query_no_category).fetchall())
        
 
     #Save all new changes to the database. 

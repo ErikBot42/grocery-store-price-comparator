@@ -6,51 +6,82 @@
     Users
 {% endblock %}
 
+{% block header %}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Add User
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/users/new">                          
+            <div class="form-group">
+                <input type="mail"  id="Email" name="Email" required placeholder="Email">
+                <input type="password"  id="Password" name="Password" required placeholder="Password">
+                <input type="text"  id="Mobile_Number" name="Mobile_Number" required required placeholder="Mobile Number">
+                <input type="text"  id="City" name="City" required placeholder="City">
+                <input type="text"  id="Name" name="Name" required placeholder="Name"><br>
+                Favourite Stores<br>
+                <input type="checkbox" id="ICA" name="ICA" value="True">
+                <label for="ICA"> ICA</label><br>
+                <input type="checkbox" id="COOP" name="COOP" value="True">
+                <label for="COOP"> COOP</label><br>
+                <input type="checkbox" id="LIDL" name="LIDL" value="True">
+                <label for="LIDL"> LIDL</label><br>
+                <input type="checkbox" id="Willys" name="Willys" value="True">
+                <label for="Willys"> Willys</label><br>
+                <button type="submit" class="btn btn-primary mr-0">Add User</button>                  
+            </div>
+        </form>
+    </div>
+  </li>
+{% endblock %}
+
 <!-- blocket content fyller ut sidans body -->
 {% block content %}
 <div class="container">
     <div id="currListings">
         <h2 class="text-primary d-flex justify-content-center">Users</h2>
         <table class="table  table-dark table-striped">
-            <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/users/new">                          
-                <div class="form-group">
-                    <input type="mail"  id="Email" name="Email" required placeholder="Email">
-                    <input type="text"  id="Password" name="Password" required placeholder="Password">
-                    <input type="text"  id="Mobile_Number" name="Mobile_Number" required required placeholder="Mobile Number">
-                    <input type="text"  id="Date_Of_Birth" name="Date_Of_Birth" required placeholder="Date Of Birth">
-                    <input type="text"  id="City" name="City" required placeholder="City">
-                    <input type="text"  id="Name" name="Name" required placeholder="Name">  
-                    <button type="submit" class="btn btn-primary mr-0">Add User</button>                  
-                </div>
-            </form>
             <thead>
                 <tr>
                     <th scope="col">User ID</th>
                     <th scope="col">Email</th>
                     <th scope="col">Password</th>
                     <th scope="col">Mobile Number</th>
-                    <th scope="col">Date Of Birth</th>
                     <th scope="col">City</th>
                     <th scope="col">Name</th>
+                    <th scope="col">Favourite Store</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Lopar igenom alla användare och lägger till en rad för varje -->
-                {% for item in users %}
+                {% for usr in users %}
                     <tr>
-                        <th scope="row">{{item[0]}}</th>    <!-- User_ID -->
-                        <td>{{item[1]}}</td>                <!-- Email -->
-                        <td>{{item[2]}}</td>                <!-- Password -->
-                        <td>{{item[3]}}</td>                <!-- Mobile_Number -->
-                        <td>{{item[4]}}</td>                <!-- Date_of_Birth -->
-                        <td>{{item[5]}}</td>                <!-- City -->
-                        <td>{{item[6]}}</td>                <!-- Name -->
+                        <th scope="row">{{usr.uid}}</th>    <!-- User_ID -->            
+                        <td><a href="mailto:{{usr.email}}">{{usr.email}}</a></td>   <!-- Email -->
+                        <td>{{usr.password}}</td>                <!-- Password -->
+                        <td>{{usr.telephone}}</td>                <!-- Mobile_Number -->
+                        <td>{{usr.city}}</td>                <!-- City -->
+                        <td>{{usr.name}}</td>                <!-- Name -->
+                        <td>
+                        {% if usr.ica %}
+                            ICA, 
+                        {% endif %}
+                        {% if usr.coop %}
+                            Coop, 
+                        {% endif %}
+                        {% if usr.lidl %}
+                            Lidl, 
+                        {% endif %}
+                        {% if usr.willys %}
+                            Willys
+                        {% endif %}
+                        </td>
                         <td>
                             <!-- Call to action buttons -->
                             <ul class="">
                                 <li class="list-inline-item">
-                                    <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/users/remove/{{item[0]}}">
+                                    <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/users/remove/{{usr.uid}}">
                                         <button class="btn btn-danger btn-sm rounded-0" type="submit" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash">Delete</i></button>
                                     </form>
                                 </li>

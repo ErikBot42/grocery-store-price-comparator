@@ -1,21 +1,12 @@
+from re import T
 from flask import Flask, render_template, url_for, session, redirect, request, flash, jsonify
 from database import Database
-from firebaseHandeler import firebaseHandeler
+from firebaseHandeler import firebaseHandeler, userData
 from datetime import timedelta
 import json
 import os.path
 import sys
-
-CATEGORIES = [
-    ["Vegetarian", [".*[vV]egetar.*", ".*[oO]stburgare.*", ".*[vV]ego.*"]], 
-    ["Vegan", [".*[vV]egan.*"]], 
-    ["Meat", [".*[kK]ött.*", ".*[pP]rosciutto.*", ".*[wW]urst.*", ".*[sS]alame .*", ".*[sS]kinka.*", ".*[bB]acon.*", ".*[hH]amburgare.*", ".*[fF]ish.*", ".*[nN]uggets.*", ".*[lL]amm.*", ".*[fF]läsk.*", ".*[sS]tek.*", ".*[rR]ostas.*", ".*[fF]isk.*", ".*[kK]arré.*", ".*[kK]orv.*", ".*[fF]ilé.*", ".*[kK]yckling.*", ".*[kK]ebab.*", ".*[sS]alami.*", ".*[bB]iff.*", ".*[fF]ärs .*"]], 
-    ["Fruit", [".*[pP]otatis.*", ".*[bB]önor.*", ".*[oO]liver.*", ".*[aA]vocado.*", ".*[mM]ango.*", ".*[sS]allad.*", ".*[kK]iwi.*", ".*[pP]umpa.*",".*[fF]rukt.*", ".*[äÄ]pple.*", ".*[pP]äron.*", ".*[bB]anan.*", ".*[dD]ruvor.*", ".*[tT]omat.*", ".*[pP]aprika.*", ".*[sS]alad.*", ".*[aA]vokado.*", ".*[cC]itro(n|nera).*"]], 
-    ["Dairy", [".*[mM]jölk.*", ".*[bB]regott.*", ".*[pP]armigiano.*", ".*[sS]mör.*", ".*[äÄ]gg$", ".*[oO]st$", ".*[yY]oghurt.*", ".*[mM]ilk.*", ".*[mM]ozzarella.*", ".*[bB]rie.*", ".*[gG]revé.*", ".*[cC]reme .*", ".*[kK]varg.*"]], 
-    ["Drink", [".*[lL]äsk$", ".*[cC]ider.*", ".*[jJ]uice.*", ".*.[sS]moothie*", ".*[kK]affe.*", ".*[dD]rika.*", ".*[bB]ords[vV]atten.*", ".*(^| )[öÖ]l($| ).*", ".*.[dD]ryck*"]], 
-    ["Sweets", [".*(^| )[gG]odis.*", ".*[cC]andie.*", ".*[tT]offee.*", ".*[pP]lopp.*", ".*[gG]lass.*", ".*[cC]hips.*", ".*[oO]stbågar.*", ".*[cC]hoklad.*", ".*[nN]ötter.*"]], 
-    ["Bread", [".*[bB]röd.*", ".*[lL]antgoda.*", ".*[bB]agel.*", ".*[kK]ak(a|or).*", ".*[cC]ookie.*", ".*([^t])[bB]ull(e|ar).*", ".*[bB]allerina.*", ".*[sS]ingoalla.*", ".*[tT]årt(a|or).*"]]
-    ]   
+from category_regexes import CATEGORIES
 
 
 
@@ -73,11 +64,10 @@ def products():
 @app.route("/users/", methods=["GET", "POST"])
 def users():
     if "user" in session:
-        db = Database()
+        db = fdb
         if request.method == "POST":
-            usr = db.searchUser(request.form["userSearch"])
+            usr = db.getUserSearch(request.form["userSearch"])
         else:
-            #usr = db.getUserDataForAdmin()
             usr = fdb.getUserData()
         return render_template("admin_users.html", users=usr)
     else:
@@ -102,14 +92,16 @@ def removeProduct(id):
 def addProduct():
     db = Database()
     query = db.addProductToDatabase(
-        category=request.form["Category_ID"],
+        category=-1,
         name=request.form["Product_Name"],
         store=request.form["Store_ID"],
-        price=request.form["Price"],
+        price=-1,
         price_num=request.form["Price_num"],
         price_kg=request.form["Price_kg"],
         price_l=request.form["Price_l"],
-        url=request.form["URL"]
+        url=request.form["URL"],
+        amount_kg=request.form["Amount_kg"],
+        amount_l=request.form["Amount_l"]
     )
     db.commitToDatabase()
     db.close()
@@ -117,25 +109,24 @@ def addProduct():
 
 @app.route("/users/new/", methods = ["POST"])
 def addUser():
-    db = Database()
-    query = db.addUserToDatabase(
+    db = fdb
+    db.addUser(userData(
         email=request.form["Email"],
-        mobile_nr=request.form["Mobile_Number"],
+        telephone=request.form["Mobile_Number"],
         password=request.form["Password"],
-        date_of_birth=request.form["Date_Of_Birth"],
         city=request.form["City"],
-        name=request.form["Name"]
-    )
-    db.commitToDatabase()
-    db.close()
+        name=request.form["Name"],
+        ica=False if request.form.get("ICA") is None else True,
+        coop=False if request.form.get("COOP") is None else True,
+        lidl=False if request.form.get("LIDL") is None else True,
+        willys=False if request.form.get("Willys") is None else True
+    ))
     return redirect(url_for("users"))
 
 @app.route("/users/remove/<id>", methods=["Post"])
 def removeUser(id):
-    db = Database()
+    db = fdb
     db.removeUser(id)
-    db.commitToDatabase()
-    db.close()
     return redirect(url_for("users"))
 
 
@@ -164,6 +155,8 @@ def sendProductsInJson():
                 "id":str(item.i),
                 "name":item.name,
                 "price":str(item.price_num),
+                "price_kg":str(item.price_num),
+                "price_l":str(item.price_num),
                 "image":item.url,
                 "store":str(item.store),
                 "store_id":str(item.store_id)
@@ -185,9 +178,9 @@ def productCategory(category: str):
                 break
         else:
             if category == "Misk":
-                #prod = db.getProductWithoutCategory(CATEGORIES)
-                print("TODO, OOPS")
-                prod: list[DbProd] = []
+                prod: list[DbProd] = db.getProductWithoutCategory(CATEGORIES)
+                #print("TODO, OOPS")
+                #prod: list[DbProd] = []
             elif category == "All":
                 prod: list[DbProd] = db.getProductDataForAdmin()
             else:

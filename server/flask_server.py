@@ -1,6 +1,6 @@
 from re import T
 from flask import Flask, render_template, url_for, session, redirect, request, flash, jsonify
-from database import Database, DbProd
+from database import Database
 from firebaseHandeler import firebaseHandeler, userData
 from datetime import timedelta
 import json
@@ -24,7 +24,7 @@ if not os.path.isfile("Grocery_Store_Database.db"):
 
  
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])    
 def showHomePage():
     if "user" in session:
         return redirect(url_for("products"))
@@ -144,6 +144,7 @@ def appLogin():
         result = {'login': 'False'}
     return jsonify(result)
 
+
 def _productsToJson(products):
     data = []
     for item in products:
@@ -156,7 +157,8 @@ def _productsToJson(products):
                 "price_l":str(item.price_num),
                 "image":item.url,
                 "store":str(item.store),
-                "store_id":str(item.store_id)
+                "store_id":str(item.store_id),
+                "category":item.category
             }   
             data.append(temp)
     prod = '{"products":'+str(data)+'}'

@@ -53,6 +53,16 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/txtPriceKg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/brandon_grotesque_light"
+                android:text="Pris Kg"
+                android:textColor="#101e99"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/txtStore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

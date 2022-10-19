@@ -42,13 +42,15 @@ android:layout_height="match_parent">
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/txtId"
+        android:id="@+id/txtPriceKg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="ID"
+        android:fontFamily="@font/brandon_grotesque_light"
+        android:text="Pris KG"
         android:textColor="#101e99"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/txtStore"

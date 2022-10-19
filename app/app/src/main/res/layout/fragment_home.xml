@@ -22,28 +22,6 @@
             android:text="@string/welcome_to_food_huzzle"
             android:textSize="50sp" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/engBtn"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:label="@string/eng_Btn"
-            android:text="English" />
-
-        <Button
-            android:id="@+id/sweBtn"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="110dp"
-            android:label="@string/swe_Btn"
-            android:text="Swedish" />
-    </LinearLayout>
     </LinearLayout>
 
     <TextView

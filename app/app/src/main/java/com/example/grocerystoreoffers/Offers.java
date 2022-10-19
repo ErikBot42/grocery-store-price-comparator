@@ -66,8 +66,8 @@ public class Offers extends Fragment {
     FirebaseFirestore fStore;
     FirebaseUser user;
     FloatingActionButton purchaseBtn;
-    //Boolean ica=false,coop=false,lidl=false,willys=false;
     Boolean ica,coop,lidl,willys;
+    Boolean vegetarian, vegan, meat, fruit, dairy, drink, ice, bread;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -94,6 +94,7 @@ public class Offers extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         coop=false;ica=false;lidl=false;willys=false;
+        vegetarian=false; vegan=false; meat=false; fruit=false; dairy=false; drink=false; ice=false; bread=false;
         fStore = FirebaseFirestore.getInstance();
     }
 
@@ -111,8 +112,10 @@ public class Offers extends Fragment {
         CheckBox catVegan = contentView.findViewById(R.id.vegan);
         CheckBox catMeat = contentView.findViewById(R.id.meatPoultryFish);
         CheckBox catFruit = contentView.findViewById(R.id.fruitVegetables);
-
-
+        CheckBox catDairy = contentView.findViewById(R.id.dairyCheeseEggs);
+        CheckBox catDrink = contentView.findViewById(R.id.drink);
+        CheckBox catIce = contentView.findViewById(R.id.iceCreamSweetsSnacks);
+        CheckBox catBread = contentView.findViewById(R.id.breadCookies);
 
         CheckBox favBox = contentView.findViewById(R.id.favouriteStore);
         CheckBox shopCart = contentView.findViewById(R.id.shoppingCart);
@@ -160,7 +163,6 @@ public class Offers extends Fragment {
                                         Log.d("LOGGER", "get failed with ", task.getException());
                                     }
                                 }
-
                             });
                         }
 
@@ -231,21 +233,102 @@ public class Offers extends Fragment {
             }
         });
         */
-        catFruit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        catVeg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (!b) {filterStore();}
+                if (!b) { vegetarian = false; filterStore();}
                 else {
-                    getCategory("Fruit");
+                    vegetarian = true;
+                    filterCategory();
                 }
             }
         });
+
+        catVegan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b) { vegan = false; filterStore();}
+                else {
+                    vegan = true;
+                    filterCategory();
+                }
+            }
+        });
+
+        catMeat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b) { meat = false; filterStore();}
+                else {
+                    meat = true;
+                    filterCategory();
+                }
+            }
+        });
+
+        catFruit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b) { fruit = false; filterStore();}
+                else {
+                    fruit = true;
+                    filterCategory();
+                }
+            }
+
+        });
+
+        catDairy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b) {dairy=false; filterStore();}
+                else {
+                    dairy=true;
+                    filterCategory();
+                }
+            }
+        });
+
+        catDrink.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b) {drink=false; filterStore();}
+                else {
+                    drink=true;
+                    filterCategory();
+                }
+            }
+        });
+
+        catIce.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b) {ice=false; filterStore();}
+                else {
+                    ica=true;
+                    filterCategory();
+                }
+            }
+        });
+
+        catBread.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b) {bread=false;filterStore();}
+                else {
+                    bread=true;
+                    filterCategory();
+                }
+            }
+        });
+
 
         favBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(!b){filterStore();}
-                else{
+                else    {
                     fStore = FirebaseFirestore.getInstance();
                     user = FirebaseAuth.getInstance().getCurrentUser();
                     DocumentReference documentReference = fStore.collection("user_profile").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -391,19 +474,35 @@ public class Offers extends Fragment {
             @Override
             public void run() {
                 Log.d("EXECTEST","TJENA");
-                new ReadJSON().execute("http://130.243.20.190:5000/app/products/");
+                new ReadJSON().execute("http://172.20.10.2:5000/app/products/");
                 //new ReadJSON().execute("https://raw.githubusercontent.com/ErikBot42/grocery-store-price-comparator/main/tmp.json");
             }
         });
+        Log.d("TESTAR", contentView.toString());
         return contentView;
     }
 
     public void getCategory(String text)   {
+
+        Log.d("ERRORMYBRAIN", String.valueOf(arrayList.isEmpty()));
+
+        ArrayList<Product> filteredList = new ArrayList<>();
+        customListAdapter = new CustomListAdapter(getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList);
+        for (Product product : arrayList) {
+            filteredList.remove(product);
+            }
+
+        customListAdapter.setFilteredList(filteredList);
+        CustomListAdapter adapter = new CustomListAdapter(
+                getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList
+        );
+        lv.setAdapter(adapter);
+
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Log.d("EXECTEST","TJENAFunktion");
-                new ReadJSON().execute("http://130.243.20.190:5000/app/products/"+text);
+                new ReadJSON().execute("http://172.20.10.2:5000/app/products/"+text);
             }
         });
     }
@@ -555,7 +654,9 @@ public class Offers extends Fragment {
                             productObject.getString("image"),
                             productObject.getString("name"),
                             productObject.getString("price"),
-                            productObject.getString("store_id")
+                            productObject.getString("price_kg"),
+                            productObject.getString("store_id"),
+                            productObject.getString("category")
                     ));
                 }
             } catch (JSONException e) {
@@ -566,6 +667,64 @@ public class Offers extends Fragment {
             );
             lv.setAdapter(adapter);
         }
+    }
+
+    private void filterCategory() {
+        ArrayList<Product> filteredList = new ArrayList<>();
+        customListAdapter = new CustomListAdapter(getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList);
+        for (Product product : arrayList) {
+            if(vegetarian) {
+                if (product.getCategory().equals("Vegetarian")) {
+                    Log.d("FILTERCATEGORY", "VEG FOUND");
+                    filteredList.add(product);
+                }
+            }
+            if(vegan) {
+                if (product.getCategory().equals("Vegan")) {
+                    Log.d("FILTERCATEGORY", "VEGAN FOUND");
+                    filteredList.add(product);
+                }
+            }
+            if(meat) {
+                if (product.getCategory().equals("Meat")) {
+                    Log.d("FILTERCATEGORY", "MEAT FOUND");
+                    filteredList.add(product);
+                }
+            }
+            if (fruit) {
+                if (product.getCategory().equals("Fruit")) {
+                    Log.d("FILTERCATEGORY", "FRUIT FOUND");
+                    filteredList.add(product);
+                }
+            }
+            if(dairy) {
+                if (product.getCategory().equals("Dairy")) {
+                    Log.d("FILTERCATEGORY", "DAIRY FOUND");
+                    filteredList.add(product);
+                }
+            }
+            if(drink) {
+                if (product.getCategory().equals("Drink")) {
+                    Log.d("FILTERCATEGORY", "DRINK FOUND");
+                    filteredList.add(product);
+                }
+            }
+        }
+        /*
+        if (filteredList.isEmpty())   {
+            Toast toast = Toast.makeText(getActivity(), "No product was found",Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
+            toast.show();
+        }   else    {
+
+        }
+
+         */
+        customListAdapter.setFilteredList(filteredList);
+        CustomListAdapter adapter = new CustomListAdapter(
+                getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList
+        );
+        lv.setAdapter(adapter);
     }
 
     private static String readURL(String theUrl) {

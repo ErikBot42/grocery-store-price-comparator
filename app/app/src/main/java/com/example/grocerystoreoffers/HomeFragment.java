@@ -2,16 +2,12 @@ package com.example.grocerystoreoffers;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.content.Intent;
-
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 
-
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
 
@@ -19,9 +15,6 @@ import android.content.res.Resources;
 
 
 import android.os.Build;
-
-
-import android.os.Bundle;
 
 
 import android.util.DisplayMetrics;
@@ -58,7 +51,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -128,29 +120,6 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         lv = view.findViewById(R.id.list);
 
-
-
-        engBtn = (Button) view.findViewById(R.id.engBtn);
-        engBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                saveData("en");
-            }
-        });
-
-        sweBtn = (Button) view.findViewById(R.id.sweBtn);
-        sweBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                saveData("sv");
-            }
-        });
-        engBtn.setText(R.string.eng_Btn);
-        sweBtn.setText(R.string.swe_Btn);
-
-
         fStore = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         DocumentReference documentReference = fStore.collection("user_profile").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -178,7 +147,9 @@ public class HomeFragment extends Fragment {
                             Log.d("STOREBOOL","WILLYS TRUE");
                             willys=true;
                         }
+
                         filterStore();
+
                     } else {
                         Log.d("LOGGER", "No such document");
                     }
@@ -191,7 +162,7 @@ public class HomeFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new ReadJSON().execute("http://130.243.20.190:5000/app/products/");
+                new ReadJSON().execute("http://172.20.10.2:5000/app/products/");
             }
         });
 
@@ -361,8 +332,9 @@ public class HomeFragment extends Fragment {
                             productObject.getString("image"),
                             productObject.getString("name"),
                             productObject.getString("price"),
-                            productObject.getString("store_id")
-                    ));
+                            productObject.getString("price_kg"),
+                            productObject.getString("store_id"),
+                            productObject.getString("category")));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

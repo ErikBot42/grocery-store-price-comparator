@@ -52,8 +52,6 @@ import modal.User;
  */
 public class RegisterFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -74,15 +72,6 @@ public class RegisterFragment extends Fragment {
     private Button regBtn;
     private ProgressBar loadingProgress;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RegisterFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static RegisterFragment newInstance(String param1, String param2) {
         RegisterFragment fragment = new RegisterFragment();
         Bundle args = new Bundle();
@@ -174,12 +163,19 @@ public class RegisterFragment extends Fragment {
                         printToast("Account created");
                         userID = mAuth.getCurrentUser().getUid();
                         DocumentReference documentReference = fStore.collection("user_profile").document(userID);
+
+
                         Map<String, Object> user = new HashMap<>();
+                        user.put("LIDL",false);
+                        user.put("COOP",false);
+                        user.put("ICA",false);
+                        user.put("Willys",false);
+                        user.put(favStore,true);
                         user.put("Name", name);
                         user.put("Email", email);
                         user.put("Password", password);
                         user.put("Telephone",telephone);
-                        user.put("Favorite store", favStore);
+                        //user.put("Favorite store", favStore);
                         replaceFragment(new LoginFragment());
                         documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
 

@@ -47,6 +47,8 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 
 
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 
@@ -92,18 +94,25 @@ public class MainActivity extends AppCompatActivity {
         setAppLocale(text);
         setTitle(R.string.app_name);
         super.onCreate(savedInstanceState);
+        getApplicationContext();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         firebaseAuth = FirebaseAuth.getInstance();
 
         setContentView(binding.getRoot());
-        replaceFragment(new HomeFragment());
+        replaceFragment(firebaseAuth.getCurrentUser() != null ? new HomeFragment() : new LoginFragment());
         //usernameEdt =(EditText) findViewById(R.id.et_email);
         //passwordEdt =(EditText) findViewById(R.id.et_password);
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch(item.getItemId()){
                 case R.id.home:
-                    replaceFragment(new HomeFragment());
+                    if(firebaseAuth.getCurrentUser() != null){
+                        replaceFragment(new HomeFragment());
+                        break;
+                    }
+                    else{
+                        replaceFragment(new LoginFragment());
+                    }
                     break;
                 case R.id.profile:
                     if(firebaseAuth.getCurrentUser() != null){
@@ -115,20 +124,68 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.settings:
-                    replaceFragment(new Offers());
+                    if(firebaseAuth.getCurrentUser() != null){
+                        replaceFragment(new Offers());
+                        break;
+                    }
+                    else{
+                        replaceFragment(new LoginFragment());
+                    }
                     break;
                 case R.id.map:
-                    replaceFragment(new NearbyStoresFragment());
-                    break;
-                case R.id.faq:
-                    replaceFragment(new FaqFragment());
+                    if(firebaseAuth.getCurrentUser() != null){
+                        replaceFragment(new NearbyStoresFragment());
+                        break;
+                    }
+                    else{
+                        replaceFragment(new LoginFragment());
+                    }
                     break;
             }
             return true;
         });
+
     }
 
-    private void setAppLocale(String localeCode){
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // R.menu.mymenu is a reference to an xml file named mymenu.xml which should be inside your res/menu directory.
+        // If you don't have res/menu, just create a directory named "menu" inside res
+        getMenuInflater().inflate(R.menu.langbtn, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.action_favorite:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                saveData("sv");
+                return true;
+            case R.id.engLang:
+                saveData("en");
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+
+    }
+    public void saveData(String lang)   {
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(TEXT, lang);
+        editor.commit();
+        Toast.makeText(this, "Data saved", Toast.LENGTH_SHORT).show();
+        replaceFragment(new ProfileFragment());
+        this.recreate();
+    }
+
+    private void setAppLocale(String localeCode)    {
 
         Resources res = getResources();
         DisplayMetrics dm = res.getDisplayMetrics();

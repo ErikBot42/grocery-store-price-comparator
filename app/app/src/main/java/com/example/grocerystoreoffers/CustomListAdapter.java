@@ -45,16 +45,21 @@ public class CustomListAdapter extends ArrayAdapter<Product> {
         Product product = getItem(position);
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewProduct);
-        Picasso.with(context).load(product.getImage()).into(imageView);
+        if(product.getImage().isEmpty()){
+            Picasso.with(context).load(R.drawable.ic_baseline_person_24);
+        }
+        else {
+            Picasso.with(context).load(product.getImage()).into(imageView);
+        }
 
         TextView txtName = (TextView) convertView.findViewById(R.id.txtName);
         txtName.setText(product.getName());
 
-        TextView txtId = (TextView) convertView.findViewById(R.id.txtId);
-        txtId.setText(product.getId());
+        TextView txtPriceKg = (TextView) convertView.findViewById(R.id.txtPriceKg);
+        txtPriceKg.setText("Pris/kg/l: "+product.getPricekg()+" :-");
 
         TextView txtPrice = (TextView) convertView.findViewById(R.id.txtPrice);
-        txtPrice.setText(product.getPrice()+" :-");
+        txtPrice.setText("Pris: "+product.getPrice()+" :-");
 
         TextView txtStore = (TextView) convertView.findViewById(R.id.txtStore);
         if (product.getStore().equals("1"))    {
@@ -66,6 +71,7 @@ public class CustomListAdapter extends ArrayAdapter<Product> {
         }   else if (product.getStore().equals("4"))  {
             txtStore.setText("Willys Karlstad");
         }
+
         return convertView;
     }
 }

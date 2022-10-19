@@ -47,8 +47,11 @@ public class HomeCustomListAdapter extends ArrayAdapter<Product> {
         TextView txtName = (TextView) convertView.findViewById(R.id.txtName);
         txtName.setText(product.getName());
 
+        TextView txtPriceKg = (TextView) convertView.findViewById(R.id.txtPriceKg);
+        txtPriceKg.setText("Pris/kg/l: "+product.getPricekg()+" :-");
+
         TextView txtPrice = (TextView) convertView.findViewById(R.id.txtPrice);
-        txtPrice.setText(product.getPrice()+" :-");
+        txtPrice.setText("Pris: "+product.getPrice()+" :-");
 
         TextView txtStore = (TextView) convertView.findViewById(R.id.txtStore);
         if (product.getStore().equals("1"))    {

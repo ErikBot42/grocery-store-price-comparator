@@ -1,12 +1,13 @@
 from re import T
 from flask import Flask, render_template, url_for, session, redirect, request, flash, jsonify
-from database import Database
+from database import Database, DbProd
 from firebaseHandeler import firebaseHandeler, userData
 from datetime import timedelta
 import json
 import os.path
 import sys
 from category_regexes import CATEGORIES
+
 
 
 
@@ -143,13 +144,9 @@ def appLogin():
         result = {'login': 'False'}
     return jsonify(result)
 
-@app.route("/app/products/", methods=["POST", "GET"])
-def sendProductsInJson():
-    db = Database()
-    prod = db.getAllProductsWithCategories(CATEGORIES)
-    db.close()
+def _productsToJson(products):
     data = []
-    for item in prod:
+    for item in products:
         if item.name != None:  
             temp = {
                 "id":str(item.i),
@@ -164,33 +161,47 @@ def sendProductsInJson():
             data.append(temp)
     prod = '{"products":'+str(data)+'}'
     prod = prod.replace("'", '"').replace("\\", "")
+    return prod
+
+@app.route("/app/products/", methods=["POST", "GET"])
+def sendProductsInJson():
+    db = Database()
+    prod = db.getAllProductsWithCategories(CATEGORIES)
+    db.close()
+    prod = _productsToJson(prod)
     return jsonify(prod)
 
+def _getCategory(category):
+    from database import DbProd
+    db = Database()
+    for cat in CATEGORIES:
+        if category == cat[0]:
+            prod: list[DbProd] = db.getProductCategory(cat[1])
+            break
+    else:
+        if category == "Misk":
+            prod: list[DbProd] = db.getProductWithoutCategory(CATEGORIES)
+        elif category == "All":
+            prod: list[DbProd] = db.getProductDataForAdmin()
+        else:
+            print(f"#### Not a mach found for: {category}")
+            prod: list[DbProd] = []
+    db.close()  
+    return prod
 
 @app.route("/products/category/<category>", methods = ["GET"])
 def productCategory(category: str):
     from database import DbProd
     if "user" in session:
-        db = Database()
-        for cat in CATEGORIES:
-            if category == cat[0]:
-                prod: list[DbProd] = db.getProductCategory(cat[1])
-                break
-        else:
-            if category == "Misk":
-                prod: list[DbProd] = db.getProductWithoutCategory(CATEGORIES)
-                #print("TODO, OOPS")
-                #prod: list[DbProd] = []
-            elif category == "All":
-                prod: list[DbProd] = db.getProductDataForAdmin()
-            else:
-                print(f"#### Not a mach found for: {category}")
-                prod: list[DbProd] = []
-        db.close()  
+        prod = _getCategory(category)
         return render_template("admin_products.html", products=prod)
     else:
         return redirect(url_for("showHomePage"))
     
+@app.route("/app/products/<category>", methods = ["GET"])
+def appCategory(category):
+    prod = _productsToJson(_getCategory(category=category))
+    return jsonify(prod)
 
 @app.route("/debug/")
 def debug():

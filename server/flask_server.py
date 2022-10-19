@@ -153,13 +153,13 @@ def _productsToJson(products):
                 "id":str(item.i),
                 "name":item.name,
                 "price":str(item.price_num),
-                "price_kg":str(item.price_num),
-                "price_l":str(item.price_num),
+                "price_kg":str(item.price_kg),
+                "price_l":str(item.price_l),
                 "image":item.url,
                 "store":str(item.store),
                 "store_id":str(item.store_id),
                 "category":item.category
-            }   
+            }  
             data.append(temp)
     prod = '{"products":'+str(data)+'}'
     prod = prod.replace("'", '"').replace("\\", "")

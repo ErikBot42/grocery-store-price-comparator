@@ -24,9 +24,9 @@ class DbProd:
         self.store     = store
         self.store_id  = store_id
         self.price     = price
-        self.price_num = price_num
-        self.price_kg  = price_kg
-        self.price_l   = price_l
+        self.price_num = round(price_num, 2)
+        self.price_kg  = round(price_kg, 2)
+        self.price_l   = round(price_l, 2)
         self.amount_kg = amount_kg
         self.amount_l  = amount_l
         self.url       = url     

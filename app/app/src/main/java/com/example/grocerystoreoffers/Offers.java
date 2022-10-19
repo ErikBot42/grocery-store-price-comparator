@@ -18,16 +18,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.Source;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,9 +40,13 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,9 +65,10 @@ public class Offers extends Fragment {
     CustomListAdapter customListAdapter;
     FirebaseFirestore fStore;
     FirebaseUser user;
+    FloatingActionButton purchaseBtn;
+    //Boolean ica=false,coop=false,lidl=false,willys=false;
+    Boolean ica,coop,lidl,willys;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -71,15 +81,6 @@ public class Offers extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Offers.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Offers newInstance(String param1, String param2) {
         Offers fragment = new Offers();
         Bundle args = new Bundle();
@@ -92,16 +93,26 @@ public class Offers extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        coop=false;ica=false;lidl=false;willys=false;
+        fStore = FirebaseFirestore.getInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         arrayList = new ArrayList<>();
         View contentView = inflater.inflate(R.layout.fragment_offers, container, false);
         lv = contentView.findViewById(R.id.listView);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        CheckBox catVeg = contentView.findViewById(R.id.vegetarian);
+        CheckBox catVegan = contentView.findViewById(R.id.vegan);
+        CheckBox catMeat = contentView.findViewById(R.id.meatPoultryFish);
+        CheckBox catFruit = contentView.findViewById(R.id.fruitVegetables);
+
+
 
         CheckBox favBox = contentView.findViewById(R.id.favouriteStore);
         CheckBox shopCart = contentView.findViewById(R.id.shoppingCart);
@@ -109,18 +120,94 @@ public class Offers extends Fragment {
         CheckBox coopBox = contentView.findViewById(R.id.coopStore);
         CheckBox lidlBox = contentView.findViewById(R.id.lidlStore);
         CheckBox willysBox = contentView.findViewById(R.id.willysStore);
+        purchaseBtn = contentView.findViewById(R.id.purchaseBtn);
         List<String> shoppingList;
+
         ArrayList<Product> filteredList = new ArrayList<>();
+
+        purchaseBtn.setVisibility(View.INVISIBLE);
+
+        purchaseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String date = new SimpleDateFormat("dd/MM-yyyy").format(new Date());
+                AlertDialog.Builder alertbox = new AlertDialog.Builder(getActivity());
+                alertbox.setTitle("Caution");
+                alertbox.setMessage(getResources().getString(R.string.removeShopList));
+                alertbox.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //TODO: Remove shoppinglist from firebase, add to purchasesList
+                        DocumentReference documentReference = fStore.collection("user_profile").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        if(user != null) {
+                            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document != null) {
+                                            documentReference.update("latestPurchase",FieldValue.arrayUnion(date));
+                                            List<String> group = (List<String>) document.get("shoppingList");
+                                            for (String prod:group){
+                                                documentReference.update("latestPurchase", FieldValue.arrayUnion(prod));
+                                                documentReference.update("shoppingList", FieldValue.arrayRemove(prod));
+                                                Log.d("TESTREMOVE",prod);
+                                            }
+                                        } else {
+                                            Log.d("LOGGER", "No such document");
+                                        }
+                                    } else {
+                                        Log.d("LOGGER", "get failed with ", task.getException());
+                                    }
+                                }
+
+                            });
+                        }
+
+                    }
+                });
+                alertbox.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                alertbox.show();
+            }
+        });
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
                 AlertDialog.Builder alertbox = new AlertDialog.Builder(getActivity());
 
                 // set the message to display
                 alertbox.setTitle("Choose option");
                 alertbox.setItems(new CharSequence[]{"Add to shopping list"}, (dialog, which) -> {
                     // TODO Auto-generated method stub
+                    DocumentReference documentReference = fStore.collection("user_profile").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    if(user != null) {
+
+                        // Name, email address, and profile photo Url
+                        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document != null) {
+                                        Product product = (Product) adapterView.getItemAtPosition(pos);
+                                        documentReference.update("shoppingList", FieldValue.arrayUnion(product.getId()));
+
+                                    } else {
+                                        Log.d("LOGGER", "No such document");
+                                    }
+                                } else {
+                                    Log.d("LOGGER", "get failed with ", task.getException());
+                                }
+                            }
+
+                        });
+                    }
 
                 });
 
@@ -136,19 +223,82 @@ public class Offers extends Fragment {
                 alertbox.show();
             }
         });
-
-        favBox.setOnClickListener(new View.OnClickListener() {
+        /*
+        favBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 getFavstore();
             }
         });
-
-        shopCart.setOnClickListener((new View.OnClickListener() {
+        */
+        catFruit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) { getCart(); }
-        }));
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b) {filterStore();}
+                else {
+                    getCategory("Fruit");
+                }
+            }
+        });
 
+        favBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(!b){filterStore();}
+                else{
+                    fStore = FirebaseFirestore.getInstance();
+                    user = FirebaseAuth.getInstance().getCurrentUser();
+                    DocumentReference documentReference = fStore.collection("user_profile").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document != null) {
+                                    if(document.getBoolean("ICA")){
+
+                                        ica=true;
+                                        Log.d("STOREBOOL ICA ",String.valueOf(ica));
+                                    }
+                                    if(document.getBoolean("COOP")){
+                                        Log.d("STOREBOOL","COOP TRUE");
+                                        coop=true;
+                                    }
+                                    if(document.getBoolean("LIDL")){
+
+                                        lidl=true;
+                                        Log.d("STOREBOOL LIDL ",String.valueOf(lidl));
+                                    }
+                                    if(document.getBoolean("Willys")){
+                                        Log.d("STOREBOOL","WILLYS TRUE");
+                                        willys=true;
+                                    }
+                                    filterStore();
+                                } else {
+                                    Log.d("LOGGER", "No such document");
+                                }
+                            } else {
+                                Log.d("LOGGER", "get failed with ", task.getException());
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        shopCart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b) {
+                    purchaseBtn.setVisibility(View.INVISIBLE);
+                    filterStore();
+                } else {
+                    purchaseBtn.setVisibility(View.VISIBLE);
+                    getCart();
+                }
+            }
+        });
+        /*
         icaBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,6 +306,21 @@ public class Offers extends Fragment {
             }
         });
 
+         */
+        icaBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b) {
+                    ica =false;
+                    filterStore();
+                } else {
+                    shopCart.setChecked(false);
+                    ica =true;
+                    filterStore();
+                }
+            }
+        });
+/*
         coopBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,17 +328,47 @@ public class Offers extends Fragment {
             }
         });
 
-        lidlBox.setOnClickListener(new View.OnClickListener() {
+ */
+        coopBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                filterStore("1");
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b) {
+                    coop=false;
+                    filterStore();
+                } else {
+                    shopCart.setChecked(false);
+                    coop=true;
+                    filterStore();
+                }
+
             }
         });
 
-        willysBox.setOnClickListener(new View.OnClickListener() {
+        lidlBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                filterStore("4");
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b ) {
+                    lidl = false;
+                    filterStore();
+                } else {
+                    shopCart.setChecked(false);
+                    lidl =true;
+                    filterStore();
+                }
+            }
+        });
+
+        willysBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!b ) {
+                    willys=false;
+                    filterStore();
+                } else {
+                    shopCart.setChecked(false);
+                    willys=true;
+                    filterStore();
+                }
             }
         });
 
@@ -195,27 +390,68 @@ public class Offers extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new ReadJSON().execute("http://193.10.238.209:5000/app/products/");
+                Log.d("EXECTEST","TJENA");
+                new ReadJSON().execute("http://130.243.20.190:5000/app/products/");
+                //new ReadJSON().execute("https://raw.githubusercontent.com/ErikBot42/grocery-store-price-comparator/main/tmp.json");
             }
         });
         return contentView;
     }
 
-    public void filterStore(String text)  {
-
-        ArrayList<Product> filteredList = new ArrayList<>();
-        customListAdapter = new CustomListAdapter(getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList);
-        for (Product product : arrayList)  {
-            if (product.getStore().equals(text))   {
-                filteredList.add(product);
+    public void getCategory(String text)   {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("EXECTEST","TJENAFunktion");
+                new ReadJSON().execute("http://130.243.20.190:5000/app/products/"+text);
             }
+        });
+    }
+
+    public void filterStore() {
+
+        if (!coop && !ica && !lidl && !willys) {
+
+            CustomListAdapter adapter = new CustomListAdapter(
+                    getActivity().getApplicationContext(), R.layout.custom_list_layout, arrayList
+            );
+            lv.setAdapter(adapter);
+
+        } else {
+            ArrayList<Product> filteredList = new ArrayList<>();
+            customListAdapter = new CustomListAdapter(getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList);
+            for (Product product : arrayList) {
+                if (ica) {
+                    Log.d("FILTERSTORE", "ICA FOUND");
+                    if (product.getStore().equals("3")) {
+                        filteredList.add(product);
+                    }
+                }
+                if (coop) {
+                    if (product.getStore().equals("2")) {
+                        filteredList.add(product);
+                    }
+                }
+                if (lidl) {
+                    Log.d("FILTERSTORE", "LIDL FOUND");
+                    if (product.getStore().equals("1")) {
+                        filteredList.add(product);
+                    }
+                }
+                if (willys) {
+                    if (product.getStore().equals("4")) {
+                        filteredList.add(product);
+                    }
+                }
+            }
+
+            customListAdapter.setFilteredList(filteredList);
+            CustomListAdapter adapter = new CustomListAdapter(
+                    getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList
+            );
+            lv.setAdapter(adapter);
         }
 
-        customListAdapter.setFilteredList(filteredList);
-        CustomListAdapter adapter = new CustomListAdapter(
-                getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList
-        );
-        lv.setAdapter(adapter);
     }
 
     private void filterList(String text) {
@@ -253,7 +489,7 @@ public class Offers extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document != null) {
                         List<String> group = (List<String>) document.get("shoppingList");
-                        Log.d("minLista", String.valueOf(group));
+
                         ArrayList<Product> filteredList = new ArrayList<>();
                         customListAdapter = new CustomListAdapter(getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList);
                         for (String prodId : group) {
@@ -263,17 +499,18 @@ public class Offers extends Fragment {
                                 }
                             }
                         }
-                        if (filteredList.isEmpty())   {
-                            Toast toast = Toast.makeText(getActivity(), "No product was found",Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
+                        if (filteredList.isEmpty()) {
+                            Toast toast = Toast.makeText(getActivity(), "No product was found", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
                             toast.show();
-                        }   else    {
+                        } else {
                             customListAdapter.setFilteredList(filteredList);
                             CustomListAdapter adapter = new CustomListAdapter(
                                     getActivity().getApplicationContext(), R.layout.custom_list_layout, filteredList
                             );
                             lv.setAdapter(adapter);
                         }
+
                     } else {
                         Log.d("LOGGER", "No such document");
                     }
@@ -288,41 +525,9 @@ public class Offers extends Fragment {
     }
 
     public void getFavstore(){
-        fStore = FirebaseFirestore.getInstance();
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        DocumentReference documentReference = fStore.collection("user_profile").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null) {
-                        String favStore = document.getString("Favorite store");
-                        //To prevent null-pointer exeptions
-                        switch (Objects.requireNonNull(favStore)){
-                            case "ICA":
-                                filterStore("3");
-                                break;
-                            case "Coop":
-                                filterStore("2");
-                                break;
-                            case "Willys":
-                                filterStore("4");
-                                break;
-                            case "LIDL":
-                                filterStore("1");
-                                break;
-                            default:
-                                break;
-                        }
-                    } else {
-                        Log.d("LOGGER", "No such document");
-                    }
-                } else {
-                    Log.d("LOGGER", "get failed with ", task.getException());
-                }
-            }
-        });
+
+
+
     }
 
 

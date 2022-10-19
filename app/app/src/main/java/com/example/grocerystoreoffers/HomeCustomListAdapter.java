@@ -2,7 +2,6 @@ package com.example.grocerystoreoffers;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,17 +11,15 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
-public class CustomListAdapter extends ArrayAdapter<Product> {
+public class HomeCustomListAdapter extends ArrayAdapter<Product> {
 
     ArrayList<Product> products;
     Context context;
     int resource;
 
-    public CustomListAdapter(Context context, int resource, ArrayList<Product> products) {
+    public HomeCustomListAdapter(Context context, int resource, ArrayList<Product> products) {
         super(context, resource, products);
         this.products = products;
         this.context = context;
@@ -40,7 +37,7 @@ public class CustomListAdapter extends ArrayAdapter<Product> {
         if (convertView == null)    {
             LayoutInflater layoutInflater = (LayoutInflater) getContext()
                     .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.custom_list_layout, null, true);
+            convertView = layoutInflater.inflate(R.layout.home_custom_list_layout, null, true);
         }
         Product product = getItem(position);
 
@@ -49,9 +46,6 @@ public class CustomListAdapter extends ArrayAdapter<Product> {
 
         TextView txtName = (TextView) convertView.findViewById(R.id.txtName);
         txtName.setText(product.getName());
-
-        TextView txtId = (TextView) convertView.findViewById(R.id.txtId);
-        txtId.setText(product.getId());
 
         TextView txtPrice = (TextView) convertView.findViewById(R.id.txtPrice);
         txtPrice.setText(product.getPrice()+" :-");
@@ -66,6 +60,8 @@ public class CustomListAdapter extends ArrayAdapter<Product> {
         }   else if (product.getStore().equals("4"))  {
             txtStore.setText("Willys Karlstad");
         }
+
         return convertView;
     }
+
 }

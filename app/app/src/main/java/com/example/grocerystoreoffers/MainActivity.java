@@ -120,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.map:
                     replaceFragment(new NearbyStoresFragment());
                     break;
+                case R.id.faq:
+                    replaceFragment(new FaqFragment());
+                    break;
             }
             return true;
         });

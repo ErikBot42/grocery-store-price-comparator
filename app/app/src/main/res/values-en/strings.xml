@@ -21,6 +21,7 @@
     <string name="log_Btn">logout</string>
     <string name="swe_Btn">swedish</string>
     <string name="eng_Btn">english</string>
+    <string name="removeShopList">Are you sure you want to mark these products as bought and remove them from your current shopping list?</string>
     <string-array name="stores_array">
         <item>Choose favorite store...</item>
         <item>ICA</item>
@@ -30,6 +31,9 @@
     </string-array>
     <string name="update_Btn">Update value</string>
     <string name="favStore_UI">Favorite store</string>
+    <string name="welcome_to_food_huzzle">Welcome to Food Huzzle</string>
+    <string name="shopCart">Shopping cart</string>
+    <string name="suggestProd">Recommended products based on your favorite store(s)</string>
 </resources>
 
 

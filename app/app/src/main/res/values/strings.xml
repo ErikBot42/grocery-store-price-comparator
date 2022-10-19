@@ -20,7 +20,10 @@
     <string name="phone">Phone number</string>
     <string name="log_Btn">Log out</string>
     <string name="swe_Btn">swedish</string>
+    <string name="suggestProd">Recommended products based on your favorite store(s)</string>
+    <string name="shopCart">Shopping cart</string>
     <string name="eng_Btn">english</string>
+    <string name="removeShopList">Are you sure you want to mark these products as bought and remove them from your current shopping list?</string>
     <string name="update_Btn">Update</string>
     <string-array name="stores_array">
         <item>Choose favorite store...</item>
@@ -31,4 +34,5 @@
     </string-array>
     <string name="favStore_UI">Favorite stores</string>
     <string name="faqtitle" translatable="false">FAQ</string>
+    <string name="welcome_to_food_huzzle">Welcome to Food Huzzle!</string>
 </resources>

@@ -1,42 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Welcome to \nFood Huzzle!"
-        android:gravity="center"
-        android:textSize="50dp"
-        />
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".HomeFragment"
+    android:padding="10dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="bottom"
-        android:gravity="center">
-
-    <Button
-        android:id="@+id/engBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:label="@string/eng_Btn"
-        android:text="English"
-        android:layout_gravity="bottom"
-        />
+        android:layout_gravity="top"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <Button
-        android:label="@string/swe_Btn"
-        android:id="@+id/sweBtn"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top|center_horizontal"
+            android:text="@string/welcome_to_food_huzzle"
+            android:textSize="50sp" />
+
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Swedish"
-        android:layout_marginLeft="110dp"
-        android:layout_gravity="bottom"
-        />
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/engBtn"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:label="@string/eng_Btn"
+            android:text="English" />
+
+        <Button
+            android:id="@+id/sweBtn"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="110dp"
+            android:label="@string/swe_Btn"
+            android:text="Swedish" />
     </LinearLayout>
-</FrameLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/suggestProd"
+        android:textSize="20sp"
+        android:layout_above="@+id/list"
+        >
+    </TextView>
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="437dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp">
+    </ListView>
+
+</RelativeLayout>

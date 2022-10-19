@@ -13,4 +13,7 @@
     <item android:title="Map"
         android:icon="@drawable/ic_baseline_map_24"
         android:id="@+id/map"/>
+    <item android:title="FAQ"
+        android:icon="@drawable/faq"
+        android:id="@+id/faq"/>
 </menu>

@@ -18,6 +18,7 @@
     <string name="swe_Btn" >Svenska</string>
     <string name="eng_Btn" >Engelska</string>
     <string name="log_Btn">Logga ut</string>
+    <string name="removeShopList">Är du säker på att du vill markera dessa produkter som köpta och ta bort dessa från din inköpslista?</string>
     <string-array name="stores_array">
         <item>Välj favoritbutik...</item>
         <item>ICA</item>
@@ -28,5 +29,8 @@
     <string name="favStore_UI">Favoritbutiker</string>
     <string name="phone">Telefonnummer</string>
     <string name="update_Btn">Uppdatera</string>
+    <string name="welcome_to_food_huzzle">Välkommen till Food Huzzle</string>
+    <string name="shopCart">Varukorg</string>
+    <string name="suggestProd">Rekommenderade produkter baserat på din favorit(er) butiker</string>
 
 </resources>

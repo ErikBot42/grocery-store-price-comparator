@@ -366,6 +366,22 @@ class Database:
         else:
             return False
 
+    def runScraper(self, fast=False):
+        print("scraping to database")
+        database = Database()
+        from web_scraper import add_all_to_database
+        add_all_to_database(database, fast)
+        database.commitToDatabase()
+        database.close()
+
+    def runDropAll(self):
+        database = Database()
+        print("clearing database")
+        database = Database()
+        database.dropAllData(True)
+        database.commitToDatabase()
+        database.close()
+
 
 
 

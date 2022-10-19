@@ -208,6 +208,38 @@ def appCategory(category):
 @app.route("/debug/")
 def debug():
     return render_template("debug.html")
+
+@app.route("/scrape/All")
+def scrapeAll():
+    if "user" in session:
+        db = Database()
+        db.runDropAll()
+        db.runScraper()
+        db.close()
+        return redirect(url_for("products"))
+    else:
+        redirect(url_for("showHomePage"))
+
+@app.route("/scrape/fast")
+def scrapeFast():
+    if "user" in session:
+        db = Database()
+        db.runDropAll()
+        db.runScraper(fast=True)
+        db.close()
+        return redirect(url_for("products"))
+    else:
+        return redirect(url_for("showHomePage"))
+
+@app.route("/dropAll")
+def dropAll():
+    if "user" in session:
+        db = Database()
+        db.runDropAll()
+        db.close()
+        return redirect(url_for("products"))
+    else:
+        return redirect(url_for("showHomePage"))
    
 def runServer():
     app.run(host="0.0.0.0", debug=True)

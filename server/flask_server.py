@@ -10,6 +10,7 @@ from category_regexes import CATEGORIES
 
 
 
+
 app = Flask(__name__)
 app.secret_key = b".U,e-Xr))$I,/bK"
 app.permanent_session_lifetime = timedelta(days=1)
@@ -23,7 +24,7 @@ if not os.path.isfile("Grocery_Store_Database.db"):
 
  
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])    
 def showHomePage():
     if "user" in session:
         return redirect(url_for("products"))
@@ -143,58 +144,102 @@ def appLogin():
         result = {'login': 'False'}
     return jsonify(result)
 
-@app.route("/app/products/", methods=["POST", "GET"])
-def sendProductsInJson():
-    db = Database()
-    prod = db.getAllProductsWithCategories(CATEGORIES)
-    db.close()
+
+def _productsToJson(products):
     data = []
-    for item in prod:
+    for item in products:
         if item.name != None:  
             temp = {
                 "id":str(item.i),
                 "name":item.name,
                 "price":str(item.price_num),
-                "price_kg":str(item.price_num),
-                "price_l":str(item.price_num),
+                "price_kg":str(item.price_kg),
+                "price_l":str(item.price_l),
                 "image":item.url,
                 "store":str(item.store),
-                "store_id":str(item.store_id)
-            }   
+                "store_id":str(item.store_id),
+                "category":item.category
+            }  
             data.append(temp)
     prod = '{"products":'+str(data)+'}'
     prod = prod.replace("'", '"').replace("\\", "")
+    return prod
+
+@app.route("/app/products/", methods=["POST", "GET"])
+def sendProductsInJson():
+    db = Database()
+    prod = db.getAllProductsWithCategories(CATEGORIES)
+    db.close()
+    prod = _productsToJson(prod)
     return jsonify(prod)
 
+def _getCategory(category):
+    from database import DbProd
+    db = Database()
+    for cat in CATEGORIES:
+        if category == cat[0]:
+            prod: list[DbProd] = db.getProductCategory(cat[1])
+            break
+    else:
+        if category == "Misk":
+            prod: list[DbProd] = db.getProductWithoutCategory(CATEGORIES)
+        elif category == "All":
+            prod: list[DbProd] = db.getProductDataForAdmin()
+        else:
+            print(f"#### Not a mach found for: {category}")
+            prod: list[DbProd] = []
+    db.close()  
+    return prod
 
 @app.route("/products/category/<category>", methods = ["GET"])
 def productCategory(category: str):
     from database import DbProd
     if "user" in session:
-        db = Database()
-        for cat in CATEGORIES:
-            if category == cat[0]:
-                prod: list[DbProd] = db.getProductCategory(cat[1])
-                break
-        else:
-            if category == "Misk":
-                prod: list[DbProd] = db.getProductWithoutCategory(CATEGORIES)
-                #print("TODO, OOPS")
-                #prod: list[DbProd] = []
-            elif category == "All":
-                prod: list[DbProd] = db.getProductDataForAdmin()
-            else:
-                print(f"#### Not a mach found for: {category}")
-                prod: list[DbProd] = []
-        db.close()  
+        prod = _getCategory(category)
         return render_template("admin_products.html", products=prod)
     else:
         return redirect(url_for("showHomePage"))
     
+@app.route("/app/products/<category>", methods = ["GET"])
+def appCategory(category):
+    prod = _productsToJson(_getCategory(category=category))
+    return jsonify(prod)
 
 @app.route("/debug/")
 def debug():
     return render_template("debug.html")
+
+@app.route("/scrape/All")
+def scrapeAll():
+    if "user" in session:
+        db = Database()
+        db.runDropAll()
+        db.runScraper()
+        db.close()
+        return redirect(url_for("products"))
+    else:
+        redirect(url_for("showHomePage"))
+
+@app.route("/scrape/fast")
+def scrapeFast():
+    if "user" in session:
+        db = Database()
+        db.runDropAll()
+        db.runScraper(fast=True)
+        db.close()
+        return redirect(url_for("products"))
+    else:
+        return redirect(url_for("showHomePage"))
+
+@app.route("/dropAll")
+def dropAll():
+    if "user" in session:
+        db = Database()
+        db.runDropAll()
+        db.close()
+        return redirect(url_for("products"))
+    else:
+        return redirect(url_for("showHomePage"))
    
 def runServer():
     app.run(host="0.0.0.0", debug=True)

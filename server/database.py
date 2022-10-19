@@ -24,13 +24,23 @@ class DbProd:
         self.store     = store
         self.store_id  = store_id
         self.price     = price
-        #self.category  = category
-        self.price_num = price_num
-        self.price_kg  = price_kg
-        self.price_l   = price_l
+        self.price_num = round(price_num, 2)
+        self.price_kg  = round(price_kg, 2)
+        self.price_l   = round(price_l, 2)
         self.amount_kg = amount_kg
         self.amount_l  = amount_l
-        self.url       = url        
+        self.url       = url     
+        self.category  = self.setCategory()   
+
+    def setCategory(self) -> str:
+        from category_regexes import CATEGORIES
+        db = Database()
+        for category in CATEGORIES:
+            if db.isInCategory(self.name, category[1]):
+                db.close()
+                return category[0]
+        return "Misk"
+
 
 
 class Database:
@@ -348,6 +358,33 @@ class Database:
         return self.queryResultToObject(self.cursor.execute(query_no_category).fetchall())
        
 
+    def isInCategory(self, product, categoryExp) -> bool:
+        res = False
+        for exp in categoryExp:
+            if re.search(exp, product.lower()) != None:
+                return True
+        else:
+            return False
+
+    def runScraper(self, fast=False):
+        print("scraping to database")
+        database = Database()
+        from web_scraper import add_all_to_database
+        add_all_to_database(database, fast)
+        database.commitToDatabase()
+        database.close()
+
+    def runDropAll(self):
+        database = Database()
+        print("clearing database")
+        database = Database()
+        database.dropAllData(True)
+        database.commitToDatabase()
+        database.close()
+
+
+
+
     #Save all new changes to the database. 
     def commitToDatabase(self):
         self.connection.commit()
@@ -508,3 +545,14 @@ class Database:
         for store in Store:
             self.addStoreToDatabase(ID = store.value, name = store.name)
         self.commitToDatabase()
+
+
+if __name__ == "__main__":
+    db = Database()
+    from category_regexes import CATEGORIES
+    item = "Mango"
+    cat = CATEGORIES[3]
+    if db.isInCategory(item, cat[1]):
+        print (f"{item} is in {cat[0]}")
+    else:
+        print(f"{item} is not in {cat[0]}")

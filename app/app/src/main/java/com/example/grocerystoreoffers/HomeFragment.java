@@ -162,7 +162,7 @@ public class HomeFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new ReadJSON().execute("http://172.20.10.2:5000/app/products/");
+                new ReadJSON().execute("http://192.168.10.221:5000/app/products/");
             }
         });
 

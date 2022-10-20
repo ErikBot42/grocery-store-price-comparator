@@ -1,6 +1,4 @@
-from itertools import tee
-import telnetlib
-from urllib import response
+import requests
 import firebase_admin
 from firebase_admin import credentials, auth, firestore
 import json
@@ -84,6 +82,25 @@ class firebaseHandeler():
         for doc in docs:
             data.append(self._getUserObject(doc.id, doc.to_dict()))
         return data
+
+    def sendNotification():
+        serverToken = 'BMy_3_VpR0EKsX_Edz6sYPu3dHWTDoX_UU-hGIq_B7JSvlCa7OZ4_82zSLtOn5GRd4zPDcjfbjs2qLxStKPpQi0'
+        deviceToken = 'dkbWvKJ1yHgEQXTq4rT5'
+        headers = {
+                'Content-Type': 'application/json',
+                'Authorization': 'key=' + serverToken,
+            }
+        body = {
+                'notification': {'title': 'Sending push form python script',
+                                    'body': 'New Message'
+                                    },
+                'to':
+                    deviceToken,
+                'priority': 'high',
+                #   'data': dataPayLoad,
+                }
+        response = requests.post("https://fcm.googleapis.com/fcm/send",headers = headers, data=json.dumps(body))
+        print(response.status_code)
 
 
 if __name__ == "__main__":

@@ -48,31 +48,31 @@ class ExtractedInfo:
         if self.price == None:
             if self.price_kg != None and self.amount_kg != None:
                 self.price = self.price_kg * self.amount_kg
-                print("inf: price", self.price)
+                #print("inf: price", self.price)
         
         if self.price == None:
             if self.price_l != None and self.amount_l!= None:
                 self.price = self.price_l * self.amount_l
-                print("inf: price", self.price)
+                #print("inf: price", self.price)
 
         if self.price != None:
             if self.amount_kg == None and self.price_kg != None:
                 self.amount_kg = self.price / self.price_kg
-                print("inf: amount_kg", self.amount_kg)
+                #print("inf: amount_kg", self.amount_kg)
             if self.amount_kg != None and self.price_kg == None:
                 self.price_kg = self.price / self.amount_kg
-                print("inf: price_kg", self.price_kg)
+                #print("inf: price_kg", self.price_kg)
             
             if self.amount_l == None and self.price_l != None:
                 self.amount_l = self.price / self.price_l
-                print("inf: amount_l", self.amount_l)
+                #print("inf: amount_l", self.amount_l)
             if self.amount_l != None and self.price_l == None:
                 self.price_l = self.price / self.amount_l
-                print("inf: price_l", self.price_l)
-        print("------")
+                #print("inf: price_l", self.price_l)
+        #print("------")
 
     def try_read(self, string: str):
-        print("try_read:", string)
+        #print("try_read:", string)
 
         #price represented as "öre"
 
@@ -159,7 +159,7 @@ class ExtractedInfo:
         
         # Error handling rule
         def t_error(t):
-            print("'%s'" % t.value[0])
+            #print("'%s'" % t.value[0])
             t.lexer.skip(1)
 
         def t_ERROR(t):
@@ -225,16 +225,16 @@ class ExtractedInfo:
                                 match unit:
                                     case Units.KG:
                                         self.price_kg = curr.value*fac
-                                        print("price/kg", self.price_kg)
+                                        #print("price/kg", self.price_kg)
                                     case Units.L:
                                         self.price_l = curr.value*fac
-                                        print("price/l", self.price_l)
+                                        #print("price/l", self.price_l)
                                     case Units.NUMBER:
                                         self.price = curr.value
-                                        print("price/unit", self.price)
+                                        #print("price/unit", self.price)
                             case _:
                                 self.price = curr.value
-                                print("price", self.price)
+                                #print("price", self.price)
                     case "NUMBER":
                         match nxt_type:
                             case "UNIT":
@@ -242,10 +242,10 @@ class ExtractedInfo:
                                 match unit:
                                     case Units.KG:
                                         self.amount_kg = curr.value*fac
-                                        print("amount_kg", self.amount_kg)
+                                        #print("amount_kg", self.amount_kg)
                                     case Units.L:
                                         self.amount_l = curr.value*fac
-                                        print("amount_l", self.amount_l)
+                                        #print("amount_l", self.amount_l)
                             case _:
                                 pass
 

@@ -1,4 +1,3 @@
-from itertools import tee
 import telnetlib
 from urllib import response
 import firebase_admin

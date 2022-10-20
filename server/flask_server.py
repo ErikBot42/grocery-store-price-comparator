@@ -242,7 +242,7 @@ def dropAll():
         return redirect(url_for("showHomePage"))
    
 def runServer():
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="192.168.10.221", debug=True)
 if __name__ == "__main__":
     runServer()
 

@@ -1,7 +1,8 @@
+from socket import MsgFlag
 import telnetlib
 from urllib import response
 import firebase_admin
-from firebase_admin import credentials, auth, firestore
+from firebase_admin import credentials, auth, firestore, messaging
 import json
 
 class userData():
@@ -84,7 +85,21 @@ class firebaseHandeler():
             data.append(self._getUserObject(doc.id, doc.to_dict()))
         return data
 
+    def sendPush(self, title, registration_token, dataobject=None):
+        message = messaging.MulticastMessage(
+            notification=messaging.Notification(
+                title=title,
+                body=msg
+            ),
+            data=dataobject,
+            tokens=registration_token,
+        )
+
+        response = messaging.send_multicast(message)
+
+        print("Sent message", response)
+
 
 if __name__ == "__main__":
     fire_db = firebaseHandeler()
-    print(fire_db.getUserSearch(u"Demo"))
+    fire_db.sendPush("Hi", "This is a message from the flask server")

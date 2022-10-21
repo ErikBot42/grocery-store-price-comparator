@@ -1,4 +1,7 @@
 import requests
+from socket import MsgFlag
+import telnetlib
+from urllib import response
 import firebase_admin
 from firebase_admin import credentials, auth, firestore
 import json
@@ -105,4 +108,4 @@ class firebaseHandeler():
 
 if __name__ == "__main__":
     fire_db = firebaseHandeler()
-    print(fire_db.getUserSearch(u"Demo"))
+    fire_db.sendPush("Hi", "This is a message from the flask server")

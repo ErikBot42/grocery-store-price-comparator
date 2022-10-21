@@ -229,7 +229,7 @@ def get_willys_html(url: str) -> str:
             print("decline cookies")
             action_driver.click(decline_cookies_button).perform()
         view_more_button_candidates = driver.find_elements(By.XPATH, "//main//section//button")
-        view_more_button = next((x for x in view_more_button_candidates if x.text == "Visa alla"),None)
+        view_more_button = next((x for x in view_more_button_candidates if (x.text == "Visa alla") or (x.text == "Visa fler")),None)
         if view_more_button != None:
             print("view more")
             action_driver.click(view_more_button).perform()
@@ -241,7 +241,7 @@ def get_willys_html(url: str) -> str:
             break
         print("scrolling")
         webdriver.ActionChains(driver).scroll_by_amount(0, 1000).perform()
-        #time.sleep(iteration_time) # a bit of a hack
+        time.sleep(iteration_time) # a bit of a hack
         print("current wait:", current_wait)
     page_source: str = driver.page_source
     #print(BeautifulSoup(page_source, "html.parser").prettify())
@@ -309,8 +309,8 @@ def add_all_to_database(data: Database, skip_selenium: bool = False):
             print()
             print("INVALID PRODUCT:")
             product.print()
-        print()
-        product.print()
+        #print()
+        #product.print()
 
 
         if not data.addProductToDatabase(\

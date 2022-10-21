@@ -97,7 +97,7 @@ class Database:
             url: str = "",
             ) -> bool:
         data = [str(category), name, str(self.getStoreID(store)), price, price_num, price_kg, price_l, amount_kg, amount_l, url]
-        print("AMOUNT", amount_kg, amount_l)
+        #print("AMOUNT", amount_kg, amount_l)
         query = self._createInsertSQLQuery(
             "Product", 
             "Category_ID, Product_Name, Store_ID, Price, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL", 

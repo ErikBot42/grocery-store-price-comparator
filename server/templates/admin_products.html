@@ -58,6 +58,7 @@
                     <th scope="col">Store</th>
                     <th scope="col">Category</th>
                     <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -102,6 +103,15 @@
                             <a href="{{item .url}}" target="_blank">
                                 <img src="{{item.url}}" alt="{{item.url}}" style="width:42px;height:42px;">
                             </a>
+                        </td>
+                        <td>
+                            <ul class="">   
+                                <li class="list-inline-item">
+                                    <form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/edit/{{item.i}}">
+                                        <button class="btn btn-danger btn-sm rounded-0" type="submit" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-trash">Edit</i></button>
+                                    </form>
+                                </li>
+                            </ul>
                         </td>
                         <td>
                             <ul class="">   

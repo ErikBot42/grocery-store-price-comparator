@@ -92,7 +92,7 @@ def removeProduct(id):
 @app.route("/products/new/", methods = ["POST"])
 def addProduct():
     db = Database()
-    query = db.addProductToDatabase(
+    db.addProductToDatabase(
         category=-1,
         name=request.form["Product_Name"],
         store=request.form["Store_ID"],
@@ -181,7 +181,7 @@ def _getCategory(category):
             prod: list[DbProd] = db.getProductCategory(cat[1])
             break
     else:
-        if category == "Misk":
+        if category == "Misc":
             prod: list[DbProd] = db.getProductWithoutCategory(CATEGORIES)
         elif category == "All":
             prod: list[DbProd] = db.getProductDataForAdmin()
@@ -236,6 +236,44 @@ def dropAll():
     if "user" in session:
         db = Database()
         db.runDropAll()
+        db.close()
+        return redirect(url_for("products"))
+    else:
+        return redirect(url_for("showHomePage"))
+
+@app.route("/edit/<id>/", methods = ["POST"])
+def edit(id):
+    if "user" in session:
+        db = Database()
+        prod = db.getProductFromID(id)
+        if prod == None:
+            print(f"ID({id}) not found")
+            return redirect(url_for("products"))
+        else:
+            return render_template("admin_edit", item = prod)
+    else:
+        return redirect(url_for("showHomePage"))
+
+@app.route("/products/edit/", methods=["POST"])
+def runEdit():
+    if "user" in session:
+        db =Database()
+        print(f"Removing Product: {request.form['ID']}, {request.form['Product_Name']}")
+        db.removeProduct(request.form['ID'])
+        db.commitToDatabase()
+        db.addProductToDatabase(
+        category=-1,
+        name=request.form["Product_Name"],
+        store=request.form["Store"],
+        price=-1,
+        price_num=request.form["Price_num"],
+        price_kg=request.form["Price_kg"],
+        price_l=request.form["Price_l"],
+        url=request.form["URL"],
+        amount_kg=request.form["Amount_kg"],
+        amount_l=request.form["Amount_l"]
+        )
+        db.commitToDatabase()
         db.close()
         return redirect(url_for("products"))
     else:

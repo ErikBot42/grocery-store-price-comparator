@@ -39,7 +39,7 @@ class DbProd:
             if db.isInCategory(self.name, category[1]):
                 db.close()
                 return category[0]
-        return "Misk"
+        return "Misc"
 
 
 

@@ -181,7 +181,7 @@ def _getCategory(category):
             prod: list[DbProd] = db.getProductCategory(cat[1])
             break
     else:
-        if category == "Misk":
+        if category == "Misc":
             prod: list[DbProd] = db.getProductWithoutCategory(CATEGORIES)
         elif category == "All":
             prod: list[DbProd] = db.getProductDataForAdmin()

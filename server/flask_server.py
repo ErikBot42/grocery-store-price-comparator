@@ -147,6 +147,7 @@ def _productsToJson(products):
     data = []
     for item in products:
         if item.name != None:  
+            app_price_str = item.app_price_str()
             temp = {
                 "id":str(item.i),
                 "name":item.name,
@@ -156,7 +157,8 @@ def _productsToJson(products):
                 "image":item.url,
                 "store":str(item.store),
                 "store_id":str(item.store_id),
-                "category":item.category
+                "category":item.category,
+                "app_price_str":app_price_str,
             }  
             data.append(temp)
     prod = '{"products":'+str(data)+'}'
@@ -278,7 +280,8 @@ def runEdit(id):
         return redirect(url_for("showHomePage"))
    
 def runServer():
-    app.run(host="192.168.10.221", debug=True)
+    #app.run(host="192.168.10.221", debug=True)
+    app.run(host="127.0.0.1", debug=True)
 if __name__ == "__main__":
     runServer()
 

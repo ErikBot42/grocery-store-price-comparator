@@ -6,6 +6,7 @@ import re
 
 
 class DbProd:
+
     def __init__(self,
         i: int,
         name: str,
@@ -30,9 +31,25 @@ class DbProd:
         self.amount_kg = amount_kg
         self.amount_l  = amount_l
         self.url       = url     
-        self.category  = self.setCategory()   
+        self.category  = self.calcCategory()   
+        print(self.app_price_str())
 
-    def setCategory(self) -> str:
+    def app_price_str(self) -> str:
+        tmp: list[str] = [] 
+        if self.price_num != None and self.price_num > 0:
+            tmp.append(str(self.price_num) + " kr")
+        if self.price_l != None and self.price_l > 0:
+            tmp.append(str(self.price_l) + " kr/l")
+        if self.price_kg != None and self.price_kg > 0:
+            tmp.append(str(self.price_kg) + " kr/kg")
+        if self.amount_kg != None and self.amount_kg > 0:
+            tmp.append("("+str(self.amount_kg) + " kg)")
+        if self.amount_l != None and self.amount_l > 0:
+            tmp.append("("+str(self.amount_l) + " l)")
+
+        return ", ".join(tmp)
+
+    def calcCategory(self) -> str:
         from category_regexes import CATEGORIES
         db = Database()
         for category in CATEGORIES:

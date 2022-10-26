@@ -6,6 +6,7 @@ import re
 
 
 class DbProd:
+
     def __init__(self,
         i: int,
         name: str,
@@ -30,16 +31,32 @@ class DbProd:
         self.amount_kg = amount_kg
         self.amount_l  = amount_l
         self.url       = url     
-        self.category  = self.setCategory()   
+        self.category  = self.calcCategory()   
+        print(self.app_price_str())
 
-    def setCategory(self) -> str:
+    def app_price_str(self) -> str:
+        tmp: list[str] = [] 
+        if self.price_num != None and self.price_num > 0:
+            tmp.append(str(self.price_num) + " kr")
+        if self.price_l != None and self.price_l > 0:
+            tmp.append(str(self.price_l) + " kr/l")
+        if self.price_kg != None and self.price_kg > 0:
+            tmp.append(str(self.price_kg) + " kr/kg")
+        if self.amount_kg != None and self.amount_kg > 0:
+            tmp.append("("+str(self.amount_kg) + " kg)")
+        if self.amount_l != None and self.amount_l > 0:
+            tmp.append("("+str(self.amount_l) + " l)")
+
+        return ", ".join(tmp)
+
+    def calcCategory(self) -> str:
         from category_regexes import CATEGORIES
         db = Database()
         for category in CATEGORIES:
             if db.isInCategory(self.name, category[1]):
                 db.close()
                 return category[0]
-        return "Misk"
+        return "Misc"
 
 
 
@@ -97,7 +114,6 @@ class Database:
             url: str = "",
             ) -> bool:
         data = [str(category), name, str(self.getStoreID(store)), price, price_num, price_kg, price_l, amount_kg, amount_l, url]
-        print("AMOUNT", amount_kg, amount_l)
         query = self._createInsertSQLQuery(
             "Product", 
             "Category_ID, Product_Name, Store_ID, Price, Price_num, Price_kg, Price_l, Amount_kg, Amount_l, URL", 
@@ -382,7 +398,29 @@ class Database:
         database.commitToDatabase()
         database.close()
 
-
+    def getProductFromID(self, id):
+        query = "SELECT * FROM Product JOIN Store USING (Store_ID)WHERE Product_ID == ?"
+        data = [id]
+        try:
+            r = self.cursor.execute(query, data).fetchone()
+            res = DbProd(
+            i           = int(r[1]), 
+            name        = str(r[2]), 
+            store       = str(r[11]), 
+            store_id    = int(r[3]), 
+            price       = str(r[4]), 
+            price_num   = float(r[5]  or -1), 
+            price_kg    = float(r[6]  or -1), 
+            price_l     = float(r[7]  or -1), 
+            amount_kg   = float(r[8]  or -1), 
+            amount_l    = float(r[9] or -1), 
+            url         = str(r[10]), 
+            )
+        except sqlite3.Error as er:
+            print("\nCould not run query: " + query)
+            print('\tSQLite error: %s' % (' '.join(er.args)))
+            res = None
+        return res
 
 
     #Save all new changes to the database. 

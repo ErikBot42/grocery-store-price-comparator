@@ -1,0 +1,40 @@
+{% extends 'admin_base.html'%}
+
+{% block title %}
+    Edit Product
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/products/edit/{{item.i}}">                          
+    <div class="form-group">
+        <input type="text"  id="Product_Name" name="Product_Name" required placeholder="Product_Name" value="{{item.name}}">
+        <label for="Product_Name">Product_Name</label><br>
+
+        <input type="text"  id="Store" name="Store" required placeholder="Store" value="{{item.store}}">
+        <label for="Store">Store_ID</label><br>
+
+        <input type="text"  id="Price_num" name="Price_num" required placeholder="Price_num" value="{{item.price_num}}">
+        <label for="Price_num">Price</label><br>
+
+        <input type="text"  id="Price_kg" name="Price_kg"  placeholder="Price_kg" value="{{item.price_kg}}">
+        <label for="Price_kg">Price_kg</label><br>
+
+        <input type="text"  id="Price_l" name="Price_l"  placeholder="Price_l" value="{{item.price_l}}">
+        <label for="Price_l">Price_l</label><br>
+
+        <input type="text"  id="Amount_kg" name="Amount_kg" placeholder="Amount_kg" value="{{item.amount_kg}}">
+        <label for="Amount_kg">Amount_kg</label><br>
+
+        <input type="text"  id="Amount_l" name="Amount_l" placeholder="Amount_l" value="{{item.amount_l}}">
+        <label for="Amount_l">Amount_l</label><br>
+
+        <input type="text"  id="URL" name="URL" placeholder="URL" value="{{item.url}}">
+        <label for="URL">URL</label><br>   
+        <button type="submit" class="btn btn-primary mr-0">Edit Product</button>                    
+    </div>
+    <button type="submit" class="btn btn-primary mr-0" action="/products">Cancel</button>   
+</form>
+{% endblock %}

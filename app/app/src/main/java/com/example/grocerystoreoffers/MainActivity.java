@@ -41,6 +41,28 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel("myNotifs", "Notification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Do something after 100ms
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "myNotifs");
+                builder.setContentTitle("Don't forget to check your favorite store");
+                builder.setContentText("Your favorite store have been updated");
+                builder.setSmallIcon(R.drawable.ic_launcher_background);
+                builder.setAutoCancel(true);
+
+                NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(MainActivity.this);
+                notificationManagerCompat.notify(1, builder.build());
+
+            }
+        }, 60000*10);// sends after alert after 10 min.
 
         loadData();
         String loadedLang = text;

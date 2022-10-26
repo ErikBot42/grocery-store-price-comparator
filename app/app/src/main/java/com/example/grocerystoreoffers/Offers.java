@@ -391,7 +391,7 @@ public class Offers extends Fragment {
             @Override
             public void run() {
                 Log.d("EXECTEST","TJENA");
-                new ReadJSON().execute("http://172.20.10.2:5000/app/products/");
+                new ReadJSON().execute("http://192.168.10.221:5000/app/products/");
                 //new ReadJSON().execute("https://raw.githubusercontent.com/ErikBot42/grocery-store-price-comparator/main/tmp.json");
             }
         });
@@ -419,7 +419,7 @@ public class Offers extends Fragment {
             @Override
             public void run() {
                 Log.d("EXECTEST","TJENAFunktion");
-                new ReadJSON().execute("http://172.20.10.2:5000/app/products/"+text);
+                new ReadJSON().execute("http://192.168.10.221:5000/app/products/"+text);
             }
         });
     }

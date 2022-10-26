@@ -1,9 +1,7 @@
-from re import T
 from flask import Flask, render_template, url_for, session, redirect, request, flash, jsonify
 from database import Database
 from firebaseHandeler import firebaseHandeler, userData
 from datetime import timedelta
-import json
 import os.path
 import sys
 from category_regexes import CATEGORIES
@@ -92,7 +90,7 @@ def removeProduct(id):
 @app.route("/products/new/", methods = ["POST"])
 def addProduct():
     db = Database()
-    query = db.addProductToDatabase(
+    db.addProductToDatabase(
         category=-1,
         name=request.form["Product_Name"],
         store=request.form["Store_ID"],
@@ -149,6 +147,7 @@ def _productsToJson(products):
     data = []
     for item in products:
         if item.name != None:  
+            app_price_str = item.app_price_str()
             temp = {
                 "id":str(item.i),
                 "name":item.name,
@@ -158,7 +157,8 @@ def _productsToJson(products):
                 "image":item.url,
                 "store":str(item.store),
                 "store_id":str(item.store_id),
-                "category":item.category
+                "category":item.category,
+                "app_price_str":app_price_str,
             }  
             data.append(temp)
     prod = '{"products":'+str(data)+'}'
@@ -181,7 +181,7 @@ def _getCategory(category):
             prod: list[DbProd] = db.getProductCategory(cat[1])
             break
     else:
-        if category == "Misk":
+        if category == "Misc":
             prod: list[DbProd] = db.getProductWithoutCategory(CATEGORIES)
         elif category == "All":
             prod: list[DbProd] = db.getProductDataForAdmin()
@@ -240,9 +240,48 @@ def dropAll():
         return redirect(url_for("products"))
     else:
         return redirect(url_for("showHomePage"))
+
+@app.route("/edit/<id>/", methods = ["POST"])
+def edit(id):
+    if "user" in session:
+        db = Database()
+        prod = db.getProductFromID(id)
+        if prod == None:
+            print(f"ID({id}) not found")
+            return redirect(url_for("products"))
+        else:
+            return render_template("admin_edit.html", item = prod)
+    else:
+        return redirect(url_for("showHomePage"))
+
+@app.route("/products/edit/<id>", methods=["POST"])
+def runEdit(id):
+    if "user" in session:
+        db =Database()
+        print(f"Removing Product: {id}, {request.form['Product_Name']}")
+        db.removeProduct(id)
+        db.commitToDatabase()
+        db.addProductToDatabase(
+        category=-1,
+        name=request.form["Product_Name"],
+        store=request.form["Store"],
+        price=-1,
+        price_num=request.form["Price_num"],
+        price_kg=request.form["Price_kg"],
+        price_l=request.form["Price_l"],
+        url=request.form["URL"],
+        amount_kg=request.form["Amount_kg"],
+        amount_l=request.form["Amount_l"]
+        )
+        db.commitToDatabase()
+        db.close()
+        return redirect(url_for("products"))
+    else:
+        return redirect(url_for("showHomePage"))
    
 def runServer():
-    app.run(host="0.0.0.0", debug=True)
+    #app.run(host="192.168.10.221", debug=True)
+    app.run(host="127.0.0.1", debug=True)
 if __name__ == "__main__":
     runServer()
 

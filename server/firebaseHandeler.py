@@ -1,7 +1,4 @@
 import requests
-from socket import MsgFlag
-import telnetlib
-from urllib import response
 import firebase_admin
 from firebase_admin import credentials, auth, firestore
 import json

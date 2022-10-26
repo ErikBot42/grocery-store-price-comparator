@@ -1,9 +1,7 @@
-from re import T
 from flask import Flask, render_template, url_for, session, redirect, request, flash, jsonify
 from database import Database
 from firebaseHandeler import firebaseHandeler, userData
 from datetime import timedelta
-import json
 import os.path
 import sys
 from category_regexes import CATEGORIES
@@ -250,16 +248,16 @@ def edit(id):
             print(f"ID({id}) not found")
             return redirect(url_for("products"))
         else:
-            return render_template("admin_edit", item = prod)
+            return render_template("admin_edit.html", item = prod)
     else:
         return redirect(url_for("showHomePage"))
 
-@app.route("/products/edit/", methods=["POST"])
-def runEdit():
+@app.route("/products/edit/<id>", methods=["POST"])
+def runEdit(id):
     if "user" in session:
         db =Database()
-        print(f"Removing Product: {request.form['ID']}, {request.form['Product_Name']}")
-        db.removeProduct(request.form['ID'])
+        print(f"Removing Product: {id}, {request.form['Product_Name']}")
+        db.removeProduct(id)
         db.commitToDatabase()
         db.addProductToDatabase(
         category=-1,

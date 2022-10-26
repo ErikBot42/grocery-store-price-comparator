@@ -8,11 +8,8 @@
 {% endblock %}
 
 {% block content %}
-<form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/products/edit/">                          
+<form method="POST" class="text-left" enctype="application/x-www-form-urlencoded" action="/products/edit/{{item.i}}">                          
     <div class="form-group">
-        <input type="text"  id="ID" name="ID" required placeholder="ID" value="{{item.i}}">
-        <label for="ID">ID</label><br>
-
         <input type="text"  id="Product_Name" name="Product_Name" required placeholder="Product_Name" value="{{item.name}}">
         <label for="Product_Name">Product_Name</label><br>
 

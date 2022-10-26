@@ -1,77 +1,30 @@
 package com.example.grocerystoreoffers;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-
-import androidx.fragment.app.Fragment;
-
-
-import androidx.fragment.app.FragmentManager;
-
-
-import androidx.fragment.app.FragmentTransaction;
-
-
-
-
-
-
-
-import android.app.AlarmManager;
-
-
-import android.app.PendingIntent;
-
-
 import android.content.Context;
-
-
-import android.content.Intent;
-
-
 import android.content.SharedPreferences;
-
-
 import android.content.res.Configuration;
-
-
 import android.content.res.Resources;
-
-
 import android.os.Build;
-
-
 import android.os.Bundle;
-
-
 import android.util.DisplayMetrics;
-
-
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
-
-import android.widget.Button;
-
-
 import android.widget.EditText;
 
-
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import android.widget.Toast;
 
-
-
-
-
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.grocerystoreoffers.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
-
-
-import java.util.ArrayList;
-
 
 import java.util.Locale;
 
@@ -102,6 +55,22 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(firebaseAuth.getCurrentUser() != null ? new HomeFragment() : new LoginFragment());
         //usernameEdt =(EditText) findViewById(R.id.et_email);
         //passwordEdt =(EditText) findViewById(R.id.et_password);
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("TOKEN", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        Log.d("TOKEN",token);
+                        // Log and toast
+
+                    }
+                });
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch(item.getItemId()){
@@ -141,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
                         replaceFragment(new LoginFragment());
                     }
                     break;
+                case R.id.faq:
+                        replaceFragment(new FaqFragment());
+                        break;
             }
             return true;
         });

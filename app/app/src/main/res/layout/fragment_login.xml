@@ -80,7 +80,7 @@
         android:id="@+id/newUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/remember"
+        android:layout_below="@+id/forgotPass"
         android:layout_marginStart="25dp"
         android:layout_marginTop="-3dp"
         android:layout_marginBottom="20dp"
@@ -100,15 +100,18 @@
         android:text="@string/register"
         android:textColor="@android:color/white" />
 
-    <CheckBox
-        android:id="@+id/remember"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/forgotPass"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@id/btn_login"
+        android:textSize="17sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_login"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/remember" />
+        android:clickable="true"
+        android:text="@string/forgotPass"
+        android:focusable="true" />
 
 
 </RelativeLayout>

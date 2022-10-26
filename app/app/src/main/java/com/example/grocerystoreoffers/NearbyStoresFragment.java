@@ -57,31 +57,31 @@ public class NearbyStoresFragment extends Fragment {
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(59.4022, 13.5115),11));
                 markerWILLYS = googleMap.addMarker(new MarkerOptions()
                         .position(WILLYS)
-                        .title("Willys").snippet("CLICK HERE FOR OFFERS")
+                        .title("Willys")
                         .icon(BitmapFromVector(getActivity().getApplicationContext(), R.drawable.sponsor_logo_willys_2)));
                 markerWILLYS.setTag(0);
 
                 markerICA = googleMap.addMarker(new MarkerOptions()
                         .position(ICA_MAXI_BERGVIK)
-                        .title("Ica Maxi Bergvik").snippet("CLICK HERE FOR OFFERS")
+                        .title("Ica Maxi Bergvik")
                         .icon(BitmapFromVector(getActivity().getApplicationContext(), R.drawable.ica_logotyp)));
                 markerICA.setTag(0);
 
                 markerCOOP = googleMap.addMarker(new MarkerOptions()
                         .position(COOP)
-                        .title("Coop Kronoparken").snippet("CLICK HERE FOR OFFERS")
+                        .title("Coop Kronoparken")
                         .icon(BitmapFromVector(getActivity().getApplicationContext(), R.drawable.coop_logotyp_600x174_1_2)));
                 markerCOOP.setTag(0);
 
                 markerLIDLRATTGATAN = googleMap.addMarker(new MarkerOptions()
                         .position(LIDL_RATTGATAN)
-                        .title("LIDL Rattgatan").snippet("CLICK HERE FOR OFFERS")
+                        .title("LIDL Rattgatan")
                         .icon(BitmapFromVector(getActivity().getApplicationContext(), R.drawable.lidl_logo_2)));
                 markerLIDLRATTGATAN.setTag(0);
 
                 markerLIDLOSTRA = googleMap.addMarker(new MarkerOptions()
                         .position(LIDL_OSTRA)
-                        .title("LIDL Östra Infarten").snippet("CLICK HERE FOR OFFERS")
+                        .title("LIDL Östra Infarten")
                         .icon(BitmapFromVector(getActivity().getApplicationContext(), R.drawable.lidl_logo_2)));
                 markerLIDLOSTRA.setTag(0);
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {

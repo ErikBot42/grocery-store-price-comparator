@@ -1,5 +1,7 @@
 package com.example.grocerystoreoffers;
 
+import static java.lang.Boolean.valueOf;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -42,16 +44,34 @@ public class HomeCustomListAdapter extends ArrayAdapter<Product> {
         Product product = getItem(position);
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewProduct);
-        Picasso.with(context).load(product.getImage()).into(imageView);
-
+        if(product.getImage().isEmpty()){
+            Picasso.with(context).load(R.drawable.ic_baseline_person_24);
+        }
+        else {
+            Picasso.with(context).load(product.getImage()).into(imageView);
+        }
         TextView txtName = (TextView) convertView.findViewById(R.id.txtName);
         txtName.setText(product.getName());
 
         TextView txtPriceKg = (TextView) convertView.findViewById(R.id.txtPriceKg);
-        txtPriceKg.setText("Pris/kg/l: "+product.getPricekg()+" :-");
+        if(product.getPricekg().equals("-1.0") && product.getPriceL().equals("-1.0")){
+            txtPriceKg.setText("Pris/kg/l: N/A");
+        }
+        else if(product.getPricekg().equals("-1.0")){
+            txtPriceKg.setText("Pris/l: "+product.getPriceL());
+        }
+        else{
+            txtPriceKg.setText("Pris/kg: "+product.getPricekg());
+        }
+
 
         TextView txtPrice = (TextView) convertView.findViewById(R.id.txtPrice);
-        txtPrice.setText("Pris: "+product.getPrice()+" :-");
+        if(!product.getPrice().equals("-1.0")){
+            txtPrice.setText("Pris: "+product.getPrice()+" :-");
+        }
+        else{
+            txtPrice.setText("Pris: Se kilopris");
+        }
 
         TextView txtStore = (TextView) convertView.findViewById(R.id.txtStore);
         if (product.getStore().equals("1"))    {

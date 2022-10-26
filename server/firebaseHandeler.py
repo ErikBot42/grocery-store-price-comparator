@@ -25,7 +25,7 @@ class firebaseHandeler():
     def __init__(self):
         self.usr_collection = u'user_profile'
         try:
-            cred = credentials.Certificate("server/key.json")
+            cred = credentials.Certificate("key.json")
         except:
             print("#####Could not authenticate to firestore\n")
             exit()

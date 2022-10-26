@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:layout_marginTop="16dp"
         android:background="@color/creamwhite"
         tools:context=".Offers">
@@ -21,90 +21,24 @@
             android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:background="@color/creamwhite"
             android:iconifiedByDefault="false"
-            android:queryHint="Search"/>
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
+            />
+
+        <Spinner android:id="@+id/spinner"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fillViewport="true">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolCat"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/vegetarian"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:iconifiedByDefault="false"
-                    android:text="Vegetarian"
-                    />
-
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/vegan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:iconifiedByDefault="false"
-                    android:text="Vegan"
-                    />
-
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/meatPoultryFish"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:iconifiedByDefault="false"
-                    android:text="Meat, Poultry &amp; Fish"
-                    />
-
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/fruitVegetables"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:iconifiedByDefault="false"
-                    android:text="Fruit &amp; Vegetables"
-
-                    />
-
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/dairyCheeseEggs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:iconifiedByDefault="false"
-                    android:text="Dairy, Cheese &amp; Eggs"
-                    />
-
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/drink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:iconifiedByDefault="false"
-                    android:text="Drink"
-                    />
-
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/iceCreamSweetsSnacks"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:iconifiedByDefault="false"
-                    android:text="Ice Cream, Sweets &amp; Snacks"
-                    />
-
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/breadCookies"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:iconifiedByDefault="false"
-                    android:text="Bread &amp; Cookies"
-                    />
-
-            </androidx.appcompat.widget.Toolbar>
-        </HorizontalScrollView>
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            />
 
         <HorizontalScrollView
+            android:id="@+id/horizontal_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/orange"
@@ -166,17 +100,32 @@
                     />
             </androidx.appcompat.widget.Toolbar>
         </HorizontalScrollView>
+        <TextView
+            android:id="@+id/errorMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="No products found!"
+            android:layout_gravity="center_horizontal"
+            android:textSize="40sp"
+            android:textAlignment="center"
+            android:visibility="gone"/>
 
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/listView"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_gravity="center_horizontal"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             />
 
+
     </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/purchaseBtn"
         android:layout_width="wrap_content"

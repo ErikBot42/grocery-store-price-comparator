@@ -32,5 +32,21 @@
     <string name="welcome_to_food_huzzle">Välkommen till Food Huzzle</string>
     <string name="shopCart">Varukorg</string>
     <string name="suggestProd">Rekommenderade produkter baserat på din favorit(er) butiker</string>
-
+    <string name="errorMessage">Ingen produkt hittades</string>
+    <string name="resetPassTitle">Återställ lösenord</string>
+    <string name="forgotPass">Glömt lösenord</string>
+    <string name="resetPassUnder">Ange din email nedan</string>
+    <string name="enterEmail">Vänligen ange en email adress</string>
+    <string name="emailSuccess">Email skickat</string>
+    <string name="question1">Hur ofta får jag nya erbjudanden?</string>
+    <string name="q2">Jag har glömt mitt lösenord</string>
+    <string name="a1">Erbjudandena i appen uppdateras veckovis när butikerna uppdaterar deras erbjudanden</string>
+    <string name="a2">Navigera till loginsidan, klicka \"Glömt lösenord\" och följ instruktionerna</string>
+    <string name="q3">Vilka källor används för att hämta priser?</string>
+    <string name="a3">ICA: https://www.ica.se/butiker/maxi/karlstad/maxi-ica-stormarknad-karlstad-11010/erbjudanden/
+                      COOP: https://www.coop.se/butiker-erbjudanden/coop/coop-kronoparken/
+                      LIDL: https://www.lidl.se/veckans-erbjudanden
+                      WILLYS: https://www.willys.se/erbjudanden/butik?StoreID=2117</string>
+    <string name="q4">Behöver jag ett konto för att kunna använda appen?</string>
+    <string name="a4">Ja. Navigera till profilsidan för att skapa ett konto, för att starta Huzzla\'</string>
 </resources>

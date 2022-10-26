@@ -14,15 +14,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:cardCornerRadius="10dp"
-        android:layout_margin="20dp"
+        app:cardBackgroundColor="@color/orange"
+        android:layout_margin="10dp"
         >
 
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:src="@mipmap/ic_launcher"
-            android:layout_gravity="start"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/customshape"
             android:id="@+id/imageViewProduct"/>
 
         <LinearLayout
@@ -36,6 +39,7 @@
                 android:id="@+id/txtName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:fontFamily="@font/brandon_grotesque_light"
                 android:text="Product name"
                 android:textColor="#c60a0a"
@@ -46,6 +50,7 @@
                 android:id="@+id/txtPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:fontFamily="@font/brandon_grotesque_light"
                 android:text="Price"
                 android:textColor="#101e99"
@@ -56,6 +61,7 @@
                 android:id="@+id/txtPriceKg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
                 android:fontFamily="@font/brandon_grotesque_light"
                 android:text="Pris Kg"
                 android:textColor="#101e99"
@@ -66,6 +72,7 @@
                 android:id="@+id/txtStore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:fontFamily="@font/brandon_grotesque_light"
                 android:text="Store"
                 android:textColor="#101e99"

@@ -1,57 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".FaqFragment">
-
-    <ExpandableListView
-        android:id="@+id/expandableListView"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="0.5dp" />
-
-</androidx.core.widget.NestedScrollView>
--->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    tools:context=".MainActivity">
-
-<!-- android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"-->
-
-
-    <TextView
-        android:id="@+id/faqTitle"
-        android:layout_width="wrap_content"
+    android:background="@color/creamwhite"
+    android:orientation="vertical"
+    android:padding="0dp"
+    tools:context=".FaqFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:text="@string/faqtitle"
-        android:textSize="60sp"
-        android:layout_centerHorizontal="true"
-        android:paddingBottom="20dp">
+        android:layout_gravity="top"
+        android:background="@color/orange"
+        android:padding="30dp"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
 
-    </TextView>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="@font/anonymous_pro_bold"
+            android:text="@string/faqtitle"
+            android:textSize="60sp"
+            android:gravity="top|center_horizontal">
+        </TextView>
 
+    </LinearLayout>
     <ExpandableListView
-        android:layout_below="@id/faqTitle"
+        android:layout_marginTop="130dp"
         android:id="@+id/expandableListView"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="0.5dp" />
+        android:dividerHeight="0.5dp">
+
+    </ExpandableListView>
+
+
 
 </RelativeLayout>

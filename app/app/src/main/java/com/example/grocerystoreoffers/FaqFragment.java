@@ -25,10 +25,19 @@ public class FaqFragment extends Fragment {
     ExpandableListAdapter expandableListAdapter;
     List<String> expandableListTitle;
     HashMap<String, List<String>> expandableListDetail;
+    String q1,a1,q2,a2,q3,a3,q4,a4;
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_faq, container, false);
+        q1 = getResources().getString(R.string.question1);
+        a1 = getResources().getString(R.string.a1);
+        q2 = getResources().getString(R.string.q2);
+        a2= getResources().getString(R.string.a2);
+        q3 = getResources().getString(R.string.q3);
+        a3= getResources().getString(R.string.a3);
+        q4 = getResources().getString(R.string.q4);
+        a4 = getResources().getString(R.string.a4);
         expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
-        expandableListDetail = ExpandableListDataPump.getData();
+        expandableListDetail = ExpandableListDataPump.getData(q1,a1,q2,a2,q3,a3,q4,a4);
         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
         expandableListAdapter = new CustomExpandableListAdapter(getActivity(), expandableListTitle, expandableListDetail);
         expandableListView.setAdapter(expandableListAdapter);
@@ -56,8 +65,6 @@ public class FaqFragment extends Fragment {
                 return false;
             }
         });
-
-
 
         return view;
     }

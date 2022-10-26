@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -86,6 +87,10 @@ public class LoginFragment extends Fragment {
 
         Button btnLogin = view.findViewById(R.id.btn_login);
         Button register_btn = view.findViewById(R.id.btn_register);
+        TextView resetPassword = view.findViewById(R.id.forgotPass);
+        resetPassword.setOnClickListener(v -> {
+            replaceFragment(new resetPassword());
+        });
 
         username = view.findViewById(R.id.et_email);
         password = view.findViewById(R.id.et_password);
@@ -112,21 +117,6 @@ public class LoginFragment extends Fragment {
         register_btn.setOnClickListener(view1 -> {
             System.out.println("Register button clicked from profFrag");
             replaceFragment(new RegisterFragment());
-        });
-
-        CheckBox checkBox = (CheckBox) view.findViewById(R.id.remember);
-        //checkBox.setChecked(checkPasswordExist()); Kolla JSON token
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (checkBox.isChecked()) {
-                    //TODO: Get JSON-token with extended time
-                    printToast("Checked");
-                }
-                else {
-                    printToast("Unchecked");
-                }
-            }
         });
 
         return view;

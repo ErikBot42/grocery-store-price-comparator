@@ -2,55 +2,30 @@ package com.example.grocerystoreoffers;
 
 import static android.content.Context.MODE_PRIVATE;
 
-
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Bundle;
-
-
 import android.content.res.Configuration;
-
-
 import android.content.res.Resources;
-
-
+import android.os.AsyncTask;
 import android.os.Build;
-
-
+import android.os.Bundle;
 import android.util.DisplayMetrics;
-
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
-
-import androidx.fragment.app.FragmentManager;
-
-
-import androidx.fragment.app.FragmentTransaction;
-
-
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-
-
 import android.view.View;
-
-
 import android.view.ViewGroup;
-
-
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-
-
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -85,7 +60,7 @@ public class HomeFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
-    Boolean ica = false, coop = false,lidl = false,willys = false;
+    Boolean ica = false, coop = false, lidl = false, willys = false;
     private Button button;
 
     public HomeFragment() {
@@ -130,26 +105,22 @@ public class HomeFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document != null) {
                         if(document.getBoolean("ICA")){
-
-                            ica=true;
                             Log.d("STOREBOOL ICA ",String.valueOf(ica));
+                            ica=true;
                         }
                         if(document.getBoolean("COOP")){
                             Log.d("STOREBOOL","COOP TRUE");
                             coop=true;
                         }
                         if(document.getBoolean("LIDL")){
-
-                            lidl=true;
                             Log.d("STOREBOOL LIDL ",String.valueOf(lidl));
+                            lidl=true;
                         }
                         if(document.getBoolean("Willys")){
                             Log.d("STOREBOOL","WILLYS TRUE");
                             willys=true;
                         }
-
                         filterStore();
-
                     } else {
                         Log.d("LOGGER", "No such document");
                     }
@@ -334,7 +305,8 @@ public class HomeFragment extends Fragment {
                             productObject.getString("price"),
                             productObject.getString("price_kg"),
                             productObject.getString("store_id"),
-                            productObject.getString("category")));
+                            productObject.getString("category"),
+                            productObject.getString("price_l")));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

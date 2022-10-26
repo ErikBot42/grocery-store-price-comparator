@@ -14,7 +14,7 @@ CATEGORIES = [
 
 ["Meat",
 [
-".*bland",
+".*blandfärs",
 ".*ribs.*",
 "nötfärs.*",
 ".*biff.*",

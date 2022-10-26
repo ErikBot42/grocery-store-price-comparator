@@ -39,7 +39,13 @@ CATEGORIES = [
 ".*kött.*",
 ".*lax.*",
 ".*pork.*",
-".*medaljong.*"
+".*medaljong.*",
+".*grytbit.*",
+".*kassler.*",
+".*hummer.*",
+".*burger.*",
+".*isterband.*",
+".*lever.*"
 ]],
 
 ["Fruit",
@@ -71,7 +77,8 @@ CATEGORIES = [
 ".*hallon.*"
 ".*lök.*",
 ".*hallon.*",
-".*blåbär.*"
+".*blåbär.*",
+".*satsumas.*"
 ]],
  
 ["Dairy",
@@ -92,7 +99,8 @@ CATEGORIES = [
 ".*kvarg.*",
 ".*yoggi.*",
 ".*ost.*",
-".*filmjölk.*"
+".*filmjölk.*",
+".*halloumi.*"
  ]],
 
 ["Drink",
@@ -121,7 +129,8 @@ CATEGORIES = [
 ".*nötter.*",
 ".*snacks.*",
 ".*proteinbar.*",
-".*stycksaker.*"
+".*stycksaker.*",
+".*godis.*"
 ]],
 
 ["Bread",
